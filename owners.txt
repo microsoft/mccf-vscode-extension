@@ -4,24 +4,9 @@
 ; root owners.txt file is applicable to every change. Targeted experts can be
 ; defined by placing an owners.txt file inside any subdirectory. More information
 ; about Ownership Enforcer can be found at https://aka.ms/ownershipenforcer.
-sbasavapatna
-amrmo
-weirenlai
-pratikrathod
-ryazhang
-iprudnikovas
-shusinha
-bhkrishn
-lyshi
-settiy
-simore
-musabbirkhan
 vimauro
-pallabpaul
 apiccione
 sumitsaurabh
-tachou
-manojazad
 t-osammie
 t-scondelli
 t-sjanney
