@@ -28,9 +28,13 @@ function activate(context) {
 	});
 	//Runs the script when Install Enviroment command is called
 	let scriptsRunner = vscode.commands.registerCommand('script-enviroment-tester.scriptRunner', function () {
-		const templateContent = `
-		//Run This Script to Install all the required Enviroment for the project
-		const { execSync } = require('child_process');
+
+			//Run This Script to Install all the required Enviroment for the project
+			const { execSync } = require('child_process');
+
+			//Starting virtual Enviorment
+			console.log('Starting Virtual Enviroment...');
+			execSync('python3 -m venv CCF Enviorment');
 
 			// Install Python
 			console.log('Installing Python...');
@@ -56,18 +60,8 @@ function activate(context) {
 			//Install Node.js
 			console.log('Installing Node.js...');
 			execSync('curl -sL https://deb.nodesource.com/setup_14.x');
-			
 
 			console.log('Installation completed successfully.');
-			
-
-		`; // Replace with your template content
-		const fileName = 'run_this.js';
-		const outputDirectory = vscode.workspace.workspaceFolders[0].uri.fsPath; // Use the workspace folder as the output directory
-		//Runs the function to create the template file
-		createTemplateFile(templateContent, fileName, outputDirectory);
-
-		vscode.window.showInformationMessage('Template file created successfully!');
 	});
 	//Functions being called
 	context.subscriptions.push(disposable);
