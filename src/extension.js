@@ -28,45 +28,65 @@ function activate(context) {
 	});
 	//Runs the script when Install Enviroment command is called
 	let scriptsRunner = vscode.commands.registerCommand('script-enviroment-tester.scriptRunner', function () {
-		const templateContent = `
-		//Run This Script to Install all the required Enviroment for the project
-		const { execSync } = require('child_process');
+		const docker = new Docker();
 
-			// Install Python
-			console.log('Installing Python...');
+docker.ping((err) => {
+  if (err) {
+    console.error('Docker is required but not installed. Aborting.');
+    process.exit(1);
+  }
 
-			//Install WSL
-			execSync('wsl --install');
+  // Check if a folder name is provided as an argument
+  if (process.argv.length < 3) {
+    console.error('Please provide a folder name.');
+    console.log('Usage: node create_dev_container.js <folder_name>');
+    process.exit(1);
+  }
 
-            //Connecting to WSL
-            execSync('wsl') 
+  const folderName = process.argv[2];
+  const folderPath = path.resolve(folderName);
 
-			// Install CCF Template
-			console.log('Installing CCF App Template...');
-			execSync('git clone https://github.com/microsoft/ccf-app-template')
+  // Create the folder if it doesn't exist
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
+  }
 
-			// Install the CCF sample applications
-			//console.log('Installing CCF Sample Applications...');
-			//execSync('git clone https://github.com/microsoft/ccf-app-samples/blob/main/banking-app')
+  // Create a Dockerfile for the development container
+  const dockerfileContent = `\
+    FROM ubuntu:latest
+    RUN apt-get update && apt-get install -y build-essential
+    WORKDIR /app
+  `;
 
-			// Login to Azure CLI
-			console.log('Logging into Azure CLI...');
-			execSync('az login');
+  fs.writeFileSync(path.join(folderPath, 'Dockerfile'), dockerfileContent);
 
-			//Install Node.js
-			console.log('Installing Node.js...');
-			execSync('curl -sL https://deb.nodesource.com/setup_14.x');
-			
+  // Build the Docker image
+  docker.buildImage(
+    {
+      context: folderPath,
+      src: ['Dockerfile']
+    },
+    { t: 'dev_container' },
+    (err, stream) => {
+      if (err) {
+        console.error('Failed to build the Docker image:', err);
+        process.exit(1);
+      }
 
-			console.log('Installation completed successfully.');
-			
+      stream.pipe(process.stdout);
 
-		`; // Replace with your template content
-		const fileName = 'run_this.js';
-		const outputDirectory = vscode.workspace.workspaceFolders[0].uri.fsPath; // Use the workspace folder as the output directory
-		//Runs the function to create the template file
-		createTemplateFile(templateContent, fileName, outputDirectory);
+      stream.on('end', () => {
+        // Clean up the Dockerfile
+        fs.unlinkSync(path.join(folderPath, 'Dockerfile'));
 
+        // Provide instructions to the user
+        console.log('Dev container created successfully.');
+        console.log('To start the container, use the following command:');
+        console.log(`docker run -it --rm -v ${folderPath}:/app dev_container`);
+      });
+    }
+  );
+});
 		vscode.window.showInformationMessage('Template file created successfully!');
 	});
 	//Functions being called
