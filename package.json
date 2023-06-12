@@ -14,20 +14,27 @@
   "contributes": {
     "commands": [{
       "command": "mccf-vscode-extension.helloWorld",
-      "title": "Hello World"
+      "title": "MCCF: Hello World"
     },
     {
       "command": "mccf-vscode-extension.install",
-      "title": "Install Environment"
+      "title": "MCCF: Install Environment"
     },
     {
       "command": "mccf-vscode-extension.javascriptapp",
-      "title": "Create CCF Javascript App Template"
+      "title": "MCCF: Create CCF App Template"
     },
     {
       "command": "mccf-vscode-extension.cplusplusapp",
-      "title": "Create CCF C++ App Template"
+      "title": "MCCF: Create CCF C++ App Template"
+    },
+
+    {
+      "command": "mccf-vscode-extension.startNetwork",
+      "title": "MCCF: Start CCF Network"
     }
+
+    
   ]
   },
   "scripts": {
