@@ -26,7 +26,7 @@ function activate(context) {
 	});
 	let install_dev_container = vscode.commands.registerCommand('mccf-vscode-extension.install', function () {
 		// The code you place here will be executed every time your command is executed
-		execSync('git clone https://github.com/Microsoft/vscode-remote-try-node.git');
+		execSync('code --folder-uri vscode-remote://containers+my-node-container $(pwd) ');
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Installed Dev Enviorment!');
 	});
@@ -38,8 +38,8 @@ function activate(context) {
 	});
 	let create_new_ccf_application_cplus = vscode.commands.registerCommand('mccf-vscode-extension.cplusplusapp', function () {
 		// The code you place here will be executed every time your command is executed
-		       //console.log('Installing Javascript App Template...');
-		       // execSync('npm --prefix ./js install');
+		      //console.log('Installing Javascript App Template...');
+		       //execSync('npm --prefix ./js install');
 
 			   vscode.window.showInformationMessage('C++ App Template Installed!');
 	});
