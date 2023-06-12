@@ -1,0 +1,32 @@
+{
+    "name": "CCF Development Environment",
+    "image": "ccfmsrc.azurecr.io/ccf/ci:27-04-2023-virtual-clang15",
+    "runArgs": [],
+    "extensions": [
+      "eamodio.gitlens",
+      "esbenp.prettier-vscode",
+      "me-dutour-mathieu.vscode-github-actions",
+      "ms-azure-devops.azure-pipelines",
+      "ms-python.black-formatter",
+      "ms-python.python",
+      "ms-vscode.cpptools"
+    ],
+    "settings": {
+      "python.defaultInterpreterPath": "python3",
+      "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+      },
+      "python.formatting.provider": "none",
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.fixAll": true
+      }
+    },
+    "features": {
+      "ghcr.io/devcontainers/features/docker-from-docker:1": {
+        "version": "latest"
+      }
+    },
+    "postCreateCommand": "DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install gdb -y"
+  }
