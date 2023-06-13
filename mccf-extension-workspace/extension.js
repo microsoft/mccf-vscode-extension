@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const { execSync, exec } = require('child_process');
+const { spawn } = require('child_process');
+const rimraf = require('rimraf');
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -23,12 +25,34 @@ function activate(context) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from mccf-vscode-extension!');
 	});
+
+	// TODO: troubleshoot installing dev container
+
 	let install_dev_container = vscode.commands.registerCommand('mccf-vscode-extension.install', function () {
 		// The code you place here will be executed every time your command is executed
-		execSync('git clone https://github.com/Microsoft/vscode-remote-try-node.git');
+		const repoDirectory = 'ccf-app-template';
+	  
+		try {
+			// Remove the existing repository directory
+			rimraf.sync(repoDirectory);
+	  
+			// Clone the repository
+			execSync('git clone https://github.com/microsoft/ccf-app-template');
+	  
+			// Change directory to the cloned repository
+			process.chdir(repoDirectory);
+	  
+			// Open the repository in a dev container
+			execSync('code .');
+		} catch (error) {
+			console.error('An error occurred:', error.message);
+		}
+	  
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Installed Dev Enviorment!');
+		vscode.window.showInformationMessage('Installed Dev Environment!');
 	});
+	
+	
 
 	// Command to create CCF App
 	let create_new_ccf_application_javascript = vscode.commands.registerCommand('mccf-vscode-extension.javascriptapp', async function () { // used async becuase ome operations in the function, such as showing input boxes and performing git cloning, may involve asynchronous operations that return things
@@ -50,7 +74,7 @@ function activate(context) {
 			// Create an empty CCF application
 			// Replace this section with your logic to generate the required files and dependencies for an empty application
 			execSync(`git clone https://github.com/microsoft/ccf-app-template`);
-			vscode.window.showInformationMessage(`Empty CCF Application Template Created`);
+			vscode.window.showInformationMessage(`Environment Created`);
 
 		} else if (template.label === 'Custom') {
 			// Create a CCF application from a custom template
@@ -86,9 +110,6 @@ function activate(context) {
 	});
 
 
-
-
-
 	let create_new_ccf_application_cplus = vscode.commands.registerCommand('mccf-vscode-extension.cplusplusapp', function () {
 		// The code you place here will be executed every time your command is executed
 		       //console.log('Installing Javascript App Template...');
@@ -104,7 +125,9 @@ function activate(context) {
 }
 
 // This method is called when your extension is deactivated
-function deactivate() {}
+function deactivate() {
+	console.log('MCCF extension is now deactivated.');
+}
 
 module.exports = {
 	activate,
