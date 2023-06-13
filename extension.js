@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const { execSync, exec } = require('child_process');
+const { execSync} = require('child_process');
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -26,7 +26,18 @@ function activate(context) {
 	});
 	let install_dev_container = vscode.commands.registerCommand('mccf-vscode-extension.install', function () {
 		// The code you place here will be executed every time your command is executed
-		execSync('code --folder-uri vscode-remote://containers+my-node-container $(pwd) ');
+		try {
+			// Clone the repository
+			execSync('git clone https://github.com/microsoft/ccf-app-template');
+		  
+			// Change directory to the cloned repository
+			process.chdir('ccf-app-template');
+		  
+			// Open the repository in a dev container
+			execSync('code .');
+		  } catch (error) {
+			console.error('An error occurred:', error.message);
+		  }
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Installed Dev Enviorment!');
 	});
@@ -51,6 +62,7 @@ function activate(context) {
 }
 
 // This method is called when your extension is deactivated
+//. ../scripts/test_docker.sh --enclave --serverIP 127.0.0.1 --port 8080
 function deactivate() {}
 
 module.exports = {
