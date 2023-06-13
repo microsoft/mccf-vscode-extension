@@ -24,23 +24,33 @@ function activate(context) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from mccf-vscode-extension!');
 	});
-	let install_dev_container = vscode.commands.registerCommand('mccf-vscode-extension.install', function () {
-		// The code you place here will be executed every time your command is executed
-		try {
-			// Clone the repository
-			execSync('git clone https://github.com/microsoft/ccf-app-template');
-		  
-			// Change directory to the cloned repository
-			process.chdir('ccf-app-template');
-		  
-			// Open the repository in a dev container
-			execSync('code .');
-		  } catch (error) {
-			console.error('An error occurred:', error.message);
-		  }
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Installed Dev Enviorment!');
-	});
+	const { execSync } = require('child_process');
+const rimraf = require('rimraf');
+
+let install_dev_container = vscode.commands.registerCommand('mccf-vscode-extension.install', function () {
+    // The code you place here will be executed every time your command is executed
+    const repoDirectory = 'ccf-app-template';
+  
+    try {
+        // Remove the existing repository directory
+        rimraf.sync(repoDirectory);
+  
+        // Clone the repository
+        execSync('git clone https://github.com/microsoft/ccf-app-template');
+  
+        // Change directory to the cloned repository
+        process.chdir(repoDirectory);
+  
+        // Open the repository in a dev container
+        execSync('code .');
+    } catch (error) {
+        console.error('An error occurred:', error.message);
+    }
+  
+    // Display a message box to the user
+    vscode.window.showInformationMessage('Installed Dev Environment!');
+});
+
 	let create_new_ccf_application_javascript = vscode.commands.registerCommand('mccf-vscode-extension.javascriptapp', function () {
 		// The code you place here will be executed every time your command is executed
 		       //console.log('Installing Javascript App Template...');
