@@ -51,9 +51,6 @@ function activate(context) {
         // Change directory to the cloned repository
         process.chdir(repoDirectory);
 
-        // Install dependencies within the dev container
-        //execSync("npm install");
-
         // Open the repository in a dev container
         execSync("code .");
 
