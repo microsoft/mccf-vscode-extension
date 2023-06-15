@@ -36,29 +36,27 @@ function activate(context) {
   let install_dev_container = vscode.commands.registerCommand(
     "mccf-vscode-extension.install",
     function () {
-      // The code you place here will be executed every time your command is executed
-      const repoDirectory = "ccf-app-template";
-
+      console.log("Installing CCF Environment...");
+      execSync('docker build -t ccf-enviroment:latest .')
+      const containerName = "ccf-enviroment";
+      const imageName = "ccf-enviorment:latest"; // Replace with your Docker image name and tag
+  
       try {
-        // Remove the existing repository directory
-        rimraf.sync(repoDirectory);
-
-        // Clone the repository
-        execSync("git clone https://github.com/microsoft/ccf-app-template");
-
-        // Change directory to the cloned repository
-        process.chdir(repoDirectory);
-
-        // Open the repository in a dev container
-        execSync("code .");
+        // Check if the container already exists and stop/remove it if it does
+        execSync(`docker ps -aq -f name=${containerName}`);
+  
+        // Run the Docker container with the specified image
+        execSync(`docker run -itd --name ${containerName} ${imageName}`);
+  
       } catch (error) {
         console.error("An error occurred:", error.message);
       }
-
+  
       // Display a message box to the user
-      vscode.window.showInformationMessage("Installed Dev Environment!");
+      vscode.window.showInformationMessage(`Installed Dev Environment using ${imageName} image!`);
     }
   );
+  
 
   let create_new_ccf_application_javascript = vscode.commands.registerCommand(
     "mccf-vscode-extension.javascriptapp",
