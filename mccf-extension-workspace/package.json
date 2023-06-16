@@ -18,7 +18,7 @@
     },
     {
       "command": "mccf-vscode-extension.install",
-      "title": "MCCF: Install Environment"
+      "title": "MCCF: Start Environment"
     },
     {
       "command": "mccf-vscode-extension.javascriptapp",

@@ -37,7 +37,78 @@ function activate(context) {
 
   let install_dev_container = vscode.commands.registerCommand(
     "mccf-vscode-extension.install",
-    function () {
+    async function () {
+      const template = await vscode.window.showQuickPick(
+        [
+          { label: "Empty", description: "Create an empty CCF application." },
+          {
+            label: "Custom",
+            description:
+              "Create a CCF application from a custom template (Recommended for new/first-time users).",
+          },
+        ],
+
+        { placeHolder: "Select a template for your CCF application" }
+      );
+
+      let selectedTemplate; // Define the selectedTemplate variable
+      if (!template) return; // If the user didn't select a template, return
+
+      if (template.label === "Empty") {
+        // Opens the CCF App template in a dev container
+
+        const link =
+          "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template";
+
+        vscode.env.openExternal(vscode.Uri.parse(link));
+
+        vscode.window.showInformationMessage("Environment Created");
+      } else if (template.label === "Custom") {
+        // Create a CCF application from a custom template
+        const templateOptions = [
+          {
+            label: "Audiable Logging App",
+            description:
+              "This is a sample application of logging app that takes advantage of CCF's ability for granular access control.",
+            repository:
+              "https://github.com/microsoft/ccf-app-samples/auditable-logging-app",
+          },
+          {
+            label: "Banking App",
+            description: "This is a sample application of a bank consortium.",
+            repository:
+              "https://github.com/microsoft/ccf-app-samples/banking-app",
+          },
+          {
+            label: "Data Reconciliation App",
+            description:
+              "This is the CCF Data Reconciliation - sample in TypeScript",
+            repository:
+              "https://github.com/microsoft/ccf-app-samples/data-reconciliation-app",
+          },
+        ];
+
+        const templateSelection = await vscode.window.showQuickPick(
+          templateOptions,
+          {
+            placeHolder: "Select a template for your new CCF application",
+            ignoreFocusOut: true,
+            matchOnDescription: true,
+          }
+        );
+
+        if (!templateSelection) return;
+        
+        const selectedTemplate = templateSelection.repository;
+
+        const link =
+          "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=" + "selectedTemplate";
+
+        vscode.env.openExternal(vscode.Uri.parse(link));
+        
+        } // end of else if statement
+
+      /* WORKING CODE  
       // The code you place here will be executed every time your command is executed
       const repoDirectory = "ccf-app-template";
 
@@ -56,7 +127,7 @@ function activate(context) {
 
       } catch (error) {
         console.error("An error occurred:", error.message);
-      }
+      } */
 
       // Display a message box to the user
       vscode.window.showInformationMessage("Installed Dev Environment!");
