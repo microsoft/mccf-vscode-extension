@@ -102,7 +102,7 @@ function activate(context) {
         const selectedTemplate = templateSelection.repository;
 
         const link =
-          "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=" + "selectedTemplate";
+          "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=" + selectedTemplate;
 
         vscode.env.openExternal(vscode.Uri.parse(link));
         
@@ -162,7 +162,6 @@ function activate(context) {
         execSync(`git clone https://github.com/microsoft/ccf-app-template`);
         vscode.window.showInformationMessage(`Environment Created`);
       } else if (template.label === "Custom") {
-        // Create a CCF application from a custom template
         // Create QuickPick menu to choose custom template
         const templateOptions = [
           {
@@ -223,6 +222,32 @@ function activate(context) {
       vscode.window.showInformationMessage("C++ App Template Installed!");
     }
   );
+
+  let start_ccf_network = vscode.commands.registerCommand(mccf-vscode-extension.startccfnetwork, function () {
+    // Run the ccf command to start the network
+
+    try {
+      // Install dependencies
+      execSync('npm --prefix ./js install');
+  
+      // Build the JavaScript app
+      execSync('npm --prefix ./js run build');
+  
+      // Start the app using the sandbox script
+      execSync('/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle ./js/dist/');
+      
+      console.log('Commands executed successfully!');
+    } catch (error) {
+      console.error('An error occurred:', error.message);
+    }
+
+    // question: what about the curl commands? how do we run them?
+    /*
+    $ curl -X POST https://127.0.0.1:8000/app/log?id=1 --cacert ./workspace/sandbox_common/service_cert.pem -H "Content-Type: application/json" --data '{"msg": "hello world"}'
+    $ curl https://127.0.0.1:8000/app/log?id=1 --cacert ./workspace/sandbox_common/service_cert.pem 
+    */
+
+  });
   //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
   context.subscriptions.push(disposable);
   context.subscriptions.push(install_dev_container);

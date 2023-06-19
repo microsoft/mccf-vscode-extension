@@ -32,9 +32,11 @@
     {
       "command": "mccf-vscode-extension.startNetwork",
       "title": "MCCF: Start CCF Network"
+    },
+    {
+      "command": "mccf-vscode-extension.addUser",
+      "title": "MCCF: Add User"
     }
-
-    
   ]
   },
   "scripts": {
