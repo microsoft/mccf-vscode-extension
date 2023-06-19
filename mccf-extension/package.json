@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "extension.createDockerContainer",
-        "title": "Create docker container"
+        "title": "Start CCF network locally"
       }
     ]
   },

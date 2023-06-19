@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
 const Docker = require("dockerode");
-const path = require("path");
-const fs = require("fs");
 function activate(context) {
     const docker = new Docker();
     let disposable = vscode.commands.registerCommand('extension.createDockerContainer', async () => {
@@ -13,33 +11,28 @@ function activate(context) {
             canPickMany: false,
             ignoreFocusOut: true
         });
-        const dockerfilePath = path.join(__dirname, 'dockerfile');
-        const contextPath = path.join(__dirname, '.');
-        // List all files in the current directory
-        fs.readdir(contextPath, (err, files) => {
-            if (err) {
-                vscode.window.showErrorMessage(`Error reading directory: ${err}`);
-                return;
-            }
-            console.log(files);
-        });
+        const imageName = 'mccf-extension';
+        const imageTag = 'latest';
         const stream = await docker.buildImage({
-            context: contextPath,
-            src: [dockerfilePath],
+            context: __dirname,
+            src: ['dockerfile'],
         }, {
             buildargs: { 'CCF_VERSION': `${ccfVersion}`, },
+            t: `${imageName}:${imageTag}`,
         });
         stream.setEncoding('utf8');
+        const outputChannel = vscode.window.createOutputChannel('Docker Build Output');
         stream.on('data', (chunk) => {
-            vscode.window.createOutputChannel('Docker Build Output').appendLine(chunk);
+            outputChannel.appendLine(chunk);
         });
+        // Uncomment to create a container based on the previously built image
         /*const container = await docker.createContainer({
             Image: `mcr.microsoft.com/ccf/app/run-js:${ccfVersion}-virtual`,
             name: 'ccf',
         });
-
+ 
         await container.start();
-
+ 
         vscode.window.showInformationMessage(`Container ${container.id} created and started`);  */
     });
     context.subscriptions.push(disposable);

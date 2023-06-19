@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 import * as Docker from 'dockerode';
-import path = require('path');
-import fs = require('fs');
 
 export function activate(context: vscode.ExtensionContext) {
     const docker = new Docker();
@@ -14,43 +12,40 @@ export function activate(context: vscode.ExtensionContext) {
             ignoreFocusOut: true
         });
 
-        const dockerfilePath = path.join(__dirname, 'dockerfile');
-        const contextPath = path.join(__dirname, '.');
-
-        // List all files in the current directory
-        fs.readdir(contextPath, (err, files) => {
-            if (err) {
-                vscode.window.showErrorMessage(`Error reading directory: ${err}`);
-                return;
-            }
-            console.log(files);
-        });
+        const imageName = 'mccf-extension';
+        const imageTag = 'latest';
 
         const stream = await docker.buildImage(
             {
-                context: contextPath,
-                src: [dockerfilePath],
+                context: __dirname,
+                src: ['dockerfile'],
             },
             {
                 buildargs: { 'CCF_VERSION': `${ccfVersion}`, },
+                t: `${imageName}:${imageTag}`, 
             });
 
         stream.setEncoding('utf8');
+        const outputChannel = vscode.window.createOutputChannel('Docker Build Output');
         stream.on('data', (chunk) => {
-            vscode.window.createOutputChannel('Docker Build Output').appendLine(chunk);
+            outputChannel.appendLine(chunk);
         }); 
 
-         /*const container = await docker.createContainer({
-             Image: `mcr.microsoft.com/ccf/app/run-js:${ccfVersion}-virtual`,
-             name: 'ccf',
-         }); 
+        // Uncomment to create a container based on the previously built image
+
+        /*const container = await docker.createContainer({
+            Image: `mcr.microsoft.com/ccf/app/run-js:${ccfVersion}-virtual`,
+            name: 'ccf',
+        }); 
  
-         await container.start();
+        await container.start();
  
-         vscode.window.showInformationMessage(`Container ${container.id} created and started`);  */
+        vscode.window.showInformationMessage(`Container ${container.id} created and started`);  */
     });
 
     context.subscriptions.push(disposable);
 }
+
+
 
 export function deactivate() { }
