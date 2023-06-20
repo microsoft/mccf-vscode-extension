@@ -334,3 +334,10 @@ ASALocalRun/
 coveragetool
 reports/
 *.cobertura.xml
+
+# Visual Studio code extension files
+out
+dist
+node_modules
+.vscode-test/
+*.vsix
