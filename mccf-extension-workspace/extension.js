@@ -1,8 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
-const { execSync, exec, spawnSync } = require("child_process");
-const { spawn } = require("child_process");
+const { execSync } = require("child_process");
 const rimraf = require("rimraf");
 
 // This method is called when your extension is activated
@@ -51,19 +50,17 @@ function activate(context) {
         { placeHolder: "Select a template for your CCF application" }
       );
 
-      let selectedTemplate; // Define the selectedTemplate variable
       if (!template) return; // If the user didn't select a template, return
 
       if (template.label === "Empty") {
         // Opens the CCF App template in a dev container
-
-        const link =
-          "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template";
-
-        vscode.env.openExternal(vscode.Uri.parse(link));
+        vscode.commands.executeCommand('remote-containers.openRepositoryInUniqueVolume', 'https://github.com/microsoft/ccf-app-template');
 
         vscode.window.showInformationMessage("Environment Created");
-      } else if (template.label === "Custom") {
+      } 
+
+      //FIXME: This is not working
+      else if (template.label === "Custom") {
         // Create a CCF application from a custom template
         const templateOptions = [
           {
@@ -100,6 +97,10 @@ function activate(context) {
         if (!templateSelection) return;
         
         const selectedTemplate = templateSelection.repository;
+        
+        // download the files individually contained within that repository that is selected
+        // do this within the dev container
+        // we want only the folder -- manually download the files. use the url to download the files and then access specific folder
 
         const link =
           "vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=" + selectedTemplate;
@@ -134,81 +135,29 @@ function activate(context) {
     }
   );
 
-  // Command to create CCF App
+  // Command to create CCF JavaScript App
   let create_new_ccf_application_javascript = vscode.commands.registerCommand(
     "mccf-vscode-extension.javascriptapp",
     async function () {
-      // used async becuase ome operations in the function, such as showing input boxes and performing git cloning, may involve asynchronous operations that return things
-      // The code you place here will be executed every time your command is executed
-      // prompt the user first with two options -- Empty Template vs. Custom Template
-      const template = await vscode.window.showQuickPick(
-        [
-          { label: "Empty", description: "Create an empty CCF application." },
-          {
-            label: "Custom",
-            description: "Create a CCF application from a custom template.",
-          },
-        ],
+     // The code you place here will be executed every time your command is executed
+     const repoDirectory = "ccf-app-template";
 
-        { placeHolder: "Select a template for your CCF application" }
-      );
+     try {
+       // Remove the existing repository directory
+       rimraf.sync(repoDirectory);
 
-      let selectedTemplate; // Define the selectedTemplate variable
-      if (!template) return;
+       // Clone the repository
+       execSync("git clone https://github.com/microsoft/ccf-app-template");
 
-      if (template.label === "Empty") {
-        // Create an empty CCF application
-        // Replace this section with your logic to generate the required files and dependencies for an empty application
-        execSync(`git clone https://github.com/microsoft/ccf-app-template`);
-        vscode.window.showInformationMessage(`Environment Created`);
-      } else if (template.label === "Custom") {
-        // Create QuickPick menu to choose custom template
-        const templateOptions = [
-          {
-            label: "Audiable Logging App",
-            description:
-              "This is a sample application of logging app that takes advantage of CCFs ability for granular access control.",
-            repository:
-              "https://github.com/microsoft/ccf-app-samples.git/auditable-logging-app",
-          },
-          {
-            label: "Banking App",
-            description: "This is a sample application of a bank consortium.",
-            repository:
-              "https://github.com/microsoft/ccf-app-samples.git/banking-app",
-          },
-          {
-            label: "Data Reconciliation App",
-            description:
-              "This is the CCF Data Reconciliation - sample in typescript",
-            repository:
-              "https://github.com/microsoft/ccf-app-samples.git/data-reconciliation-app",
-          },
-        ];
+       // Change directory to the cloned repository
+       process.chdir(repoDirectory);
 
-        // Show QuickPick menu to choose custom template
-        const templateSelection = await vscode.window.showQuickPick(
-          templateOptions,
-          {
-            placeHolder: "Select a template for your new CCF application",
-            ignoreFocusOut: true,
-            matchOnDescription: true,
-          }
-        );
+       // Open the repository in a dev container
+       execSync("code .");
 
-        if (!templateSelection) return;
-
-        const selectedTemplate = templateSelection.repository;
-
-        // TODO: Handle the cloning logic for the selected template's repository
-        // You can use the git command-line tool or a Git client library to clone the repository
-        execSync(`git clone ${selectedTemplate}`);
-
-        // Replace the following line with your logic to handle the cloned repository and perform any additional setup
-        vscode.window.showInformationMessage(
-          `Selected custom template: ${selectedTemplate}, App name: ${appName}`
-        );
-      }
+     } catch (error) {
+       console.error("An error occurred:", error.message);
+     }
     }
   );
 
@@ -223,9 +172,18 @@ function activate(context) {
     }
   );
 
-  let start_ccf_network = vscode.commands.registerCommand(mccf-vscode-extension.startccfnetwork, function () {
-    // Run the ccf command to start the network
-
+  // FIXME: Cannot access the ccf commands from the dev container opened by the extension command (ccf: Start Network)
+  // FIXME: Can't be run/tested without environment set up & connected to environment
+  // Issue: Cannot find command 'ccf' - this is because the ccf commands are not installed in the dev container
+  // Solution: Install the ccf commands in the dev container
+  // How to install the ccf commands in the dev container?
+  // Install the ccf commands in the dev container using the extension command (ccf: Start Network) and the Dockerfile
+  // how to do this: 
+  // 1. Create a Dockerfile that installs the ccf commands
+  // 2. Create a Dockerfile that installs the ccf commands and runs the ccf commands
+ 
+  let start_ccf_network = vscode.commands.registerCommand("mccf-vscode-extension.startNetwork", function () {
+    // Run the ccf commands to start the network
     try {
       // Install dependencies
       execSync('npm --prefix ./js install');
@@ -241,10 +199,27 @@ function activate(context) {
       console.error('An error occurred:', error.message);
     }
 
-    // question: what about the curl commands? how do we run them?
     /*
-    $ curl -X POST https://127.0.0.1:8000/app/log?id=1 --cacert ./workspace/sandbox_common/service_cert.pem -H "Content-Type: application/json" --data '{"msg": "hello world"}'
-    $ curl https://127.0.0.1:8000/app/log?id=1 --cacert ./workspace/sandbox_common/service_cert.pem 
+      // FIXME: Below's code outlines the steps to initialize a network with one node and one member. 
+      // Update and retrieve the latest state digest
+      const updateStateDigestEndpoint = "https://<ccf-node-address>/gov/ack/update_state_digest";
+      const updateStateDigestCommand = `curl ${updateStateDigestEndpoint} -X POST --cacert service_cert.pem --key new_member_privk.pem --cert new_member_cert.pem --silent | jq > request.json`;
+      execSync(updateStateDigestCommand);
+
+      // Read the state digest from the request.json file
+      const requestJson = fs.readFileSync('request.json', 'utf8');
+      const stateDigest = JSON.parse(requestJson).state_digest;
+
+      // Sign the state digest and send the acknowledgment
+      const ackEndpoint = "https://<ccf-node-address>/gov/ack";
+      const ackCommand = `ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key new_member_privk.pem --signing-cert new_member_cert.pem --content request.json | curl ${ackEndpoint} --cacert service_cert.pem --data-binary @- -H "content-type: application/cose"`;
+      execSync(ackCommand);
+
+      // Verify the activation of the member
+      const membersEndpoint = "https://<ccf-node-address>/gov/members";
+      const membersResponse = axios.get(membersEndpoint);
+      const membersData = membersResponse.data;
+      console.log(membersData);
     */
 
   });
@@ -253,6 +228,7 @@ function activate(context) {
   context.subscriptions.push(install_dev_container);
   context.subscriptions.push(create_new_ccf_application_javascript);
   context.subscriptions.push(create_new_ccf_application_cplus);
+  context.subscriptions.push(start_ccf_network);
 }
 
 // This method is called when your extension is deactivated

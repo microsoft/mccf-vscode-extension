@@ -22,7 +22,7 @@
     },
     {
       "command": "mccf-vscode-extension.javascriptapp",
-      "title": "MCCF: Create CCF App Template"
+      "title": "MCCF: Start JavaScript CCF App"
     },
     {
       "command": "mccf-vscode-extension.cplusplusapp",

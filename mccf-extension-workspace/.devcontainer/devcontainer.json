@@ -1,5 +1,5 @@
 {
-    "name": "Development Container for CCF C++ Apps",
+    "name": "Development Container for MCCF Apps",
     "dockerFile": "Dockerfile",
     "extensions": [
       "ms-vscode.cpptools",
