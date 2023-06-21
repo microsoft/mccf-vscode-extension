@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "mccf-vscode-extension": "file:.."
+  }
+}

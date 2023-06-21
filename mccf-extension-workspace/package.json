@@ -1,0 +1,62 @@
+{
+  "name": "mccf-vscode-extension",
+  "displayName": "mccf-vscode-extension",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.79.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mccf-vscode-extension.helloWorld",
+        "title": "MCCF: Hello World"
+      },
+      {
+        "command": "mccf-vscode-extension.install",
+        "title": "MCCF: Start Environment"
+      },
+      {
+        "command": "mccf-vscode-extension.javascriptapp",
+        "title": "MCCF: Start JavaScript CCF App"
+      },
+      {
+        "command": "mccf-vscode-extension.cplusplusapp",
+        "title": "MCCF: Create CCF C++ App Template"
+      },
+      {
+        "command": "mccf-vscode-extension.startNetwork",
+        "title": "MCCF: Start CCF Network"
+      },
+      {
+        "command": "mccf-vscode-extension.addUser",
+        "title": "MCCF: Add User"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.2.5",
+    "@types/vscode": "^1.79.0",
+    "@vscode/test-electron": "^2.3.2",
+    "eslint": "^8.41.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "dockerode": "^3.3.5"
+  }
+}
