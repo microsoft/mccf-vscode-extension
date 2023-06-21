@@ -14,8 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-azure-managed-ccf.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-azure-managed-ccf.createCCFdevContainer",
+        "title": "MCCF: Start Environment"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.startNetwork",
+        "title": "MCCF: Start CCF Network"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.addUser",
+        "title": "MCCF: Add User"
       }
     ]
   },
