@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
         [
           {
             label: "Standard CCF Template",
-            description: "Create an empty CCF application.",
+            description: "Create a CCF application from generic template.",
           },
           {
             label: "Custom",
@@ -30,6 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
         { placeHolder: "Select a template for your CCF application" }
       );
 
+      // eslint-disable-next-line curly
       if (!template) return; // If the user didn't select a template, return
       else if (template.label === "Standard CCF Template") {
         // Opens the CCF App template in a dev container
@@ -93,48 +94,81 @@ export function activate(context: vscode.ExtensionContext) {
 
   let startNetwork = vscode.commands.registerCommand(
     "vscode-azure-managed-ccf.startNetwork",
-    function () {
+    async function () {
       // Run the ccf commands to start the network
       try {
         // Create terminal
-		const terminal = vscode.window.createTerminal("Terminal");
+        const terminal = vscode.window.createTerminal("Terminal");
 
-		// Install Dependencies
-		terminal.sendText("npm --prefix ./js run install");
+        // Install Dependencies
+        terminal.sendText("npm --prefix ./js run install");
 
-		// Build the JS app
-		terminal.sendText("npm --prefix ./js run build");
+        setTimeout(() => {
+          // Build the JS app
+          terminal.sendText("npm --prefix ./js run build");
 
-		// Start app using sandbox script
-		terminal.sendText("/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle ./js/dist/");
+          setTimeout(async () => {
+            // Start app using sandbox script
+            terminal.sendText(
+              "/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle ./js/dist/"
+            );
 
-		
+            // create a first member
+            const terminal2 = vscode.window.createTerminal("Terminal2");
+            const memberName = await vscode.window.showInputBox({
+              prompt: "Enter a name for the first member",
+              ignoreFocusOut: true,
+            });
+
+            // won't run
+            terminal.sendText("keygenerator.sh --name " + memberName); 
+
+            //FIXME: the below commands won't execute
+            /* // Start up a new terminal for network activation
+            const networkActivation =
+              vscode.window.createTerminal("Net. Activation");
+
+            // TODO: Retrieve the ccf-node-address from the user
+            // TODO: Set up a condition for multiple members (3 minimum?)
+
+            networkActivation.sendText(
+              "curl https://localhost/gov/ack/update_state_digest -X POST --cacert service_cert.pem --key new_member_privk.pem --cert new_member_cert.pem --silent | jq > request.json"
+            ); // Activate Member
+
+            networkActivation.sendText("cat request.json");
+
+            networkActivation.sendText(
+              'curl.sh https://localhost/gov/ack --cacert service_cert.pem --signing-key member0_privk.pem --signing-cert member0_cert.pem --header "Content-Type: application/json" --data-binary @request.json'
+            ); // Send Acknowledgement */
+
+          }, 1000); // 1 second delay before starting app
+        }, 1000); // 1 second delay before building app
       } catch (error) {
-        //console.error("An error occurred:", error.message);
+        console.error("An error occurred:", error);
       }
 
       /*
-		  // FIXME: Below's code outlines the steps to initialize a network with one node and one member. 
-		  // Update and retrieve the latest state digest
-		  const updateStateDigestEndpoint = "https://<ccf-node-address>/gov/ack/update_state_digest";
-		  const updateStateDigestCommand = `curl ${updateStateDigestEndpoint} -X POST --cacert service_cert.pem --key new_member_privk.pem --cert new_member_cert.pem --silent | jq > request.json`;
-		  execSync(updateStateDigestCommand);
+      // FIXME: Below's code outlines the steps to initialize a network with one node and one member. 
+      // Update and retrieve the latest state digest
+      const updateStateDigestEndpoint = "https://<ccf-node-address>/gov/ack/update_state_digest";
+      const updateStateDigestCommand = `curl ${updateStateDigestEndpoint} -X POST --cacert service_cert.pem --key new_member_privk.pem --cert new_member_cert.pem --silent | jq > request.json`;
+      execSync(updateStateDigestCommand);
 	
-		  // Read the state digest from the request.json file
-		  const requestJson = fs.readFileSync('request.json', 'utf8');
-		  const stateDigest = JSON.parse(requestJson).state_digest;
+      // Read the state digest from the request.json file
+      const requestJson = fs.readFileSync('request.json', 'utf8');
+      const stateDigest = JSON.parse(requestJson).state_digest;
 	
-		  // Sign the state digest and send the acknowledgment
-		  const ackEndpoint = "https://<ccf-node-address>/gov/ack";
-		  const ackCommand = `ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key new_member_privk.pem --signing-cert new_member_cert.pem --content request.json | curl ${ackEndpoint} --cacert service_cert.pem --data-binary @- -H "content-type: application/cose"`;
-		  execSync(ackCommand);
+      // Sign the state digest and send the acknowledgment
+      const ackEndpoint = "https://<ccf-node-address>/gov/ack";
+      const ackCommand = `ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key new_member_privk.pem --signing-cert new_member_cert.pem --content request.json | curl ${ackEndpoint} --cacert service_cert.pem --data-binary @- -H "content-type: application/cose"`;
+      execSync(ackCommand);
 	
-		  // Verify the activation of the member
-		  const membersEndpoint = "https://<ccf-node-address>/gov/members";
-		  const membersResponse = axios.get(membersEndpoint);
-		  const membersData = membersResponse.data;
-		  console.log(membersData);
-		*/
+      // Verify the activation of the member
+      const membersEndpoint = "https://<ccf-node-address>/gov/members";
+      const membersResponse = axios.get(membersEndpoint);
+      const membersData = membersResponse.data;
+      console.log(membersData);
+    */
     }
   );
   //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
@@ -144,5 +178,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	  console.log("Extension Deactivated");
+  console.log("Extension Deactivated");
 }
