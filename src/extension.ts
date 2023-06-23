@@ -69,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
           }
         );
 
+        // eslint-disable-next-line curly
         if (!templateSelection) return;
 
         vscode.commands.executeCommand(
@@ -82,16 +83,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  // FIXME: Cannot access the ccf commands from the dev container opened by the extension command (ccf: Start Network)
-  // FIXME: Can't be run/tested without environment set up & connected to environment
-  // Issue: Cannot find command 'ccf' - this is because the ccf commands are not installed in the dev container
-  // Solution: Install the ccf commands in the dev container
-  // How to install the ccf commands in the dev container?
-  // Install the ccf commands in the dev container using the extension command (ccf: Start Network) and the Dockerfile
-  // how to do this:
-  // 1. Create a Dockerfile that installs the ccf commands
-  // 2. Create a Dockerfile that installs the ccf commands and runs the ccf commands
-
   let startNetwork = vscode.commands.registerCommand(
     "vscode-azure-managed-ccf.startNetwork",
     async function () {
@@ -101,30 +92,50 @@ export function activate(context: vscode.ExtensionContext) {
         const terminal = vscode.window.createTerminal("Terminal");
 
         // Install Dependencies
-        terminal.sendText("npm --prefix ./js run install");
-
         setTimeout(() => {
-          // Build the JS app
-          terminal.sendText("npm --prefix ./js run build");
+          terminal.sendText("npm --prefix ./js install");
 
-          setTimeout(async () => {
-            // Start app using sandbox script
-            terminal.sendText(
-              "/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle ./js/dist/"
-            );
+          setTimeout(() => {
+            // Build the JS app
+            terminal.sendText("npm --prefix ./js run build");
 
-            // create a first member
-            const terminal2 = vscode.window.createTerminal("Terminal2");
-            const memberName = await vscode.window.showInputBox({
-              prompt: "Enter a name for the first member",
-              ignoreFocusOut: true,
-            });
+            setTimeout(async () => {
+              // Start app using sandbox script
+              terminal.sendText(
+                "/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle ./js/dist/"
+              );
+            }, 1000); // 1 second delay before starting app
+          }, 1000); // 1 second delay before building app
+        }, 1000); // 1 second delay before installing dependencies
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    }
+  );
+  //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
+  context.subscriptions.push(installDevContainer);
+  context.subscriptions.push(startNetwork);
+}
 
-            // won't run
-            terminal.sendText("keygenerator.sh --name " + memberName); 
+// This method is called when your extension is deactivated
+export function deactivate() {
+  console.log("Extension Deactivated");
+}
 
+// code in progress:
+/* // create a first member
+              const terminal2 = vscode.window.createTerminal("Terminal2");
+              const memberName = await vscode.window.showInputBox({
+                prompt: "Enter a name for the first member",
+                ignoreFocusOut: true,
+              });
+
+              // won't run
+              terminal2.sendText("keygenerator.sh --name " + memberName); */
+
+/*
             //FIXME: the below commands won't execute
-            /* // Start up a new terminal for network activation
+             // Start up a new terminal for network activation
             const networkActivation =
               vscode.window.createTerminal("Net. Activation");
 
@@ -141,14 +152,8 @@ export function activate(context: vscode.ExtensionContext) {
               'curl.sh https://localhost/gov/ack --cacert service_cert.pem --signing-key member0_privk.pem --signing-cert member0_cert.pem --header "Content-Type: application/json" --data-binary @request.json'
             ); // Send Acknowledgement */
 
-          }, 1000); // 1 second delay before starting app
-        }, 1000); // 1 second delay before building app
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-
-      /*
-      // FIXME: Below's code outlines the steps to initialize a network with one node and one member. 
+/*
+      // FIXME: Below's code outlines the steps to completing network governance 
       // Update and retrieve the latest state digest
       const updateStateDigestEndpoint = "https://<ccf-node-address>/gov/ack/update_state_digest";
       const updateStateDigestCommand = `curl ${updateStateDigestEndpoint} -X POST --cacert service_cert.pem --key new_member_privk.pem --cert new_member_cert.pem --silent | jq > request.json`;
@@ -169,14 +174,3 @@ export function activate(context: vscode.ExtensionContext) {
       const membersData = membersResponse.data;
       console.log(membersData);
     */
-    }
-  );
-  //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
-  context.subscriptions.push(installDevContainer);
-  context.subscriptions.push(startNetwork);
-}
-
-// This method is called when your extension is deactivated
-export function deactivate() {
-  console.log("Extension Deactivated");
-}
