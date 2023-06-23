@@ -1,3 +1,6 @@
+// FIXME: Remember, each time we make an update to the below code and want to run the reflected updates, we will need to rebuild the .vsix and reinstall the extension in our dev container.
+// _________________________________________________________________________________________________________________________________________________________________________________________
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import { execSync } from "child_process";
@@ -112,9 +115,58 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   );
+
+  let addUser = vscode.commands.registerCommand(
+    "vscode-azure-managed-ccf.addUser",
+    async function () {
+      // TODO: Plan for this command:
+      const memberName = await vscode.window.showInputBox({
+        prompt: "Enter a name for the member",
+        ignoreFocusOut: true,
+      });
+
+      const terminal2 = vscode.window.createTerminal("Terminal2");
+      terminal2.sendText("keygenerator.sh --name " + memberName);
+
+      // TODO: Activate the new member -- make sure to update name of ledger and member here
+      terminal2.sendText("curl https://contoso.confidential-ledger.azure.com/gov/ack/update_state_digest -X POST --cacert service_cert.pem --keymember0_privk.pem --cert member0_cert.pem --silent| jq > request.json");
+      terminal2.sendText('scurl.sh https://contoso.confidential-ledger.azure.com/gov/ack --cacert service_cert.pem--signing-key member0_privk.pem --signing-cert member0_cert.pem --header "Content-Type: application/json" --data-binary @request.json');
+    
+      /*
+      To add new users, first use the keygenerator.sh --name 'name that you choose here' 
+      This will createa public and private key pair for the users and the certificate
+        a) Run this command:  user0_id=$(openssl x509 -in "user0_cert.pem" -noout -fingerprint -sha256 | cut -d "=" -f 2 | sed 's/://g' | awk '{print tolower($0)}')
+
+        b) Createa file set_user0.json file by right clicking in the dev container column. Put in the following info: 
+        {
+        "actions": [
+            {
+            "name": "set_user",
+            "args": {
+                "cert": "-----BEGIN CERTIFICATE-----\... n7c3AgKUrAxzq\n-----END CERTIFICATE-----\n"
+                }
+            }
+            ]
+        }
+        c) create a vote_accept.json file and write in the following:
+        {
+        "ballot": "export function vote (proposal, proposerId) { return true }"
+        }
+
+        d) Now we propose the addition of the new user with the following command:
+        > scurl.sh --url https://explorers1.confidential-ledger.azure.com/gov/proposals --cacert service_cert.pem --signing-key member0_privk.pem --signing-cert member0_cert.pem --data-binary @set_user1.json -H "content-type: application/json"|jq -r '.proposal_id'`
+        After running this command, we will see some stuff generated. pay attention to the characters within the
+        (EXAMPLE... {"ballot_count":0,"proposal_id":"528387ec6a71bf27027d3263b2ab22e1e76a871552deb5138fd0d44248a148ea"...............)
+
+        e) Copy and paste that long number after the proposal_id (no quotes) and paste it into the following command where the member accepts the user addition proposal:
+        > scurl.sh https://explorers1.confidential-ledger.azure.com/gov/proposals/COPY AND PASTE RIGHT HERE!!!!/ballots --cacert service_cert.pem --signing-key member0_privk.pem --signing-cert member0_cert.pem --data-binary @vote_accept.json -H "content-type: application/json"
+      */
+
+    }); // End of addUser
   //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
   context.subscriptions.push(installDevContainer);
   context.subscriptions.push(startNetwork);
+  context.subscriptions.push(addUser);
 }
 
 // This method is called when your extension is deactivated
@@ -123,15 +175,10 @@ export function deactivate() {
 }
 
 // code in progress:
-/* // create a first member
-              const terminal2 = vscode.window.createTerminal("Terminal2");
-              const memberName = await vscode.window.showInputBox({
-                prompt: "Enter a name for the first member",
-                ignoreFocusOut: true,
-              });
+/* 
 
               // won't run
-              terminal2.sendText("keygenerator.sh --name " + memberName); */
+               */
 
 /*
             //FIXME: the below commands won't execute
