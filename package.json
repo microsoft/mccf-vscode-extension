@@ -15,15 +15,11 @@
     "commands": [
       {
         "command": "vscode-azure-managed-ccf.createCCFdevContainer",
-        "title": "MCCF: Start CCF App Environment"
+        "title": "MCCF: Create CCF App Environment"
       },
       {
         "command": "vscode-azure-managed-ccf.startNetwork",
         "title": "MCCF: Start CCF Network"
-      },
-      {
-        "command": "vscode-azure-managed-ccf.addUser",
-        "title": "MCCF: Add User"
       }
     ]
   },
