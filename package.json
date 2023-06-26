@@ -23,7 +23,7 @@
       },
       {
         "command": "vscode-azure-managed-ccf.addUser",
-        "title": "MCCF: Add User"
+        "title": "MCCF: Add Member"
       }
     ]
   },
