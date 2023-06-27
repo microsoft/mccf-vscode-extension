@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Opens the CCF App template in a dev container
         vscode.commands.executeCommand(
           "remote-containers.openRepositoryInUniqueVolume",
-          "https://github.com/microsoft/ccf-app-template"
+          "https://github.com/andpiccione/ccf-app-template"
         );
       }
 
