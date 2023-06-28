@@ -1,21 +1,26 @@
 
 # MCCF VSCode Extension
- The managed confidential consortium framework (MCCF) extension builds and deploys confidential networks in Azure.This extension allows users to seamlessly build and develop their CCF apps on a tested, trusted and managed virtual environment.
+
+The current workflow for Managed CCF users involves the development and testing of their own CCF applications using the [available CCF documentation and tools.](https://microsoft.github.io/CCF/main/build_apps/get_started.html) 
+
+To enhance the developer experience for Managed CCF customers, we have  developed a dedicated Visual Studio Code extension that aims to empower developers by providing a comprehensive set of features for local CCF application development and seamless deployment to Azure as Managed CCF instances.
+
+## Create your CCF Application
+1. To start your project, first set up the self-contained development environment and choose the template you'd like to use
+
+![](images/first_commandView.png)
+![Alt text](images/choose_template.png)
+> The feature allows users to run and build CCF app in its development container with ease. Users are able to choose between already existing CCF apps' templates that already have the files and dependencies installed.
+
+## Start your Network
+1. To initialize your CCF network
+\
+\
+\
 
 
 
 
-
-## 1. Features
-**SET UP LOCAL DEVELOPMENT ENVIRONMENT**
-
-A TEE (Trusted Execution Environment) with all neccesary dependencies and files for running and building CCF apps locally in a virtual environment through Docker can be set up with only the touch of a button 
-
-
-
-**CREATE A CCF APP** 
-
-The extension allows users to run and build CCF app in its development container with ease. Users are able to choose between already existing CCF apps' templates that already have the files and dependencies installed.
 
 
 
