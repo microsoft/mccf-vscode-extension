@@ -28,6 +28,10 @@
       {
         "command": "vscode-azure-managed-ccf.startCCFNetworkDocker",
         "title": "MCCF: Start CCF Network in Docker container"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.mccfDeployment",
+        "title": "MCCF: Create MCCF Instance"
       }
     ]
   },
@@ -62,7 +66,6 @@
   "dependencies": {
     "@azure/arm-compute": "^21.0.0",
     "@azure/arm-resources": "^5.2.0",
-    "@azure/identity": "^3.2.3",
-    "@microsoft/vscode-azext-utils": "^2.0.1"
+    "@azure/identity": "^3.2.3"
   }
 }
