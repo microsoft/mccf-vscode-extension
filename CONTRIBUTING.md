@@ -1,18 +1,17 @@
 ---
-
 ---
 
 # Contributing
 
 Welcome contributors to your project then list particular contribution procedures your team follows including but not limited to the sections below.
 
-Sample text may go like this. *Welcome and thank you for your interest
+Sample text may go like this. _Welcome and thank you for your interest
 in contributing to **project-name**! Before contributing to this
 project, please review this document for policies and procedures which
 will ease the contribution and review process for everyone. If you have
 questions, please contact **contact-method**. This project adopted Inner
 Source
-[model](https://oe-documentation.azurewebsites.net/inner-source/index.html).*
+[model](https://oe-documentation.azurewebsites.net/inner-source/index.html)._
 
 ## Issues and Feature Requests
 
