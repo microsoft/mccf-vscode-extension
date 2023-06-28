@@ -107,9 +107,26 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  let dockercontainer = vscode.commands.registerCommand("vscode-azure-managed-ccf.dockercontainer", async function () {
+        try {
+          const terminal = vscode.window.createTerminal("Terminal");
+            terminal.sendText("docker build -t ccf-app-template:js-virtual -f docker/ccf_app_js.virtual .");
+            console.log("Docker image built successfully!");
+            terminal.sendText('docker run -it --rm -p 8000:8000 ccf-app-template:js-virtual');
+          } catch (error) {
+            console.error("Failed to build Docker image:", error);
+          }
+    } // end of else if statement
+
+    
+);
+
+
+
   //https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/ccf-app-template
   context.subscriptions.push(installDevContainer);
   context.subscriptions.push(startNetwork);
+  context.subscriptions.push(dockercontainer);
 }
 
 // This method is called when your extension is deactivated
