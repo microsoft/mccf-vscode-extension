@@ -17,7 +17,6 @@ const mccfInstanceName = readlineSync.question("Enter the MCCF instance name: ")
 const credential = new DefaultAzureCredential();
 const resourceClient = new ResourceManagementClient(credential, subscriptionId);
 
-async function createMCCFInstance() {
     // Define the MCCF instance parameters
     const mccfInstanceParams = {
       location: location,
