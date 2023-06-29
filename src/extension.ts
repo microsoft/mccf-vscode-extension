@@ -1,38 +1,40 @@
-import * as vscode from "vscode";
-import { createDevContainerCommand } from "./commands/createDevContainer";
-import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
-import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
+const { DefaultAzureCredential } = require("@azure/identity");
+const { ResourceManagementClient } = require("@azure/arm-resources");
+const readlineSync = require('readline-sync');
 
-// This method is called when your extension is activated
-export function activate(context: vscode.ExtensionContext) {
-  console.log("Extension Activated");
+export async function createMCCFInstance() {
+    try {
+        // Prompt the user for input
+        const subscriptionId = readlineSync.question("Enter the subscription ID: ");
+        const resourceGroupName = readlineSync.question("Enter the resource group name: ");
+        const location = readlineSync.question("Enter the location: ");
+        const mccfInstanceName = readlineSync.question("Enter the MCCF instance name: ");
 
-  // COMMAND: Create CCF project in devcontainer
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createCCFDevContainer",
-      createDevContainerCommand
-    )
-  );
+        const credential = new DefaultAzureCredential();
+        const resourceClient = new ResourceManagementClient(credential, subscriptionId);
 
-  // COMMAND: Start CCF network in devcontainer
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.startCCFNetworkDevContainer",
-      startCCFNetworkDevContainer
-    )
-  );
+        // Define the MCCF instance parameters
+        const mccfInstanceParams = {
+            location: location,
+            sku: {
+                name: "Standard"
+            },
+            properties: {
+                parentId: "/",
+                tenantId: "<your-tenant-id>"
+            }
+        };
 
-  // COMMAND: Start CCF network in docker container
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.startCCFNetworkDocker",
-      startCCFNetworkDocker
-    )
-  );
-}
+        // Create the MCCF instance
+        const mccfInstance = await resourceClient.resources.beginCreateOrUpdate(
+            resourceGroupName,
+            "Microsoft.Management/managementGroupSubscriptions",
+            mccfInstanceName,
+            mccfInstanceParams
+        ).awaitCompletion();  // Wait for the operation to complete
 
-// This method is called when your extension is deactivated
-export function deactivate() {
-  console.log("Extension Deactivated");
+        console.log("MCCF instance created:", mccfInstance);
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
 }
