@@ -60,13 +60,13 @@ export async function submitProposalCommand() {
 
     // Run the proposal script using the exec sync function
     // How to pass in the parameters to the script?
-    //execSync('./scripts/proposalscript.sh', [network_url, certificate_dir, proposal_file, member_count]);
+    //execSync('./scripts/submit_proposal.sh', [network_url, certificate_dir, proposal_file, member_count]);
     // above not working, need to figure out how to pass in parameters to the script
-
+    //execSync(./scripts/submit_proposal.sh + network_url + certificate_dir + proposal_file + member_count);
     // Create terminal
     const terminal = vscode.window.createTerminal("Proposal Submission");
     terminal.show();
-    terminal.sendText("./scripts/proposalscript.sh " + network_url + " " + certificate_dir + " " + proposal_file + " " + member_count);
+    terminal.sendText("./scripts/submit_proposal.sh " + network_url + " " + certificate_dir + " " + proposal_file + " " + member_count);
 
     } catch (error) {
         console.error("Proposal could not be submitted", error);
