@@ -1,7 +1,6 @@
-
 # MCCF VSCode Extension
 
-We created a Visual Studio Code extension for [Managed CCF](https://techcommunity.microsoft.com/t5/azure-confidential-computing/microsoft-introduces-preview-of-azure-managed-confidential/ba-p/3648986) users to simplify and enhance their development experience. With this extension, users can seamlessly create, test, manage, and deploy their CCF applications directly within Visual Studio Code. By eliminating the need for external tools and [documentation]((https://microsoft.github.io/CCF/main/build_apps/get_started.html)), we streamline the workflow, making it faster and more efficient for Managed CCF customers.
+We created a Visual Studio Code extension for [Managed CCF](https://techcommunity.microsoft.com/t5/azure-confidential-computing/microsoft-introduces-preview-of-azure-managed-confidential/ba-p/3648986) users to simplify and enhance their development experience. With this extension, users can seamlessly create, test, manage, and deploy their CCF applications directly within Visual Studio Code. By eliminating the need for external tools and [documentation](https://microsoft.github.io/CCF/main/build_apps/get_started.html), we streamline the workflow, making it faster and more efficient for Managed CCF customers.
 
 One important aspect of the extension is providing a local sandbox, which offers users a self-contained development environment with all the necessary dependencies for developing applications locally. Additionally, we will incorporate templating, allowing users to quickly create and build CCF applications in JavaScript. Lastly, we aim to streamline the process of testing and deploying CCF applications to Managed CCF instances in Azure. All of these features combined enables users to build **confidential multi-party applications** with **customizable governance** and **auditability**.
 
@@ -42,18 +41,4 @@ Activate a network with one node and member to start a network all from docker *
 2. When choosing project folder, ensure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)
 > TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
 ## Submit Application Proposal
-[insert text here]
-
-
-
-
-
-## Lifecycle
-
-The MCCF VScode extension follows the [Modern Lifecycle](https://learn.microsoft.com/en-us/lifecycle/policies/modern). Follow the instructions [here](https://code.visualstudio.com/docs/editor/extension-marketplace) to get the latest updates of the extension.
-
-
-
-### Related Information 
-
- Visit <https://ccf.microsoft.com/> for more information about CCF apps and MCCF 
+Command currently still in development ...
