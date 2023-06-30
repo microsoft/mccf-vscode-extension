@@ -28,6 +28,10 @@
       {
         "command": "vscode-azure-managed-ccf.startCCFNetworkDocker",
         "title": "MCCF: Start CCF Network in Docker container"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.submitProposal",
+        "title": "MCCF: Submit Proposal"
       }
     ]
   },
