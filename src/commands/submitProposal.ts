@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import { execSync } from 'child_process'; 
+import path = require("path");
 
-export async function submitProposalCommand() {
+// context: vscode.ExtensionContext is for the extension to be able to access the extension path
+export async function submitProposalCommand(context: vscode.ExtensionContext) {
 
     try{
     // Prompt user for network URL
@@ -17,7 +19,7 @@ export async function submitProposalCommand() {
     }
 
     // Prompt user for certificate Directory
-    const certificate_dir = await vscode.window.showOpenDialog({
+    const certificateDir = await vscode.window.showOpenDialog({
         canSelectFiles: false,
         canSelectFolders: true,
         canSelectMany: false,
@@ -26,7 +28,7 @@ export async function submitProposalCommand() {
     });
 
     // If no directory is selected, report it to the user
-    if (!certificate_dir || certificate_dir.length === 0) {
+    if (!certificateDir || certificateDir.length === 0) {
         vscode.window.showInformationMessage("No directory selected");
         return;
     }
@@ -68,7 +70,18 @@ export async function submitProposalCommand() {
     }
 
     // Run the proposal script using the exec sync function
-    execSync("./scripts/submit_proposal.sh --network-url " + networkUrl + " --certificate-dir " + certificate_dir + " --proposal-file " + proposalFile + " --member-count " + memberCount);
+    const result = execSync("bash " + context.extensionPath + "/src/scripts/submit_proposal.sh").toString();
+
+    console.info(result);
+
+    // Get the path of the certificate directory
+    const certificateDirPaths = certificateDir.map(uri => uri.fsPath);
+    
+    // Convert the path to string
+    const certificateDirString = certificateDirPaths.map(dir => path.join(dir));
+
+    // Run the proposal script using the exec sync function
+    execSync("./scripts/submit_proposal.sh --network-url " + networkUrl.toString() + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFile.toString() + " --member-count " + memberCount.toString());
 
     } catch (error) {
         console.error("Proposal could not be submitted", error);
