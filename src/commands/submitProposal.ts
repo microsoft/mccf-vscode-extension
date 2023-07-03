@@ -5,13 +5,13 @@ export async function submitProposalCommand() {
 
     try{
     // Prompt user for network URL
-    const network_url = await vscode.window.showInputBox({
+    const networkUrl = await vscode.window.showInputBox({
         prompt: "Enter the network URL",
         placeHolder: "https://explorers1.confidential-ledger.azure.com" // temporary placeholder
     });
 
     // If no URL is entered, report it to the user
-    if (!network_url) {
+    if (!networkUrl) {
         vscode.window.showInformationMessage("No URL entered");
         return;
     }
@@ -32,7 +32,7 @@ export async function submitProposalCommand() {
     }
 
     // Prompt user for proposal file
-    const proposal_file = await vscode.window.showOpenDialog({
+    const proposalFile = await vscode.window.showOpenDialog({
         canSelectFiles: true,
         canSelectFolders: false,
         canSelectMany: false,
@@ -41,32 +41,34 @@ export async function submitProposalCommand() {
     });
 
     // If no file is selected, report it to the user
-    if (!proposal_file || proposal_file.length === 0) {
+    if (!proposalFile || proposalFile.length === 0) {
         vscode.window.showInformationMessage("No file selected");
         return;
     }
 
     // Prompt user for member count (integer value)
-    const member_count = await vscode.window.showInputBox({
+    const memberCountInput = await vscode.window.showInputBox({
         prompt: "Enter the number of members",
-        placeHolder: "1" // temporary placeholder
+        placeHolder: "1 or more" // temporary placeholder
     });
 
     // If no member count is entered, report it to the user
-    if (!member_count) {
+    if (!memberCountInput) {
         vscode.window.showInformationMessage("No member count entered");
         return;
     }
 
+    // Check if member count is an integer
+    const memberCount = parseInt(memberCountInput);
+
+    // If member count is not an integer, report it to the user
+    if (isNaN(memberCount)|| !Number.isInteger(memberCount) || memberCount < 1) {
+        vscode.window.showInformationMessage("Invalid member count. Please enter a positive integer value");
+        return;
+    }
+
     // Run the proposal script using the exec sync function
-    // How to pass in the parameters to the script?
-    //execSync('./scripts/submit_proposal.sh', [network_url, certificate_dir, proposal_file, member_count]);
-    // above not working, need to figure out how to pass in parameters to the script
-    //execSync(./scripts/submit_proposal.sh + network_url + certificate_dir + proposal_file + member_count);
-    // Create terminal
-    const terminal = vscode.window.createTerminal("Proposal Submission");
-    terminal.show();
-    terminal.sendText("./scripts/submit_proposal.sh " + network_url + " " + certificate_dir + " " + proposal_file + " " + member_count);
+    execSync("./scripts/submit_proposal.sh --network-url " + networkUrl + " --certificate-dir " + certificate_dir + " --proposal-file " + proposalFile + " --member-count " + memberCount);
 
     } catch (error) {
         console.error("Proposal could not be submitted", error);
