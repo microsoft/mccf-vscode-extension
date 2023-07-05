@@ -81,8 +81,14 @@ export async function submitProposalCommand(context: vscode.ExtensionContext) {
     const certificateDirString = certificateDirPaths.map(dir => path.join(dir));
 
     // Run the proposal script using the exec sync function
-    execSync("./scripts/submit_proposal.sh --network-url " + networkUrl.toString() + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFile.toString() + " --member-count " + memberCount.toString());
+    const outputChannel = vscode.window.createOutputChannel("Script Output");
 
+    const submitScriptCommand = execSync("./scripts/submit_proposal.sh --network-url " + networkUrl.toString() + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFile.toString() + " --member-count " + memberCount.toString());
+
+    outputChannel.appendLine(submitScriptCommand.toString());
+
+    outputChannel.show();
+    
     } catch (error) {
         console.error("Proposal could not be submitted", error);
         vscode.window.showErrorMessage("Proposal failed to submit");
