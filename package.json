@@ -32,6 +32,10 @@
       {
         "command": "vscode-azure-managed-ccf.submitProposal",
         "title": "MCCF: Submit Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.addMember",
+        "title": "MCCF: Add Member"
       }
     ]
   },
