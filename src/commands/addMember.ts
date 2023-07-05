@@ -17,10 +17,11 @@ export async function addMemberCommand(context: vscode.ExtensionContext){
         }
     
         // Run the script using the user input as a parameter
-        const addMember = execSync("bash " + context.extensionPath + "src/scripts/addMember.sh --name" + memberName);
+        const addMember = execSync("bash " + context.extensionPath + "src/scripts/addMember.sh --name " + memberName);
 
     } catch (error) {
         console.error(error);
+        // show the error
         vscode.window.showErrorMessage("Error adding member");
     }
     
