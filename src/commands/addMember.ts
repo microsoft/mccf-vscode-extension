@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { exec, execSync } from 'child_process'; 
+import path = require("path");
 const fs = require('fs');
 
 export async function addMember(context: vscode.ExtensionContext){
@@ -17,20 +18,19 @@ export async function addMember(context: vscode.ExtensionContext){
             return;
         }
     
-        // Create a certificate directory folder where we will store the member certificates
+        // Create a certificate directory folder in the current environment where we will store the member certificates
         const folderName = "Certificates";
-        if (!fs.existsSync(folderName)){
-            fs.mkdirSync(folderName);
+        const currentPath = path.join(process.cwd(), folderName);
+        if (!fs.existsSync(currentPath)){
+            fs.mkdirSync(currentPath);
         }
 
         // Enter the folder 
         process.chdir(folderName);
 
         // Run the script using the user input as a parameter
-        // context.extensionPath is the path to the extension folder but is not working
         const addMember = execSync("bash " + context.extensionPath + "/src/scripts/addMember.sh --name " + memberName + " 2>&1");
    
-        
     } catch (error) {
         console.error(error);
         // show the error
