@@ -34,7 +34,7 @@ export async function addMember(context: vscode.ExtensionContext) {
             }
 
             // Generate the member certificates using the keygenerator.sh script
-            const generateMember = execSync(
+            execSync(
                 "bash " + context.extensionPath + "/src/scripts/generateMember.sh --name " + memberName + " 2>&1"
             );
 
@@ -70,7 +70,6 @@ export async function addMember(context: vscode.ExtensionContext) {
 
             // Navigate to the root directory of local environment
             const parentDirectory = path.join(process.cwd(), '..');
-
             process.chdir(parentDirectory);
 
             // Write the .json file into the current filepath
