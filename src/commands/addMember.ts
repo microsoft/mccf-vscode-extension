@@ -14,7 +14,7 @@ export async function addMember(context: vscode.ExtensionContext) {
             if (!fs.existsSync(folderName)) {
                 fs.mkdirSync(folderName);
             }
-            // Enter current folder
+            // Enter current folder (Certificates folder)
             process.chdir(folderName);
         }
         catch (error) {
@@ -37,10 +37,10 @@ export async function addMember(context: vscode.ExtensionContext) {
                 return;
             }
 
+            console.log("Generating member certificates...");
+            
             // Generate the member certificates using the keygenerator.sh script
-            execSync(
-                "bash " + context.extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1"
-            );
+            execSync("bash " + context.extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1");
 
             // Show success message to user 
             vscode.window.showInformationMessage("Member " + memberName + " created successfully");
