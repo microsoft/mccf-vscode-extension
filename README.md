@@ -37,7 +37,8 @@ Activate a network with one node and member to start a network all from docker *
 1. To build a runtime image of the JavaScript application via docker, you will get the option to "Select Dockerfile." Select the file in the path: /workspaces/{your-chosen-template}/docker/ccf_app_js.virtual
 ![Alt text](images/DockerfileOptions.png)
 
-2. When choosing project folder, ensure that you are in the root folder of your project workspace: ![Alt text](images/ProjFolderChoice.png)
+2. When choosing project folder, ensure that you are in the root folder of your project workspace: 
+![Alt text](images/ProjFolderChoice.png)
 
 After starting the network in a Docker Container, your output should look similar to the following output:
 
