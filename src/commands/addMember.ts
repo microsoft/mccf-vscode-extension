@@ -5,6 +5,7 @@ const fs = require("fs");
 
 export async function addMember(context: vscode.ExtensionContext) {
 
+    /* 
     // Create a certificate directory folder in the current environment where member certificates will be stored
     const certificateFolder = "Certificates";
 
@@ -102,5 +103,24 @@ export async function addMember(context: vscode.ExtensionContext) {
 
     // Call the memberGenerator function
     memberGenerator(memberName);
+    */
 
+    // Have program create new folder called "certificates" in the current directory
+    execSync("bash mkdir certificates");
+
+    // Prompt user to enter member name
+    const memberName = await vscode.window.showInputBox({
+        prompt: "Enter the member name",
+        placeHolder: "Member name",
+    });
+
+    // If no member name is entered, report it to the user
+    if (!memberName || memberName.length === 0) {
+        vscode.window.showInformationMessage("No member name entered");
+        return;
+    }
+
+    // Create a new file called "memberName_cert.pem" in the certificates folder
+    //execSync("openssl req -new -x509 -keyout certificates/" + memberName + "_privk.pem -out certificates/" + memberName + "_cert.pem -days 365 -subj '/CN=" + memberName + "'");
+    execSync("bash touch " + memberName);
 }
