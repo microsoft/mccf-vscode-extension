@@ -58,7 +58,7 @@ export async function addMember(context: vscode.ExtensionContext) {
     function createJsonFile(memberName: string) {
         try {
             // Generate a .JSON file for the user with the user's public certificate information
-            // ********Will need to parse through the membername_cert.pem file to get the public certificate information
+            // ********Will need to parse through the membername_cert.pem file to get the public certificate information. This has not been done yet
 
             const fileName = "set_" + memberName + ".json";
             const fileContent = {
