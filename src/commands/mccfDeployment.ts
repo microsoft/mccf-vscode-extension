@@ -1,40 +1,39 @@
-const { DefaultAzureCredential } = require("@azure/identity");
-const { ResourceManagementClient } = require("@azure/arm-resources");
-const readlineSync = require('readline-sync');
+import { execSync } from "child_process";
+import { window } from "vscode";
+const {exec} = require("child_process");
 
 export async function createMCCFInstance() {
-    // Prompt the user for input
-    const subscriptionId = readlineSync.question("Enter the subscription ID: ");
-    const resourceGroupName = readlineSync.question("Enter the resource group name: ");
-    const location = readlineSync.question("Enter the location: ");
-    const mccfInstanceName = readlineSync.question("Enter the MCCF instance name: ");
+    try {
+        exec('az --version', (error: any, stdout: string, stderr: any) => {
+            if (error) {
+                console.log(error);
+                return console.log('Please install Azure CLI before proceeding: ' + error);
+            }
 
-    const credential = new DefaultAzureCredential();
-    const resourceClient = new ResourceManagementClient(credential, subscriptionId);
+            // Check the output for Azure CLI version information
+            const versionRegex = /azure-cli (\d+\.\d+\.\d+)/i;
+            // Get the version number from the output.
+             const match = stdout.match(versionRegex);
 
-    // Define the MCCF instance parameters
-    const mccfInstanceParams = {
-        location: location,
-        sku: {
-            name: "Standard"
-        },
-        properties: {
-            parentId: "/",
-            tenantId: "<your-tenant-id>"
-        }
-    };
+           // Returns the name of the current branch, or null if not on a branch.
+           if (match && match[1]) {
+                console.log(match);
+                return Promise.resolve(match[1]);
+            } else {
+                console.log(stdout);
+                return Promise.resolve(null);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error);
+    }
 
-    // Create the MCCF instance
-    const mccfInstance = await resourceClient.resources.beginCreateOrUpdate(
-        resourceGroupName,
-        "Microsoft.Management/managementGroupSubscriptions",
-        mccfInstanceName,
-        mccfInstanceParams
-    ).awaitCompletion();  // Wait for the operation to complete
+    
+    const certificateDir = await window.showInputBox({ prompt: 'Enter the certificate directory:' });
+    const identifier = await window.showInputBox({ prompt: 'Enter the identifier:' });
+    const names = await window.showInputBox({ prompt: 'Enter the name of your CCF Network' });
+    const resourceGroup = await window.showInputBox({ prompt: 'Enter the resource group you want this instance to be placed' });
 
-    console.log("MCCF instance created:", mccfInstance);
+    execSync(`az confidentialledger managedccfs create --members "[{certificate:${certificateDir},identifier:${identifier}}]"--name ${names} --resource-group ${resourceGroup}`);
 }
-
-createMCCFInstance().catch((error) => {
-    console.error("Error occurred:", error);
-});
