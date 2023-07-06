@@ -6,16 +6,16 @@ const fs = require("fs");
 export async function addMember(context: vscode.ExtensionContext) {
 
     // Create a certificate directory folder in the current environment where member certificates will be stored
-    const folderName = "Certificates";
-    const currentPath = path.join(process.cwd(), folderName);
+    const certificateFolder = "Certificates";
 
-    function createFolder(directoryPath: string = process.cwd()) {
+    function createFolder(folderName: string = process.cwd()) {
+        // Check if the folder exists. If not, create a certificates folder
         try {
-            if (!fs.existsSync(directoryPath)) {
-                fs.mkdirSync(directoryPath);
+            if (!fs.existsSync(folderName)) {
+                fs.mkdirSync(folderName);
             }
             // Enter current folder
-            process.chdir(directoryPath);
+            process.chdir(folderName);
         }
         catch (error) {
             console.error(error);
@@ -25,17 +25,21 @@ export async function addMember(context: vscode.ExtensionContext) {
 
     // Prompt user to enter member name
     async function memberGenerator(memberName: string) {
+        // Read contents of certificates folder
+        const currentPath = path.join(process.cwd(), certificateFolder);
+        const files = fs.readdirSync(currentPath);
+
         try {
             // If the member name already exists, report it to the user
             // If the folder contains a file with membername already, report it to the user and do not create new member
-            if (currentPath.includes(memberName + "_cert.pem" || memberName + "_privk.pem")) {
+            if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem")) ) {
                 vscode.window.showInformationMessage("Member already exists");
                 return;
             }
 
             // Generate the member certificates using the keygenerator.sh script
             execSync(
-                "bash " + context.extensionPath + "/src/scripts/generateMember.sh --name " + memberName + " 2>&1"
+                "bash " + context.extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1"
             );
 
             // Show success message to user 
@@ -77,7 +81,7 @@ export async function addMember(context: vscode.ExtensionContext) {
 
         } catch (error) {
             console.error(error);
-            vscode.window.showErrorMessage("Error creating .json file");
+            vscode.window.showErrorMessage("Error creating member json file");
         }
     }
 
@@ -94,7 +98,7 @@ export async function addMember(context: vscode.ExtensionContext) {
     }
 
     // Call the createFolder function
-    createFolder(currentPath);
+    createFolder(certificateFolder);
 
     // Call the memberGenerator function
     memberGenerator(memberName);
