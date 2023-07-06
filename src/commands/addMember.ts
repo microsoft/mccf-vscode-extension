@@ -5,7 +5,7 @@ const fs = require("fs");
 
 export async function addMember(context: vscode.ExtensionContext) {
 
-    /* 
+
     // Create a certificate directory folder in the current environment where member certificates will be stored
     const certificateFolder = "Certificates";
 
@@ -17,6 +17,8 @@ export async function addMember(context: vscode.ExtensionContext) {
             }
             // Enter current folder (Certificates folder)
             process.chdir(folderName);
+
+            console.log("checkpoint --1 "); // testing purposes
         }
         catch (error) {
             console.error(error);
@@ -43,6 +45,7 @@ export async function addMember(context: vscode.ExtensionContext) {
             // Generate the member certificates using the keygenerator.sh script
             execSync("bash " + context.extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1");
 
+            console.log("checkpoint --2 "); // testing purposes
             // Show success message to user 
             vscode.window.showInformationMessage("Member " + memberName + " created successfully");
 
@@ -73,6 +76,7 @@ export async function addMember(context: vscode.ExtensionContext) {
                 ]
             };
 
+            console.log("checkpoint --3 "); // testing purposes
             // Navigate to the root directory of local environment
             const parentDirectory = path.join(process.cwd(), '..');
             process.chdir(parentDirectory);
@@ -103,10 +107,13 @@ export async function addMember(context: vscode.ExtensionContext) {
 
     // Call the memberGenerator function
     memberGenerator(memberName);
-    */
 
+    /*
     // Have program create new folder called "certificates" in the current directory
-    execSync("bash mkdir certificates");
+    //execSync("bash mkdir certificates");
+
+    // alternative:
+    //fs.mkdirSync("certificates");
 
     // Prompt user to enter member name
     const memberName = await vscode.window.showInputBox({
@@ -114,13 +121,17 @@ export async function addMember(context: vscode.ExtensionContext) {
         placeHolder: "Member name",
     });
 
-    // If no member name is entered, report it to the user
-    if (!memberName || memberName.length === 0) {
-        vscode.window.showInformationMessage("No member name entered");
-        return;
-    }
+
+    // get extension path
+    //const extensionPath = context.extensionPath;
+
+    //console.log("next command 2: ");
+    // print out extension path as string
+    //vscode.window.showInformationMessage(extensionPath);
+    //execSync("bash " + extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1");
 
     // Create a new file called "memberName_cert.pem" in the certificates folder
     //execSync("openssl req -new -x509 -keyout certificates/" + memberName + "_privk.pem -out certificates/" + memberName + "_cert.pem -days 365 -subj '/CN=" + memberName + "'");
-    execSync("bash touch " + memberName);
+    //fs.writeFileSync(memberName);
+    */
 }
