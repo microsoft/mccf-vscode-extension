@@ -1,28 +1,16 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
 const {exec} = require("child_process");
+import * as vscode from 'vscode';
 
 export async function createMCCFInstance() {
     try {
-        exec('az --version', (error: any, stdout: string, stderr: any) => {
+        exec('az --version', (error: any) => {
             if (error) {
                 console.log(error);
                 return console.log('Please install Azure CLI before proceeding: ' + error);
             }
 
-            // Check the output for Azure CLI version information
-            const versionRegex = /azure-cli (\d+\.\d+\.\d+)/i;
-            // Get the version number from the output.
-             const match = stdout.match(versionRegex);
-
-           // Returns the name of the current branch, or null if not on a branch.
-           if (match && match[1]) {
-                console.log(match);
-                return Promise.resolve(match[1]);
-            } else {
-                console.log(stdout);
-                return Promise.resolve(null);
-            }
         });
     } catch (error) {
         console.log(error);
@@ -36,5 +24,11 @@ export async function createMCCFInstance() {
     const names = await window.showInputBox({ prompt: 'Enter the name of your CCF Network' });
     const resourceGroup = await window.showInputBox({ prompt: 'Enter the resource group you want this instance to be placed' });
 
-    execSync(`az confidentialledger managedccfs create --members "[{certificate:${certificateDir},identifier:${identifier}}]"--name ${names} --resource-group ${resourceGroup}`);
+    if (!certificateDir || !identifier || !names || !resourceGroup) {
+        vscode.window.showErrorMessage('Please enter all the required fields and try again');
+    }
+
+    execSync(`az confidentialledger managedccfs create --members "[{certificate:'${certificateDir}',identifier:'${identifier}'}]"--name ${names} --resource-group ${resourceGroup}`);
+    
+    vscode.window.showInformationMessage('MCCF instance created successfully');
 }
