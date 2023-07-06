@@ -4,7 +4,7 @@ import path = require("path");
 const fs = require("fs");
 
 export async function addMember(context: vscode.ExtensionContext) {
-    
+
     // Create a certificate directory folder in the current environment where member certificates will be stored
     const folderName = "Certificates";
     const currentPath = path.join(process.cwd(), folderName);
@@ -37,13 +37,48 @@ export async function addMember(context: vscode.ExtensionContext) {
             const generateMember = execSync(
                 "bash " + context.extensionPath + "/src/scripts/generateMember.sh --name " + memberName + " 2>&1"
             );
-            
+
             // Show success message to user 
             vscode.window.showInformationMessage("Member " + memberName + " created successfully");
+
+            // Create the .json file for the member
+            createJsonFile(memberName);
 
         } catch (error) {
             console.error(error);
             vscode.window.showErrorMessage("Error adding member");
+        }
+    }
+
+    // Create the .json file for the member
+    function createJsonFile(memberName: string) {
+        try {
+            // Generate a .JSON file for the user with the user's public certificate information
+            // ********Will need to parse through the membername_cert.pem file to get the public certificate information
+
+            const fileName = "set_" + memberName + ".json";
+            const fileContent = {
+                "actions:": [
+                    {
+                        "name": "set_user",
+                        "args": {
+                            "cert": "-----BEGIN CERTIFICATE----- \insert parsed information here\ -----END CERTIFICATE-----\n"
+                        }
+                    }
+                ]
+            };
+
+            // Navigate to the root directory of local environment
+            const parentDirectory = path.join(process.cwd(), '..');
+
+            process.chdir(parentDirectory);
+
+            // Write the .json file into the current filepath
+            fs.writeFileSync(fileName, JSON.stringify(fileContent));
+
+        } catch (error) {
+            console.error(error);
+            vscode.window.showErrorMessage("Error creating .json file");
         }
     }
 
@@ -64,4 +99,5 @@ export async function addMember(context: vscode.ExtensionContext) {
 
     // Call the memberGenerator function
     memberGenerator(memberName);
+
 }
