@@ -29,6 +29,7 @@ export async function createMCCFInstance() {
         return Promise.reject(error);
     }
 
+    execSync('az account set --subscription 027da7f8-2fc6-46d4-9be9-560706b60fec');
     
     const certificateDir = await window.showInputBox({ prompt: 'Enter the certificate directory:' });
     const identifier = await window.showInputBox({ prompt: 'Enter the identifier:' });
