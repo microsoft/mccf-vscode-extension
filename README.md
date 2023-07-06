@@ -19,7 +19,7 @@ Use MCCF functions to quickly create the development environment with all necess
 ## Start a CCF Network
 Activate a network with one node and member to start a network all from docker **OR** the devcontainer. The option is left to users as it allows non-devconatiner users to start a CCF  network on their local environment
 ### Start Network in DevContainer
-1. Upon starting the network in a DevContainer, you will be given the option to choose a project folder. Make sure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)![Alt text](image.png)
+1. Upon starting the network in a DevContainer, you will be given the option to choose a project folder. Make sure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)![Alt text](images/ProjFolderChoice.png)
 
 2. You should see something similar to the following output generating in the terminal. This is how you will know your network has been successfully set up:
 ``` bash
@@ -35,13 +35,14 @@ Activate a network with one node and member to start a network all from docker *
 ```
 ### Start Network in Docker Container
 1. To build a runtime image of the JavaScript application via docker, you will get the option to "Select Dockerfile." Select the file in the path: /workspaces/{your-chosen-template}/docker/ccf_app_js.virtual
-![Alt text](image-1.png)
+![Alt text](images/DockerfileOptions.png)
 
-2. When choosing project folder, ensure that you are in the root folder of your project workspace: ![Alt text](image.png)
+2. When choosing project folder, ensure that you are in the root folder of your project workspace: ![Alt text](images/ProjFolderChoice.png)
 
-After starting the network in a Docker Container, your output should look similar to the following output: 
+After starting the network in a Docker Container, your output should look similar to the following output:
 
-![Alt text](image-2.png)
+ ![Alt text](images/DockerContainerResult.png)
+
 
 > TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
 
