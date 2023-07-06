@@ -43,7 +43,3 @@ Activate a network with one node and member to start a network all from docker *
 After starting the network in a Docker Container, your output should look similar to the following output:
 
  ![Alt text](images/DockerContainerResult.png)
-
-
-> TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
-
