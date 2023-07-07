@@ -2,21 +2,23 @@ import * as vscode from "vscode";
 import { exec, execSync } from "child_process";
 import path = require("path");
 import { chdir } from "process";
+import { error } from "console";
 const fs = require("fs");
 
 export async function addMember(specialContext: vscode.ExtensionContext) {
-
     async function createFolder(folderName: string) {
+        // Create a certificate directory path accessible by all functions in this command
+        const certificatePath = path.join(process.cwd(), certificateFolder);
 
         // Check if the folder exists in the current file system. If not, create a certificates folder
         try {
             if (!fs.existsSync(certificatePath)) {
                 fs.mkdirSync(certificatePath);
-                vscode.window.showInformationMessage(folderName + " directory created successfully"); // show in the extension environment
+                vscode.window.showInformationMessage(
+                    folderName + " directory created successfully"
+                ); // show in the extension environment
             }
-
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
             vscode.window.showErrorMessage("Error creating certificates folder");
         }
@@ -24,29 +26,23 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
 
     // Member Generator function that runs the keygenerator.sh script to generate member certificates
     async function memberGenerator(memberName: string) {
+        // Create a certificate directory path accessible by all functions in this command
+        const certificatePath = path.join(process.cwd(), certificateFolder);
 
-        // Translate our certificate path to a wsl path
-        const currentPathWsl = execSync(`wsl wslpath -u '${certificatePath}'`);
-
-        // Read the files in the current directory
+        // Access the files in the certificate folder directory
         const files = fs.readdirSync(certificatePath);
         try {
             // If the folder contains a file with membername already, report it to the user and do not overwrite member certificates
             if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem"))) {
-                vscode.window.showWarningMessage("Member already exists. Please enter a unique member name");
+                vscode.window.showWarningMessage(
+                    "Member already exists. Please enter a unique member name"
+                );
                 return;
             }
-
             vscode.window.showInformationMessage("Generating member certificates..."); // show in the extension environment
-
-            // The following line translates the windows directory path to our extension into a wsl path
-            const result = execSync(`wsl wslpath -u '${specialContext.extensionPath}'`);
 
             // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
             execSync(`(cd ${certificatePath.toString().trim()} && wsl bash '${result.toString().trim()}/src/scripts/keygenerator.sh' --name ${memberName})`);
-
-            // Create the .json file for the member
-            //createJsonFile(memberName);
 
         } catch (error) {
             console.error(error);
@@ -54,54 +50,47 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         }
 
         // Show success message to user
-        vscode.window.showInformationMessage("Member " + memberName + " created successfully");
-    }
-
-    // Create the .json file for the member - SCRAP CODE
-    function createJsonFile(memberName: string) {
-        try {
-            // Generate a .JSON file for the user with the user's public certificate information
-            // ********Will need to parse through the membername_cert.pem file to get the public certificate information. This has not been done yet
-
-            const fileName = "set_" + memberName + ".json";
-            const fileContent = {
-                "actions:": [
-                    {
-                        "name": "set_user",
-                        "args": {
-                            "cert": "-----BEGIN CERTIFICATE----- \insert parsed information here\ -----END CERTIFICATE-----\n"
-                        }
-                    }
-                ]
-            };
-
-            console.log("checkpoint --3 "); // testing purposes
-            // Navigate to the root directory of local environment
-            const parentDirectory = path.join(process.cwd(), '..');
-            process.chdir(parentDirectory);
-
-            // Write the .json file into the current filepath
-            fs.writeFileSync(fileName, JSON.stringify(fileContent));
-
-        } catch (error) {
-            console.error(error);
-            vscode.window.showErrorMessage("Error creating member json file");
-        }
+        vscode.window.showInformationMessage(
+            "Member " + memberName + " created successfully"
+        );
     }
 
     // Function that runs the add_user.sh script to create user JSON file and later add them to the network
+    // FIXME: This function is not working as intended. It is not creating the user JSON file or adding the user to the network. Still working on
     async function addUserProposal(memberName: string) {
+        // Create a folder directory called ProposalFiles
+        const proposalFolder = "ProposalFiles";
 
-        // Command for running addUser.sh script: ./add_user.sh --cert-file /path/to/cert.pem --dest-folder /path/to/destination/folder
-        // Access the files in the certificate folder directory
-        const files = fs.readdirSync(certificatePath);
+        // Create a proposal folder directory path
+        const proposalPath = path.join(process.cwd(), proposalFolder);
 
-        // Look in the files to find the file name that matches: memberName_cert.pem
-        const certFile = files.find((file: string) => file.includes(memberName + "_cert.pem"));
+        if (!fs.existsSync(proposalPath)) {
+            fs.mkdirSync(proposalPath);
+            vscode.window.showInformationMessage(
+                proposalFolder + " directory created successfully"
+            ); // show in the extension environment
+        }
 
-    }
+        // Creation the member's specific certificate file path
+        const certificatePath = path.join(process.cwd(), certificateFolder);
+        const certFilePath = path.join(certificatePath, memberName + "_cert.pem");
 
+        // Change certFilePath to a wsl path
+        const certFilePathWsl = execSync(`wsl wslpath -u '${certFilePath}'`);
 
+        // Change ProposalPath to a wsl path
+        const proposalResultWsl = execSync(`wsl wslpath -u '${proposalPath}'`);
+
+        try {
+            // This will run the script and set the destination folder to the proposal folder
+            execSync(`wsl bash ' ${result.toString().trim()}/src/scripts/add_user.sh' --cert-file ${certFilePathWsl.toString().trim()} --dest-folder ${proposalResultWsl.toString().trim()}`);
+
+        } catch (error) {
+            console.error(error);
+            vscode.window.showErrorMessage("Error passing user to network");
+        }
+    
+}
 
     // Prompt user to enter member name
     const memberName = await vscode.window.showInputBox({
@@ -118,7 +107,8 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
     // Create a certificate directory folder name accessible by all functions in this command
     const certificateFolder = "Certificates";
 
-    const certificatePath = path.join(process.cwd(), certificateFolder);
+    // The following line translates the windows directory path to our extension into a wsl path
+    const result = execSync(`wsl wslpath -u '${specialContext.extensionPath}'`);
 
     // Call the createFolder function
     createFolder(certificateFolder);
@@ -126,4 +116,6 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
     // Call the memberGenerator function
     memberGenerator(memberName);
 
+    // Call the addUserProposal function
+    addUserProposal(memberName);
 }
