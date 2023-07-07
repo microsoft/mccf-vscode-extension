@@ -28,7 +28,7 @@ export async function createMCCFInstance() {
         vscode.window.showErrorMessage('Please enter all the required fields and try again');
     }
 
-    execSync(`az confidentialledger managedccfs create --members "[{certificate:'${certificateDir}',identifier:'${identifier}'}]"--name ${names} --resource-group ${resourceGroup}`);
+    execSync(`az confidentialledger managedccfs create --members "[{certificate:'${certificateDir}',identifier:'${identifier}}',group:'group1'}]" --name ${names} --resource-group ${resourceGroup}`);
     
     vscode.window.showInformationMessage('MCCF instance created successfully');
 }

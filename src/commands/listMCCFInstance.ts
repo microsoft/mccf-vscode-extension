@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export async function listMCCFInstances() {
-  try {
+  /* try {
     const resourceGroup = await vscode.window.showInputBox({ prompt: 'Enter the resource group:' });
     if (!resourceGroup) {
       vscode.window.showErrorMessage('Please enter all the required fields and try again');
@@ -71,4 +71,8 @@ export async function listMCCFInstances() {
   } catch (error) {
     vscode.window.showErrorMessage('An error occurred: ' + error);
   }
+}
+
+ */
+console.log('work in progress');
 }
