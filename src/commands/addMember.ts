@@ -6,15 +6,9 @@ const fs = require("fs");
 
 export async function addMember(specialContext: vscode.ExtensionContext) {
 
-    // Create a certificate directory folder name accessible by all functions in this command
-    const certificateFolder = "Certificates";
-    const parentDirectory = process.cwd(); // place holder until we can run subshell
-
-    function createFolder(folderName: string) {
+    async function createFolder(folderName: string) {
 
         // Check if the folder exists in the current file system. If not, create a certificates folder
-        const certificatePath = path.join(process.cwd(), folderName);
-
         try {
             if (!fs.existsSync(certificatePath)) {
                 fs.mkdirSync(certificatePath);
@@ -28,17 +22,14 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         }
     }
 
-    // Prompt user to enter member name
+    // Member Generator function that runs the keygenerator.sh script to generate member certificates
     async function memberGenerator(memberName: string) {
 
-        // Create path to certificate folder
-        const currentPath = path.join(process.cwd(), certificateFolder);
-
-        // Translate currentPath to a wsl path
-        const currentPathWsl = execSync(`wsl wslpath -u '${currentPath}'`);
+        // Translate our certificate path to a wsl path
+        const currentPathWsl = execSync(`wsl wslpath -u '${certificatePath}'`);
 
         // Read the files in the current directory
-        const files = fs.readdirSync(currentPath);
+        const files = fs.readdirSync(certificatePath);
         try {
             // If the folder contains a file with membername already, report it to the user and do not overwrite member certificates
             if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem"))) {
@@ -52,7 +43,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
             const result = execSync(`wsl wslpath -u '${specialContext.extensionPath}'`);
 
             // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-            execSync(`(cd ${currentPath.toString().trim()} && wsl bash '${result.toString().trim()}/src/scripts/keygenerator.sh' --name ${memberName})`);
+            execSync(`(cd ${certificatePath.toString().trim()} && wsl bash '${result.toString().trim()}/src/scripts/keygenerator.sh' --name ${memberName})`);
 
             // Create the .json file for the member
             //createJsonFile(memberName);
@@ -66,7 +57,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("Member " + memberName + " created successfully");
     }
 
-    // Create the .json file for the member
+    // Create the .json file for the member - SCRAP CODE
     function createJsonFile(memberName: string) {
         try {
             // Generate a .JSON file for the user with the user's public certificate information
@@ -98,6 +89,20 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         }
     }
 
+    // Function that runs the add_user.sh script to create user JSON file and later add them to the network
+    async function addUserProposal(memberName: string) {
+
+        // Command for running addUser.sh script: ./add_user.sh --cert-file /path/to/cert.pem --dest-folder /path/to/destination/folder
+        // Access the files in the certificate folder directory
+        const files = fs.readdirSync(certificatePath);
+
+        // Look in the files to find the file name that matches: memberName_cert.pem
+        const certFile = files.find((file: string) => file.includes(memberName + "_cert.pem"));
+
+    }
+
+
+
     // Prompt user to enter member name
     const memberName = await vscode.window.showInputBox({
         prompt: "Enter the member name",
@@ -109,6 +114,11 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No member name entered");
         return;
     }
+
+    // Create a certificate directory folder name accessible by all functions in this command
+    const certificateFolder = "Certificates";
+
+    const certificatePath = path.join(process.cwd(), certificateFolder);
 
     // Call the createFolder function
     createFolder(certificateFolder);
