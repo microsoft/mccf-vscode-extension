@@ -45,13 +45,13 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
                 vscode.window.showWarningMessage("Member already exists. Please enter a unique member name");
                 return;
             }
-            
+
             vscode.window.showInformationMessage("Generating member certificates..."); // show in the extension environment
 
             // The following line translates the windows directory path to our extension into a wsl path
             const result = execSync(`wsl wslpath -u '${specialContext.extensionPath}'`);
 
-            // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory. However, I could not get this to work
+            // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
             execSync(`(cd ${currentPath.toString().trim()} && wsl bash '${result.toString().trim()}/src/scripts/keygenerator.sh' --name ${memberName})`);
 
             // Create the .json file for the member
