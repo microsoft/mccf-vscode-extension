@@ -16,19 +16,26 @@ export async function createMCCFInstance() {
         console.log(error);
         return Promise.reject(error);
     }
-
-    execSync('az account set --subscription 027da7f8-2fc6-46d4-9be9-560706b60fec');
+    //Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
+    const subscription = await window.showInputBox({ prompt: 'Enter your subscription ID:' });
+    execSync(`az account set --subscription ${subscription}`);
     
     const certificateDir = await window.showInputBox({ prompt: 'Enter the certificate directory:' });
     const identifier = await window.showInputBox({ prompt: 'Enter the identifier:' });
     const names = await window.showInputBox({ prompt: 'Enter the name of your CCF Network' });
     const resourceGroup = await window.showInputBox({ prompt: 'Enter the resource group you want this instance to be placed' });
 
-    if (!certificateDir || !identifier || !names || !resourceGroup) {
-        vscode.window.showErrorMessage('Please enter all the required fields and try again');
+    if (!certificateDir) {
+        vscode.window.showErrorMessage('Please enter a directory for the certificate');
+    } else if (!identifier) {
+        vscode.window.showErrorMessage('Please enter an identifier');
+    } else if (!names) {
+        vscode.window.showErrorMessage('Please enter a name for your CCF Network');
+    } else if (!resourceGroup) {
+        vscode.window.showErrorMessage('Please enter a resource group');
     }
 
     execSync(`az confidentialledger managedccfs create --members "[{certificate:'${certificateDir}',identifier:'${identifier}}',group:'group1'}]" --name ${names} --resource-group ${resourceGroup}`);
-    
+    console.log('Creating CCF instance...');
     vscode.window.showInformationMessage('MCCF instance created successfully');
 }
