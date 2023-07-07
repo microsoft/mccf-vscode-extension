@@ -31,7 +31,7 @@
       },
       {
         "command": "vscode-azure-managed-ccf.submitProposal",
-        "title": "Call Proposal scripts"
+        "title": "MCCF : submit Proposal"
       }
     ]
   },
