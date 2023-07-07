@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-VIRTUAL_ENVIRONMENT_NAME="./env/extensionenv"
+VIRTUAL_ENVIRONMENT_NAME="/tmp/extensionenv"
 CCF_VERSION="4.0.2"
 
 # Initialize environment
