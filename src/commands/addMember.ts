@@ -82,6 +82,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
         const proposalResultWsl = execSync(`wsl wslpath -u '${proposalPath}'`);
 
         try {
+            // FIXME: 
             // This will run the script and set the destination folder to the proposal folder
             execSync(`wsl bash ' ${result.toString().trim()}/src/scripts/add_user.sh' --cert-file ${certFilePathWsl.toString().trim()} --dest-folder ${proposalResultWsl.toString().trim()}`);
 
@@ -90,7 +91,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
             vscode.window.showErrorMessage("Error passing user to network");
         }
     
-}
+    }  
 
     // Prompt user to enter member name
     const memberName = await vscode.window.showInputBox({
@@ -117,5 +118,5 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
     memberGenerator(memberName);
 
     // Call the addUserProposal function
-    addUserProposal(memberName);
+    //addUserProposal(memberName);
 }

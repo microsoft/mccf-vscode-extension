@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.addMember",
-        (pathForExtension : vscode.ExtensionContext) => addMember(context)));
+        () => addMember(context)));
 }
 
 
