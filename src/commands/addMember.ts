@@ -1,24 +1,25 @@
 import * as vscode from "vscode";
 import { exec, execSync } from "child_process";
 import path = require("path");
+import { chdir } from "process";
 const fs = require("fs");
 
-export async function addMember(context: vscode.ExtensionContext) {
+export async function addMember(specialContext: vscode.ExtensionContext) {
 
+    // Here is the correct path to the extension
+    //console.log(pathForExtension);
 
     // Create a certificate directory folder in the current environment where member certificates will be stored
     const certificateFolder = "Certificates";
 
-    function createFolder(folderName: string = process.cwd()) {
+    function createFolder(folderName: string) {
+
         // Check if the folder exists. If not, create a certificates folder
         try {
             if (!fs.existsSync(folderName)) {
                 fs.mkdirSync(folderName);
             }
-            // Enter current folder (Certificates folder)
-            process.chdir(folderName);
 
-            console.log("checkpoint --1 "); // testing purposes
         }
         catch (error) {
             console.error(error);
@@ -28,29 +29,44 @@ export async function addMember(context: vscode.ExtensionContext) {
 
     // Prompt user to enter member name
     async function memberGenerator(memberName: string) {
+
+        // TODO: translate into WSL path!!!!!! 
         // Read contents of certificates folder
         const currentPath = path.join(process.cwd(), certificateFolder);
+        const currentPathWsl = execSync(`wsl wslpath -u '${currentPath}'`);
+
+        // Convert the windows path to a wsl path
+        //execSync(`wsl wslpath -u '${currentPath.extensionPath}'`);
+        //process.chdir(currentPath);
         const files = fs.readdirSync(currentPath);
 
         try {
             // If the member name already exists, report it to the user
             // If the folder contains a file with membername already, report it to the user and do not create new member
-            if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem")) ) {
+            if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem"))) {
                 vscode.window.showInformationMessage("Member already exists");
                 return;
             }
 
             console.log("Generating member certificates...");
-            
-            // Generate the member certificates using the keygenerator.sh script
-            execSync("bash " + context.extensionPath + "/src/scripts/keygenerator.sh --name " + memberName + " 2>&1");
 
-            console.log("checkpoint --2 "); // testing purposes
+            vscode.window.showInformationMessage("Generating member certificates..."); // show in the extension environment
+
+            // The following line translates the windows directory path to a wsl path
+            const result = execSync(`wsl wslpath -u '${specialContext.extensionPath}'`);
+
+            //execSync("wsl bash '" + result.toString().trim() + "/src/scripts/keygenerator.sh" + "' --name " + memberName);
+            execSync(`wsl bash '${result.toString().trim()}/src/scripts/keygenerator.sh' --name ${memberName}`);
+            
             // Show success message to user 
             vscode.window.showInformationMessage("Member " + memberName + " created successfully");
 
+            // 2nd approach: open terminal and run commands there instead of exec sync
+            const AddMember_Terminal = vscode.window.createTerminal();
+
+
             // Create the .json file for the member
-            createJsonFile(memberName);
+            //createJsonFile(memberName);
 
         } catch (error) {
             console.error(error);
