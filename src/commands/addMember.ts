@@ -82,9 +82,6 @@ async function memberGenerator(memberName: string, certificatesFolderPath: strin
     );
 }
 
-
-
-
 function getBashCommand() : string
 {
     return os.platform() === 'win32' ? `wsl bash` : `bash`;
