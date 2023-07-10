@@ -18,20 +18,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-azure-managed-ccf.createCCFDevContainer",
-        "title": "MCCF: Create CCF App Environment in DevContainer"
-      },
-      {
-        "command": "vscode-azure-managed-ccf.startCCFNetworkDevContainer",
-        "title": "MCCF: Start CCF Network in DevContainer"
-      },
-      {
-        "command": "vscode-azure-managed-ccf.startCCFNetworkDocker",
-        "title": "MCCF: Start CCF Network in Docker container"
-      },
-      {
-        "command": "vscode-azure-managed-ccf.submitProposal",
-        "title": "MCCF : submit Proposal"
+        "command": "vscode-azure-managed-ccf.helloWorld",
+        "title": "Hello World"
       }
     ]
   },
