@@ -34,9 +34,6 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
 
     // Call the memberGenerator function
     memberGenerator(memberName, certificatePath, extensionPath);
-
-    // Call the addUserProposal function
-    //addUserProposal(memberName);
 }
 
 // Create a certificate directory path accessible by all functions in this command
@@ -85,42 +82,7 @@ async function memberGenerator(memberName: string, certificatesFolderPath: strin
     );
 }
 
-// Function that runs the add_user.sh script to create user JSON file and later add them to the network
-// FIXME: This function is not working as intended. It is not creating the user JSON file or adding the user to the network. Still working on
-async function addUserProposal(memberName: string, certificateFolder: string, extensionPath: string) {
-    // Create a folder directory called ProposalFiles
-    const proposalFolder = "ProposalFiles";
 
-    // Create a proposal folder directory path
-    const proposalPath = path.join(process.cwd(), proposalFolder);
-
-    if (!fs.existsSync(proposalPath)) {
-        fs.mkdirSync(proposalPath);
-        vscode.window.showInformationMessage(
-            proposalFolder + " directory created successfully"
-        ); // show in the extension environment
-    }
-
-    // Creation the member's specific certificate file path
-    const certificatePath = path.join(process.cwd(), certificateFolder);
-    const certFilePath = path.join(certificatePath, memberName + "_cert.pem");
-
-    // Change certFilePath to a wsl path
-    const certFilePathWsl = execSync(`wsl wslpath -u '${certFilePath}'`);
-
-    // Change ProposalPath to a wsl path
-    const proposalResultWsl = execSync(`wsl wslpath -u '${proposalPath}'`);
-
-    try {
-        // FIXME: 
-        // This will run the script and set the destination folder to the proposal folder
-        execSync(`${getBashCommand()} '${extensionPath.toString().trim()}/src/scripts/add_user.sh' --cert-file ${certFilePathWsl.toString().trim()} --dest-folder ${proposalResultWsl.toString().trim()}`);
-
-    } catch (error) {
-        console.error(error);
-        vscode.window.showErrorMessage("Error passing user to network");
-    }
-}
 
 
 function getBashCommand() : string
