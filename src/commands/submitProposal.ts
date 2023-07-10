@@ -17,6 +17,8 @@ export async function submitProposal(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No URL entered");
         return;
     }
+    vscode.window.showErrorMessage(networkUrl);
+    
 
     // Prompt user for certificate Directory
     const certificateDir = await vscode.window.showOpenDialog({
@@ -32,6 +34,8 @@ export async function submitProposal(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No directory selected");
         return;
     }
+    vscode.window.showErrorMessage(certificateDir[0].fsPath);
+    
 
     // Prompt user for proposal file
     const proposalFile = await vscode.window.showOpenDialog({
@@ -47,6 +51,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No file selected");
         return;
     }
+    vscode.window.showErrorMessage(proposalFile[0].fsPath);
 
     // Prompt user for member count (integer value)
     const memberCountInput = await vscode.window.showInputBox({
@@ -68,10 +73,12 @@ export async function submitProposal(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("Invalid member count. Please enter a positive integer value");
         return;
     }
-    
+    vscode.window.showErrorMessage(memberCountInput);
+
     const scriptPath = context.asAbsolutePath("src/commands/scripts/submit_proposal.sh");
 
     console.info(scriptPath);
+    vscode.window.showErrorMessage(scriptPath);
 
     // Convert the paths to strings
     const certificateDirString = certificateDir[0].fsPath;

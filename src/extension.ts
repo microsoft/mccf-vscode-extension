@@ -10,11 +10,6 @@ import * as path from "path";
 export function activate(context: vscode.ExtensionContext) {
   console.log("Extension Activated");
   
-  //const result = execSync("bash '" + path.join(context.extensionPath,"/src/commands/scripts/submit_proposal.sh") + "'").toString();
-  //const result = execSync("'" + path.join(context.extensionPath,"/src/commands/scripts/submit_proposal.sh") + "'").toString();
-
-  //console.info(result);
-
   // COMMAND: Create CCF project in devcontainer
   context.subscriptions.push(
     vscode.commands.registerCommand(
