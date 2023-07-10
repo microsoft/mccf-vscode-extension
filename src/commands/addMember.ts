@@ -71,10 +71,8 @@ async function memberGenerator(memberName: string, certificatesFolderPath: strin
         }
         vscode.window.showInformationMessage("Generating member certificates..."); // show in the extension environment
 
-        vscode.window.showInformationMessage("ExtensionPath: " + extensionPath);
-
         // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-       execSync(`(cd ${certificatesFolderPath.toString().trim()} && ${getBashCommand()} ${extensionPath}/src/scripts/keygenerator.sh --name ${memberName})`);
+       execSync(`(cd ${certificatesFolderPath.toString().trim()} && ${getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`);
 
     } catch (error: any) {
         console.error(error.message);
