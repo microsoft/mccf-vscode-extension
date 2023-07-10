@@ -38,13 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.submitProposal",
-      () => {
-
-        submitProposal(context);
-
-      }
-    )
-  );
+      () => submitProposal(context)));
 }
 
 // This method is called when your extension is deactivated
