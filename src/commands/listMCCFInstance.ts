@@ -1,92 +1,34 @@
 import * as vscode from 'vscode';
+import { execSync } from 'child_process';
+import * as fs from 'fs';
 
-export async function listMCCFInstaces() {
-    try{
-        const resourceGroup = await vscode.window.showInputBox({ prompt: 'Enter the resource group:' });
-        if (!resourceGroup) {
-            vscode.window.showErrorMessage('Please enter all the required fields and try again');
-        }
-        
-        const terminal = vscode.window.createTerminal("MCCF Instances");
-        terminal.show();
-        terminal.sendText(`az confidentialledger managedccfs list --resource-group ${resourceGroup}`);
-
-    } catch(error){
-        vscode.window.showErrorMessage('An Error Occured: ' + error);
-
-    };
-
-}
-
-/* try {
-    const resourceGroup = await vscode.window.showInputBox({ prompt: 'Enter the resource group:' });
-    if (!resourceGroup) {
-      vscode.window.showErrorMessage('Please enter all the required fields and try again');
-      return;
-    }
-
-    const outputFolderPath = path.join(vscode.workspace.rootPath || '', '.vscode-azure-managed-ccf');
-    fs.mkdirSync(outputFolderPath, { recursive: true });
-
-    const outputFile = path.join(outputFolderPath, 'mccf-instances.txt');
-
-    const terminal = vscode.window.createTerminal('MCCF Instances');
-    terminal.show();
-    terminal.sendText(`az confidentialledger managedccfs list --resource-group ${resourceGroup} > ${outputFile}`);
-
-    const onDidCloseTerminalDisposable = vscode.window.onDidCloseTerminal((closedTerminal) => {
-      if (closedTerminal === terminal) {
-        onDidCloseTerminalDisposable.dispose();
-
-        // Read the output file
-        fs.readFile(outputFile, 'utf-8', (err, data) => {
-          if (err) {
-            vscode.window.showErrorMessage('An error occurred while reading the output file: ' + err.message);
-            return;
-          }
-
-          // Split the content into lines
-          const lines = data.split('\n');
-
-          // Create a webview panel to display the output
-          const panel = vscode.window.createWebviewPanel(
-            'mccfInstancesPanel',
-            'MCCF Instances',
-            vscode.ViewColumn.One,
-            {
-              enableScripts: true,
-            }
-          );
-
-          // Construct the HTML content with a list box
-          const htmlContent = `
-            <html>
-              <body>
-                <h1>MCCF Instances</h1>
-                <ul>
-                  ${lines.map((line) => `<li>${line.trim()}</li>`).join('')}
-                </ul>
-              </body>
-            </html>
-          `;
-
-          // Set the HTML content in the webview panel
-          panel.webview.html = htmlContent;
-
-          // Clean up the output file when the webview panel is closed
-          panel.onDidDispose(() => {
-            fs.unlinkSync(outputFile);
-          });
-
-          // Show the webview panel
-          panel.reveal();
-        });
-      }
-    });
-  } catch (error) {
-    vscode.window.showErrorMessage('An error occurred: ' + error);
+export async function listMCCFInstances() {
+  const resourceGroup = await vscode.window.showInputBox({ prompt: 'Enter the resource group:' });
+  if (!resourceGroup) {
+    vscode.window.showErrorMessage('Please enter all the required fields and try again');
+    return;
   }
-}
 
- */
-console.log('work in progress');
+
+//command is ran in the terminal
+const command = `az confidentialledger managedccfs list --subscription 027da7f8-2fc6-46d4-9be9-560706b60fec --resource-group ${resourceGroup} --only-show-errors --query "[].name" -o tsv`;
+  let output = execSync(command).toString();
+  const instances = output.trim().split('\n');
+  console.log(instances);
+
+ // This code takes a list of instances and returns a list of items.
+// The instances are converted into items by mapping each instance
+// to an item object.
+
+ const items = instances.map((instance) => ({ label: instance }));
+  // Get the selected instance from the user
+
+ const selectedInstance = await vscode.window.showQuickPick(items);
+  console.log(selectedInstance?.label);
+}
+/* 
+  //--query "[].name" -o ts
+
+//  const instances = command.trim().split('\n'); 
+
+*/
