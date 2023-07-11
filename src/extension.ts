@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
-import { submitProposalCommand } from "./commands/submitProposal";
 import { addMember } from "./commands/addMember";
 
 // This method is called when your extension is activated
@@ -13,39 +12,33 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.createCCFDevContainer",
-      createDevContainerCommand
-    )
+      createDevContainerCommand,
+    ),
   );
 
   // COMMAND: Start CCF network in devcontainer
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.startCCFNetworkDevContainer",
-      startCCFNetworkDevContainer
-    )
+      startCCFNetworkDevContainer,
+    ),
   );
 
   // COMMAND: Start CCF network in docker container
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.startCCFNetworkDocker",
-      startCCFNetworkDocker
-    )
+      startCCFNetworkDocker,
+    ),
   );
-
-  // COMMAND: Submit proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.submitProposal", 
-      submitProposalCommand));
 
   // COMMAND: Add member
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.addMember",
-        () => addMember(context)));
+    vscode.commands.registerCommand("vscode-azure-managed-ccf.addMember", () =>
+      addMember(context),
+    ),
+  );
 }
-
 
 // This method is called when your extension is deactivated
 export function deactivate() {
