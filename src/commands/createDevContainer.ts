@@ -44,7 +44,7 @@ export async function createDevContainerCommand() {
       // Opens the dev container with the corresponding repository
       vscode.commands.executeCommand(
         openRepositoryInDevContainerCommand,
-        standardTemplateOption.repository
+        standardTemplateOption.repository,
       );
     }
 
@@ -56,7 +56,7 @@ export async function createDevContainerCommand() {
       // Opens the dev container with the corresponding repository
       vscode.commands.executeCommand(
         openRepositoryInDevContainerCommand,
-        sampleBankingAppOption.repository
+        sampleBankingAppOption.repository,
       );
     } else if (template.label === customProjectOption.label) {
       // Get the repository URL
@@ -74,7 +74,7 @@ export async function createDevContainerCommand() {
       // Create the devcontainer with the input URL
       vscode.commands.executeCommand(
         openRepositoryInDevContainerCommand,
-        repositoryUrl
+        repositoryUrl,
       );
     }
   } catch (error) {

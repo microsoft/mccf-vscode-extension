@@ -3,11 +3,7 @@ import { execSync } from 'child_process';
 import path = require("path");
 
 // context: vscode.ExtensionContext is for the extension to be able to access the extension path
-<<<<<<< HEAD
 export async function submitProposal(context: vscode.ExtensionContext) {
-=======
-export async function submitProposalCommand(context: vscode.ExtensionContext) {
->>>>>>> keyGeneratorCommand
 
     try{
     // Prompt user for network URL
@@ -21,11 +17,6 @@ export async function submitProposalCommand(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No URL entered");
         return;
     }
-<<<<<<< HEAD
-    vscode.window.showErrorMessage(networkUrl);
-    
-=======
->>>>>>> keyGeneratorCommand
 
     // Prompt user for certificate Directory
     const certificateDir = await vscode.window.showOpenDialog({
@@ -41,11 +32,6 @@ export async function submitProposalCommand(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No directory selected");
         return;
     }
-<<<<<<< HEAD
-    vscode.window.showErrorMessage(certificateDir[0].fsPath);
-    
-=======
->>>>>>> keyGeneratorCommand
 
     // Prompt user for proposal file
     const proposalFile = await vscode.window.showOpenDialog({
@@ -61,19 +47,11 @@ export async function submitProposalCommand(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("No file selected");
         return;
     }
-<<<<<<< HEAD
-    vscode.window.showErrorMessage(proposalFile[0].fsPath);
-=======
->>>>>>> keyGeneratorCommand
 
     // Prompt user for member count (integer value)
     const memberCountInput = await vscode.window.showInputBox({
         prompt: "Enter the number of members",
-<<<<<<< HEAD
         placeHolder: "1" // temporary placeholder
-=======
-        placeHolder: "1 or more" // temporary placeholder
->>>>>>> keyGeneratorCommand
     });
 
     // If no member count is entered, report it to the user
@@ -90,43 +68,15 @@ export async function submitProposalCommand(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage("Invalid member count. Please enter a positive integer value");
         return;
     }
-<<<<<<< HEAD
-    vscode.window.showErrorMessage(memberCountInput);
 
     const scriptPath = context.asAbsolutePath("src/commands/scripts/submit_proposal.sh");
-
-    console.info(scriptPath);
-    vscode.window.showErrorMessage(scriptPath);
 
     // Convert the paths to strings
     const certificateDirString = certificateDir[0].fsPath;
     const proposalFileString = proposalFile[0].fsPath;
 
     // Run the proposal script using the exec sync function
-    const submitScriptCommand = execSync("bash " + scriptPath + " --network-url " + networkUrl + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFileString + " --member-count " + memberCount.toString());
-    
-=======
-
-    // Run the proposal script using the exec sync function
-    const result = execSync("bash " + context.extensionPath + "/src/scripts/submit_proposal.sh").toString();
-
-    console.info(result);
-
-    // Get the path of the certificate directory
-    const certificateDirPaths = certificateDir.map(uri => uri.fsPath);
-    
-    // Convert the path to string
-    const certificateDirString = certificateDirPaths.map(dir => path.join(dir));
-
-    // Run the proposal script using the exec sync function
-    const outputChannel = vscode.window.createOutputChannel("Script Output");
-
-    const submitScriptCommand = execSync("./scripts/submit_proposal.sh --network-url " + networkUrl.toString() + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFile.toString() + " --member-count " + memberCount.toString());
-
-    outputChannel.appendLine(submitScriptCommand.toString());
-
-    outputChannel.show();
->>>>>>> keyGeneratorCommand
+    execSync("bash " + scriptPath + " --network-url " + networkUrl + " --certificate-dir " + certificateDirString + " --proposal-file " + proposalFileString + " --member-count " + memberCount.toString());
     
     } catch (error) {
         console.error("Proposal could not be submitted", error);
