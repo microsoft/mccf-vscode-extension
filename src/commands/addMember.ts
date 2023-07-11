@@ -1,13 +1,8 @@
 import * as vscode from "vscode";
 import { exec, execSync } from "child_process";
 import path = require("path");
-import { chdir } from "process";
-import { error } from "console";
 const fs = require("fs");
-import * as os from 'os';
-import { getBashCommand } from "../Utility/getBashCommand";
-import { getExtensionPathOSAgnostic } from "../Utility/getExtensionPathOSAgnostic";
-import { get } from "http";
+import * as utilities from "../Utility/osUtilities";
 
 export async function addMember(specialContext: vscode.ExtensionContext) {
 
@@ -30,7 +25,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
     const certificatePath = path.join(process.cwd(), certificateFolder);
 
     // The following line translates the windows directory path to our extension into a wsl path
-    const extensionPath = await getExtensionPathOSAgnostic(specialContext.extensionPath);
+    const extensionPath = await utilities.getExtensionPathOSAgnostic(specialContext.extensionPath);
 
     // Call the createFolder function
     createFolder(certificatePath);
@@ -72,7 +67,7 @@ async function memberGenerator(memberName: string, certificatesFolderPath: strin
         vscode.window.showInformationMessage(`Generating member certificates in folder ${certificatesFolderPath}`); // show in the extension environment
 
         // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-        execSync(`cd ${certificatesFolderPath.toString().trim()} && ${getBashCommand()} '${extensionPath.toString().trim()}/dist/keygenerator.sh --name ${memberName}'`);
+       execSync(`(cd ${certificatesFolderPath.toString().trim()} && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`);
 
     } catch (error: any) {
         console.error(error.message);
