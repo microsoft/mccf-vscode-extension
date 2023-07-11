@@ -8,6 +8,8 @@ import { submitProposal } from "./commands/submitProposal";
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log("Extension Activated");
+
   // COMMAND: Create CCF project in devcontainer
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -49,4 +51,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  console.log("Extension Deactivated");
+}
