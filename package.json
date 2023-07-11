@@ -70,6 +70,7 @@
   },
   "dependencies": {
     "@azure/arm-compute": "^21.0.0",
+    "@azure/arm-confidentialledger": "^1.2.0",
     "@azure/arm-resources": "^5.2.0",
     "@azure/identity": "^3.2.3",
     "axios": "^1.4.0",

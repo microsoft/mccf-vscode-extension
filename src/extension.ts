@@ -3,7 +3,7 @@ import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
 import { createMCCFInstance } from "./commands/mccfDeployment";
-import { listMCCFInstaces } from "./commands/listMCCFInstance";
+import { listMCCFInstances } from "./commands/listMCCFInstance";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.listMccfDeployment",
-        listMCCFInstaces
+        listMCCFInstances
     )
   );
 }
