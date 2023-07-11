@@ -1,10 +1,8 @@
 import * as vscode from "vscode";
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
 import path = require("path");
-import { chdir } from "process";
-import { error } from "console";
 const fs = require("fs");
-import * as os from "os";
+import * as utilities from "../Utilities/osUtilities";
 
 export async function addMember(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter member name
@@ -26,7 +24,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
   const certificatePath = path.join(process.cwd(), certificateFolder);
 
   // The following line translates the windows directory path to our extension into a wsl path
-  const extensionPath = getExtensionPathOSAgnostic(
+  const extensionPath = utilities.getExtensionPathOSAgnostic(
     specialContext.extensionPath,
   );
 
@@ -81,7 +79,7 @@ async function memberGenerator(
     execSync(
       `(cd ${certificatesFolderPath
         .toString()
-        .trim()} && ${getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,
+        .trim()} && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,
     );
   } catch (error: any) {
     console.error(error.message);
@@ -92,16 +90,4 @@ async function memberGenerator(
   vscode.window.showInformationMessage(
     "Member " + memberName + " created successfully",
   );
-}
-
-function getBashCommand(): string {
-  return os.platform() === "win32" ? `wsl bash` : `bash`;
-}
-
-function getExtensionPathOSAgnostic(extensionPath: string): string {
-  if (os.platform() === "win32") {
-    return execSync(`wsl wslpath -u '${extensionPath}'`).toString().trim();
-  } else {
-    return extensionPath;
-  }
 }
