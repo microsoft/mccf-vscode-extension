@@ -23,12 +23,12 @@
       "type": "npm",
       "script": "compile",
       "group": {
-          "kind": "build",
-          "isDefault": true
+        "kind": "build",
+        "isDefault": true
       },
       "isBackground": true,
       "presentation": {
-          "reveal": "never"
+        "reveal": "never"
       },
       "problemMatcher": "$tsc-watch"
     }

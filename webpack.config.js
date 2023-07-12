@@ -3,7 +3,7 @@
 "use strict";
 
 const path = require("path");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const copyWebpackPlugin = require("copy-webpack-plugin");
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -46,13 +46,13 @@ const extensionConfig = {
     level: "log", // enables logging required for problem matchers
   },
   plugins: [
-    new CopyWebpackPlugin({
+    new copyWebpackPlugin({
       patterns: [
         {
-          from: '**/*.sh',
-          to: '[name][ext]',
-          context: 'src'
-        }
+          from: "**/*.sh",
+          to: "[name][ext]",
+          context: "src",
+        },
       ],
     }),
   ],
