@@ -4,7 +4,7 @@ import path = require("path");
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 
-export async function addMember(specialContext: vscode.ExtensionContext) {
+export async function generateMemberIdentity(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter member name
   const memberName = await vscode.window.showInputBox({
     prompt: "Enter the member name",
@@ -32,7 +32,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
   createFolder(certificatePath);
 
   // Call the memberGenerator function
-  memberGenerator(memberName, certificatePath, extensionPath);
+  memberIdGenerator(memberName, certificatePath, extensionPath);
 }
 
 // Create a certificate directory path accessible by all functions in this command
@@ -52,7 +52,7 @@ async function createFolder(certificatesFolderPath: string) {
 }
 
 // Member Generator function that runs the keygenerator.sh script to generate member certificates
-async function memberGenerator(
+async function memberIdGenerator(
   memberName: string,
   certificatesFolderPath: string,
   extensionPath: string,
