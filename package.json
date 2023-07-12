@@ -18,10 +18,6 @@
   "contributes": {
     "commands": [
       {
-<<<<<<< HEAD
-        "command": "vscode-azure-managed-ccf.helloWorld",
-        "title": "Hello World"
-=======
         "command": "vscode-azure-managed-ccf.createCCFDevContainer",
         "title": "MCCF: Create CCF App Environment in DevContainer"
       },
@@ -40,7 +36,6 @@
       {
         "command": "vscode-azure-managed-ccf.addMember",
         "title": "MCCF: Add Member"
->>>>>>> keyGeneratorCommand
       }
     ]
   },
