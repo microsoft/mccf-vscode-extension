@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import path = require("path");
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
+import { execSync } from "child_process";
 
 export async function createMemberProposal(specialContext: vscode.ExtensionContext) {
 
@@ -22,7 +23,9 @@ export async function createMemberProposal(specialContext: vscode.ExtensionConte
 
     // Get a certificate directory path accessible by all functions
     const certificatePath = path.join(process.cwd(), certificateFolder);
-
+    // change certificate path to wsl path
+    certificatePath.replace(/\\/g, "/");
+    
     // The following line translates the windows directory path to our extension into a wsl path
     const extensionPath = utilities.getExtensionPathOSAgnostic(
         specialContext.extensionPath,
@@ -32,7 +35,7 @@ export async function createMemberProposal(specialContext: vscode.ExtensionConte
 
 }
 
-// Create function that will check read files in the certificate folder and make sure that the member name entered exists
+ // Create function that will check read files in the certificate folder and make sure that the member name entered exists
 async function proposalCreator(memberName: string, certificatePath: string, extensionPath: string) {
     
     // ./add_member.sh --cert-file /path/to/cert.pem --pubk-file /path/to/pubk.pem --dest-folder /path/to/destination/folder.
@@ -43,11 +46,13 @@ async function proposalCreator(memberName: string, certificatePath: string, exte
             const files = fs.readdirSync(certificatePath);
             // Check if the member name entered exists in the certificate folder
             if (files.includes(memberName + "_cert.pem" || files.includes(memberName + "_privk.pem"))) {
-                // Create terminal to run add_member.sh script
-                const terminal = vscode.window.createTerminal("Add Member");
-                // Run the add_member.sh script to add the member to the network
-                terminal.sendText(utilities.getBashCommand() + " " + path.join(extensionPath, "/dist", "/add_member.sh") + " --cert-file " + path.join(certificatePath, memberName + "_cert.pem") + " --pubk-file  " + " --dest-folder " + certificatePath);
-                terminal.show();
+               
+                // Run the generate_keys.sh script to generate the member certificates using execSync
+                //execSync(`${utilities.getBashCommand()} ${extensionPath}/dist/generate_keys.sh --id ${memberName} --dest-folder ${certificatePath}`);
+
+                // Run the add_member.sh script to add the member to the network using execSync
+                execSync(`${utilities.getBashCommand()} ${extensionPath}/dist/add_member.sh --cert-file ${certificatePath}/${memberName}_cert.pem --dest-folder ${certificatePath}`);
+               
             } else {
                 vscode.window.showErrorMessage("Member name does not exist");
                 return;
@@ -60,4 +65,4 @@ async function proposalCreator(memberName: string, certificatePath: string, exte
 
     // Display success message to user
     vscode.window.showInformationMessage("Member proposal generated successfully");
-}
+} 

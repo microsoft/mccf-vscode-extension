@@ -76,11 +76,12 @@ async function memberIdGenerator(
     ); // show in the extension environment
 
     // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-    execSync(
-      `(cd ${certificatesFolderPath
-        .toString()
-        .trim()} && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,
-    );
+    execSync(`(cd ${certificatesFolderPath.toString().trim()} && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,);
+    
+    // Run the generate_keys.sh script to generate the member certificates using execSync
+    // execSync(`${utilities.getBashCommand()} ${extensionPath}/dist/generate_keys.sh --id ${memberName} --dest-folder ${certificatesFolderPath.toString().trim()}`);
+
+ 
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating member certificates");
