@@ -1,9 +1,11 @@
 import * as vscode from "vscode";
 import { execSync } from "child_process";
+import * as utilities from "../utilities/osUtilities";
 
 // context: vscode.ExtensionContext is for the extension to be able to access the extension path
 export async function submitProposal(context: vscode.ExtensionContext) {
-  try {
+  try {   
+
     // Prompt user for network URL
     const networkUrl = await vscode.window.showInputBox({
       prompt: "Enter the network URL",
@@ -72,26 +74,23 @@ export async function submitProposal(context: vscode.ExtensionContext) {
       );
       return;
     }
-
-    const scriptPath = context.asAbsolutePath("src/scripts/submit_proposal.sh");
-
+    
     // Convert the paths to strings
     const certificateDirString = certificateDir[0].fsPath;
     const proposalFileString = proposalFile[0].fsPath;
 
     // Run the proposal script using the exec sync function
-    const result = execSync(
-      "bash " +
-        scriptPath +
-        " --network-url " +
-        networkUrl +
-        " --certificate-dir " +
-        certificateDirString +
-        " --proposal-file " +
-        proposalFileString +
-        " --member-count " +
-        memberCount,
-    );
+    const result = execSync(`cd ${context.extensionPath + '/dist/'} && ${utilities.getBashCommand()} ` +
+      "submit_proposal.sh" +
+      " --network-url " +
+      networkUrl +
+      " --certificate-dir " +
+      certificateDirString +
+      " --proposal-file " +
+      proposalFileString +
+      " --member-count " +
+      memberCount,
+     );
 
     if (result) {
       console.info(result.toString());
