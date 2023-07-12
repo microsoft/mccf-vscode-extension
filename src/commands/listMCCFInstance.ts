@@ -11,7 +11,11 @@ export async function listMCCFInstances() {
     );
     return;
   }
-
+  try {
+    execSync(`az resource list --resource-group ${resourceGroup} --output table --only-show-errors`);
+  } catch (error) {
+    vscode.window.showErrorMessage('An error occurred while retrieving the resources. Please enter a valid resource group and try again');
+  }
 
 //command is ran in the terminal
 const command = `az confidentialledger managedccfs list --subscription 027da7f8-2fc6-46d4-9be9-560706b60fec --resource-group ${resourceGroup} --only-show-errors --query "[].name" -o tsv`;
