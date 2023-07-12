@@ -40,6 +40,10 @@
       {
         "command": "vscode-azure-managed-ccf.listMccfDeployment",
         "title": "MCCF: List MCCF Instances"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.subscriptionList",
+        "title": "MCCF: List Subscriptions"
       }
     ]
   },

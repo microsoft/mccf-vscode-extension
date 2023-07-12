@@ -20,6 +20,9 @@ export async function listMCCFInstances() {
 //command is ran in the terminal
 const command = `az confidentialledger managedccfs list --subscription 027da7f8-2fc6-46d4-9be9-560706b60fec --resource-group ${resourceGroup} --only-show-errors --query "[].name" -o tsv`;
   let output = execSync(command).toString();
+  if(output === "") {
+    vscode.window.showErrorMessage('No instances found. Please enter a valid resource group and try again');
+  }
   const instances = output.trim().split("\n");
   console.log(instances);
 

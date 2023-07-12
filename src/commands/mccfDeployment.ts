@@ -3,13 +3,18 @@ import { window } from "vscode";
 const { exec } = require("child_process");
 import * as vscode from "vscode";
 
+interface Subscription {
+  name: string;
+  id: string;
+}
+
 export async function createMCCFInstance() {
   try {
     exec("az --version", (error: any) => {
       if (error) {
         console.log(error);
         return console.log(
-          "Please install Azure CLI before proceeding: " + error,
+          "Please install Azure CLI before proceeding: " + error
         );
       }
     });
@@ -17,8 +22,30 @@ export async function createMCCFInstance() {
     console.log(error);
     return Promise.reject(error);
   }
-  //Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
-  const subscriptionId = process.env["CONFIDENTIALLEDGER_SUBSCRIPTION_ID"];
+
+  // Retrieve a list of subscriptions
+  const subscriptionsOutput = execSync("az account list --output json").toString();
+  const subscriptions: Subscription[] = JSON.parse(subscriptionsOutput);
+
+  // Convert the subscriptions to QuickPick items
+  const subscriptionItems = subscriptions.map((subscription) => ({
+    label: subscription.name,
+    description: subscription.id,
+  }));
+
+  // Let the user choose a subscription using QuickPick
+  const selectedSubscription = await window.showQuickPick(subscriptionItems, {
+    placeHolder: "Select a subscription",
+  });
+
+  if (!selectedSubscription) {
+    vscode.window.showErrorMessage("Please select a subscription");
+    return;
+  }
+
+  const subscriptionId = selectedSubscription.description;
+
+  // Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
 
   const certificateDir = await vscode.window.showOpenDialog({
     canSelectFiles: true,
@@ -58,8 +85,8 @@ export async function createMCCFInstance() {
   }
 
   execSync(
-    `az confidentialledger managedccfs create --members "[{certificate:'${certificateDirString}',identifier:'${identifier}}',group:'group1'}]" --name ${names} --resource-group ${resourceGroup}`,
+    `az confidentialledger managedccfs create --members "[{certificate:'${certificateDirString}',identifier:'${identifier}}',group:'group1'}]" --name ${names} --resource-group ${resourceGroup} --subscription ${subscriptionId}`,
   );
-  console.log("Creating CCF instance...");
+  vscode.window.showInformationMessage("Creating MCCF instance...");
   vscode.window.showInformationMessage("MCCF instance created successfully");
 }
