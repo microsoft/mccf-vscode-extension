@@ -1,6 +1,5 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
-const { exec } = require("child_process");
 import * as vscode from "vscode";
 
 interface Subscription {
@@ -10,17 +9,10 @@ interface Subscription {
 
 export async function createMCCFInstance() {
   try {
-    exec("az --version", (error: any) => {
-      if (error) {
-        console.log(error);
-        return console.log(
-          "Please install Azure CLI before proceeding: " + error
-        );
-      }
-    });
+    execSync("az --version");
   } catch (error) {
     console.log(error);
-    return Promise.reject(error);
+    return console.log("Please install Azure CLI before proceeding: " + error);
   }
 
   // Retrieve a list of subscriptions
