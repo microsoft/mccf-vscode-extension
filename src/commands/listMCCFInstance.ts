@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { execSync } from "child_process";
+import { window } from "vscode";
 
 export async function listMCCFInstances() {
   const resourceGroup = await vscode.window.showInputBox({
@@ -16,9 +17,34 @@ export async function listMCCFInstances() {
   } catch (error) {
     vscode.window.showErrorMessage('An error occurred while retrieving the resources. Please enter a valid resource group and try again');
   }
+  interface Subscription {
+    name: string;
+    id: string;
+  }
+
+  const subscriptionsOutput = execSync("az account list --output json").toString();
+  const subscriptions: Subscription[] = JSON.parse(subscriptionsOutput);
+
+  // Convert the subscriptions to QuickPick items
+  const subscriptionItems = subscriptions.map((subscription) => ({
+    label: subscription.name,
+    description: subscription.id,
+  }));
+
+  // Let the user choose a subscription using QuickPick
+  const selectedSubscription = await window.showQuickPick(subscriptionItems, {
+    placeHolder: "Select a subscription",
+  });
+
+  if (!selectedSubscription) {
+    vscode.window.showErrorMessage("Please select a subscription");
+    return;
+  }
+
+  const subscriptionId = selectedSubscription.description;
 
 //command is ran in the terminal
-const command = `az confidentialledger managedccfs list --resource-group ${resourceGroup} --only-show-errors --query "[].name" -o tsv`;
+const command = `az confidentialledger managedccfs list --subscription ${subscriptionId} --resource-group ${resourceGroup.toLowerCase()} --only-show-errors --query "[].name" -o tsv`;
   let output = execSync(command).toString();
   if(output === "") {
     vscode.window.showErrorMessage('No instances found. Please enter a valid resource group and try again');
@@ -35,4 +61,6 @@ const command = `az confidentialledger managedccfs list --resource-group ${resou
 
   const selectedInstance = await vscode.window.showQuickPick(items);
   console.log(selectedInstance?.label);
+
+  vscode.window.showInformationMessage(`Selected instance: ${selectedInstance?.label}`);
 }
