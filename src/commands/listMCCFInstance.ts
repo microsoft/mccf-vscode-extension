@@ -15,7 +15,11 @@ export async function listMCCFInstances() {
   }
   const message =  execSync(`az resource list --resource-group ${resourceGroup} --output table --only-show-errors`);
   try {
-    message 
+    const final =  message.toString();
+    if (final == '') {
+      vscode.window.showErrorMessage('No resources found. Please enter a valid resource group and try again');
+      return;
+    }
   } catch (error) {
     vscode.window.showErrorMessage('An error occurred while retrieving the resources. Please enter a valid resource group and try again');
   }
