@@ -6,14 +6,14 @@ export function getBashCommand() : string
     return os.platform() === 'win32' ? `wsl bash` : `bash`;
 }
 
-export function getExtensionPathOSAgnostic(extensionPath: string) : string
+export function getPathOSAgnostic(filePath: string) : string
 {
     if(os.platform() === 'win32')
     {
-        return execSync(`wsl wslpath -u '${extensionPath}'`).toString().trim();
+        return execSync(`wsl wslpath -u '${filePath}'`).toString().trim();
     }
     else
     {
-        return extensionPath;
+        return filePath;
     }
 }

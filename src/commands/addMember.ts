@@ -24,7 +24,7 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
   const certificatePath = path.join(process.cwd(), certificateFolder);
 
   // The following line translates the windows directory path to our extension into a wsl path
-  const extensionPath = utilities.getExtensionPathOSAgnostic(
+  const extensionPath = utilities.getPathOSAgnostic(
     specialContext.extensionPath,
   );
 
