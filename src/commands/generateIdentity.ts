@@ -1,20 +1,19 @@
+/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
 import path = require("path");
-import { chdir } from "process";
-import { error } from "console";
 const fs = require("fs");
-import * as os from "os";
+import * as utilities from "../Utilities/osUtilities";
 
-export async function addMember(specialContext: vscode.ExtensionContext) {
+export async function generateIdentity(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter member name
-  const memberName = await vscode.window.showInputBox({
-    prompt: "Enter the member name",
-    placeHolder: "Member name",
+  const idName = await vscode.window.showInputBox({
+    prompt: "Enter ID",
+    placeHolder: "ID Name",
   });
 
   // If no member name is entered, report it to the user
-  if (!memberName || memberName.length === 0) {
+  if (!idName || idName.length === 0) {
     vscode.window.showInformationMessage("No member name entered");
     return;
   }
@@ -25,16 +24,11 @@ export async function addMember(specialContext: vscode.ExtensionContext) {
   // Get a certificate directory path accessible by all functions
   const certificatePath = path.join(process.cwd(), certificateFolder);
 
-  // The following line translates the windows directory path to our extension into a wsl path
-  const extensionPath = getExtensionPathOSAgnostic(
-    specialContext.extensionPath,
-  );
-
   // Call the createFolder function
   createFolder(certificatePath);
 
   // Call the memberGenerator function
-  memberGenerator(memberName, certificatePath, extensionPath);
+  idGenerator(idName, certificatePath, specialContext.extensionPath);
 }
 
 // Create a certificate directory path accessible by all functions in this command
@@ -54,8 +48,8 @@ async function createFolder(certificatesFolderPath: string) {
 }
 
 // Member Generator function that runs the keygenerator.sh script to generate member certificates
-async function memberGenerator(
-  memberName: string,
+async function idGenerator(
+  id: string,
   certificatesFolderPath: string,
   extensionPath: string,
 ) {
@@ -65,24 +59,27 @@ async function memberGenerator(
     // If the folder contains a file with membername already, report it to the user and do not overwrite member certificates
     if (
       files.includes(
-        memberName + "_cert.pem" || files.includes(memberName + "_privk.pem"),
+        id + "_cert.pem" || files.includes(id + "_privk.pem"),
       )
     ) {
       vscode.window.showWarningMessage(
-        "Member already exists. Please enter a unique member name",
+        "ID already exists. Please enter a unique ID",
       );
       return;
     }
     vscode.window.showInformationMessage(
       `Generating member certificates in folder ${certificatesFolderPath}`,
     ); // show in the extension environment
-
-    // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-    execSync(
-      `(cd ${certificatesFolderPath
-        .toString()
-        .trim()} && ${getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,
+       
+    // Change certificatesFolderPath to a wsl path
+    const wslCertificatePath = utilities.getExtensionPathOSAgnostic(
+      certificatesFolderPath,
     );
+
+    // Run the generate_keys.sh script to generate member certificates and encription keys
+    execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key)`);
+
+    // have command to change directory inside of the dist folder
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating member certificates");
@@ -90,18 +87,6 @@ async function memberGenerator(
 
   // Show success message to user
   vscode.window.showInformationMessage(
-    "Member " + memberName + " created successfully",
+    id + " created successfully",
   );
-}
-
-function getBashCommand(): string {
-  return os.platform() === "win32" ? `wsl bash` : `bash`;
-}
-
-function getExtensionPathOSAgnostic(extensionPath: string): string {
-  if (os.platform() === "win32") {
-    return execSync(`wsl wslpath -u '${extensionPath}'`).toString().trim();
-  } else {
-    return extensionPath;
-  }
 }

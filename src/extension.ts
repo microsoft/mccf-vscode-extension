@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
-import { generateMemberIdentity } from "./commands/generateMemberIdentity";
-import { createMemberProposal } from "./commands/createMemberProposal";
+import { generateIdentity } from "./commands/generateIdentity";
+import { createProposal } from "./commands/createProposal";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -35,13 +36,13 @@ export function activate(context: vscode.ExtensionContext) {
 
   // COMMAND: Add member
   context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-azure-managed-ccf.generateMemberIdentity", () =>
-    generateMemberIdentity(context),
+    vscode.commands.registerCommand("vscode-azure-managed-ccf.generateIdentity", () =>
+    generateIdentity(context),
     ),
   );
 
   // Command: Create member proposal
-  context.subscriptions.push(vscode.commands.registerCommand("vscode-azure-managed-ccf.createMemberProposal", () => createMemberProposal(context)));
+  context.subscriptions.push(vscode.commands.registerCommand("vscode-azure-managed-ccf.createProposal", () => createProposal(context)));
 }
 
 // This method is called when your extension is deactivated
