@@ -13,6 +13,9 @@ export async function createProposal(specialContext: vscode.ExtensionContext) {
         placeHolder: "Member name",
     });
 
+    // Allow the user a quick pick option where they select the file name with _cert.pem AND _enc_pubk.pem at the end files for the id they want to generate the proposal for from the certificates folder located at : const certificatePath = path.join(process.cwd(), certificateFolder);
+    // these 2 choices will be passed through the generate proposal function
+
     // If no member name is entered, report it to the user
     if (!idName || idName.length === 0) {
         vscode.window.showInformationMessage("No member name entered");
@@ -45,16 +48,16 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
                 const certPath = utilities.getExtensionPathOSAgnostic(path.join(certificatePath, `${id}_cert.pem`));
 
                 const pubkPath = utilities.getExtensionPathOSAgnostic(path.join(certificatePath, `${id}_enc_pubk.pem`));
-    
-                //vscode.window.showInformationMessage(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertificatePath}/${id}_cert.pem" --pubk-file "${wslCertificatePath}/${id}_enc_pubk.pem" --dest-folder "${wslCertificatePath}" --id ${id})`)
 
                 //FIXME: Trace the correct path to the cert-file and pubk-file. They are located inside of the certificate folder
                 // Run the add_member_2.sh script to add the member to the network using execSync
-                // execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertificatePath}/${id}_cert.pem" --pubk-file "${wslCertificatePath}/${id}_enc_pubk.pem" --dest-folder "${wslCertificatePath}" --id ${id})`);
+                //execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
 
-                execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
-                vscode.window.showInformationMessage(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} ./add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
-
+                // Get the terminal with the name "Generate Identity" if it exists, otherwise create it
+                const terminal = vscode.window.terminals.find((t) => t.name === "Generate Proposal") || vscode.window.createTerminal("Generate Proposal");
+                terminal.show();
+                terminal.sendText(`cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id}`);
+            
             } else {
                 vscode.window.showErrorMessage("ID does not exist");
                 return;
@@ -63,7 +66,6 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
             vscode.window.showErrorMessage("Certificates folder does not exist");
             return;
         }
-
         // Display success message to user
         vscode.window.showInformationMessage("Proposal generated successfully: " + certificatePath);
 

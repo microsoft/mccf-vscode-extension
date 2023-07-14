@@ -76,14 +76,18 @@ async function idGenerator(
       certificatesFolderPath,
     );
 
-    // Run the generate_keys.sh script to generate member certificates and encription keys
-    execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key)`);
+    // Get the terminal with the name "Generate Identity" if it exists, otherwise create it
+    const terminal = vscode.window.terminals.find((t) => t.name === "Generate Identity") || vscode.window.createTerminal("Generate Identity");
+    terminal.show();
+
+    // Run Script through terminal
+    terminal.sendText(`cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
 
     // Show success message to user
     vscode.window.showInformationMessage(
       id + " created successfully",
     );
-    
+
     // have command to change directory inside of the dist folder
   } catch (error: any) {
     console.error(error.message);
