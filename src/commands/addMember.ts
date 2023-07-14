@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as utilities from "../Utilities/osUtilities";
 import * as folderUtils from "../Utilities/folderUtils";
+import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
 export async function addMember(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter member name
@@ -59,12 +60,13 @@ async function memberGenerator(
       `Generating member certificates in folder ${certificatesFolderPath}`,
     ); // show in the extension environment
 
-    // This will create a subshell to execute the script inside of the certificate directory path without changing our main process's working directory
-    execSync(
-      `(cd ${certificatesFolderPath
-        .toString()
-        .trim()} && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`,
-    );
+    // Construct a command to execute the script inside of the certificate directory path without changing our main process's working directory
+    const command = `(cd "${certificatesFolderPath
+      .toString()
+      .trim()}" && ${utilities.getBashCommand()} ${extensionPath}/dist/keygenerator.sh --name ${memberName})`;
+
+    // Run the command in the terminal
+    runCommandInTerminal("Generate Identity Terminal", command);
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating member certificates");
