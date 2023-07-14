@@ -53,6 +53,14 @@ const extensionConfig = {
           to: "[name][ext]",
           context: "src",
         },
+        {
+          from: "templates/**/*",
+          to: "[path][name][ext]",
+          context: "src",
+          globOptions: {
+            dot: true,
+          },
+        },
       ],
     }),
   ],

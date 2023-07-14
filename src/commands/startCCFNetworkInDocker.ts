@@ -43,7 +43,7 @@ export async function startCCFNetworkDocker() {
 
     // Build and run a docker container
     const dockerBuildCommand =
-      "docker build -t " +
+      "DOCKER_BUILDKIT=1 docker build -t " +
       imageName +
       " -f " +
       dockerfilePath +
