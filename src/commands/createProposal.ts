@@ -40,16 +40,34 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
             const files = fs.readdirSync(certificatePath);
             // Check if the member name entered exists in the certificate folder
             if (files.includes(id + "_cert.pem" || files.includes(id + "_enc_pubk.pem"))) {
-                
+                 
                 const wslCertificatePath = utilities.getExtensionPathOSAgnostic(certificatePath);
+
+                // Create the path that goes to the cert file using path join
+                let certPath = path.join(wslCertificatePath, `${id}_cert.pem`);
+                certPath = utilities.getExtensionPathOSAgnostic(certPath);
+
+                // Create the path that goes to the pubk file using path join
+                let pubkPath = path.join(wslCertificatePath, `${id}_enc_pubk.pem`);
+                pubkPath = utilities.getExtensionPathOSAgnostic(pubkPath);
+
+                //vscode.window.showInformationMessage(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertificatePath}/${id}_cert.pem" --pubk-file "${wslCertificatePath}/${id}_enc_pubk.pem" --dest-folder "${wslCertificatePath}" --id ${id})`)
                 
-                // Run the add_member.sh script to add the member to the network using execSync
-                execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member.sh --cert-file ${id}_cert.pem --pubk-file ${id}_enc_pubk.pem --dest-folder "${wslCertificatePath}")`);
-            
+                //FIXME: Trace the correct path to the cert-file and pubk-file. They are located inside of the certificate folder
+                // Run the add_member_2.sh script to add the member to the network using execSync
+                // execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertificatePath}/${id}_cert.pem" --pubk-file "${wslCertificatePath}/${id}_enc_pubk.pem" --dest-folder "${wslCertificatePath}" --id ${id})`);
+                
+
+                execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
+                vscode.window.showInformationMessage(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} ./add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
+
             } else {
                 vscode.window.showErrorMessage("ID does not exist");
                 return;
             }
+        } else {
+            vscode.window.showErrorMessage("Certificates folder does not exist");
+            return;
         }
     } catch (error) {
         console.error(error);
@@ -57,5 +75,5 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
     }
 
     // Display success message to user
-    vscode.window.showInformationMessage("Proposal generated successfully");
+    vscode.window.showInformationMessage("Proposal generated successfully: " + certificatePath);
 } 

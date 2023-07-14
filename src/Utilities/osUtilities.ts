@@ -7,7 +7,8 @@ export function getBashCommand(): string {
 
 export function getExtensionPathOSAgnostic(extensionPath: string): string {
   if (os.platform() === "win32") {
-    return execSync(`wsl wslpath -u '${extensionPath}'`).toString().trim();
+    // eslint-disable-next-line prettier/prettier
+    return execSync(`wsl wslpath -u '${extensionPath}'`).toString().trim().replace(" ", "\ ");
   } else {
     return extensionPath;
   }
