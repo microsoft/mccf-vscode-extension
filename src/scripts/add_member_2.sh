@@ -8,12 +8,12 @@ source common_utils.sh
 function create_member_proposal {
   local certFile=$1
   local keyFile=$2
-  local setUserFile=$3
+  local setUserFile="${id}_set_user.json"
 
-  cert=$(< $certFile sed '$!G' | paste -sd '\\n' -)
-  key=$(< $keyFile sed '$!G' | paste -sd '\\n' -)
+  cert=$(< "$certFile" sed '$!G' | paste -sd '\\n' -)
+  key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
 
-  cat <<JSON > $setUserFile
+  cat <<JSON > "$setUserFile"
 {
   "actions": [
   {
@@ -92,7 +92,7 @@ then
   exit 1
 fi
 
-proposal_json_file= "'${dest_folder}/set_${id}.json'"
+proposal_json_file="'${dest_folder}/set_${id}.json'"
 
 echo "Creating member json proposal file..."
 create_member_proposal "$cert_file" "$pubk_file" "$proposal_json_file"
