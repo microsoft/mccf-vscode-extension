@@ -1,0 +1,37 @@
+{
+  "name": "MCCF template",
+  "image": "mcr.microsoft.com/ccf/app/dev:4.0.2-virtual",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vsls-contrib.codetour",
+        "esbenp.prettier-vscode",
+        "timonwong.shellcheck",
+        "github.vscode-pull-request-github"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll": true
+        }
+      }
+    }
+  },
+  "postStartCommand": "scripts/devContainer_OnStart.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": true
+    },
+    "ghcr.io/devcontainers/features/powershell:1": {
+      "modules": "Az.Resources, Microsoft.Graph.Authentication, Microsoft.Graph.Applications"
+    },
+    "ghcr.io/rchaganti/vsc-devcontainer-features/azurebicep:1": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  }
+}

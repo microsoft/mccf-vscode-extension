@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
 import * as vscode from "vscode";
-import {subscriptionList} from "./subscriptionList";
+import { subscriptionList } from "./subscriptionList";
 
 interface Subscription {
   name: string;
@@ -15,7 +15,6 @@ export async function createMCCFInstance() {
     console.log(error);
     return console.log("Please install Azure CLI before proceeding: " + error);
   }
-
 
   const subscriptionId = subscriptionList();
 
@@ -60,13 +59,17 @@ export async function createMCCFInstance() {
   } else if (!resourceGroup) {
     vscode.window.showErrorMessage("Please enter a resource group");
   } else if (!nodes) {
-    vscode.window.showErrorMessage("Please enter the amount of nodes you want this instance to have");
+    vscode.window.showErrorMessage(
+      "Please enter the amount of nodes you want this instance to have",
+    );
   }
 
   resourceGroup = resourceGroup?.toLowerCase();
   console.log(resourceGroup);
 
-  const progressBar = window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  const progressBar = window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+  );
   progressBar.text = "$(sync~spin) Creating MCCF instance...";
   progressBar.show();
 
@@ -83,13 +86,17 @@ export async function createMCCFInstance() {
         );
         progressBar.text = "MCCF instance created successfully";
         progressBar.hide();
-        vscode.window.showInformationMessage("MCCF instance created successfully");
+        vscode.window.showInformationMessage(
+          "MCCF instance created successfully",
+        );
       } catch (error) {
         progressBar.text = "MCCF instance creation failed";
         progressBar.hide();
         console.log(error);
-        vscode.window.showErrorMessage("Failed to create MCCF instance: " + error);
+        vscode.window.showErrorMessage(
+          "Failed to create MCCF instance: " + error,
+        );
       }
-    }
+    },
   );
 }

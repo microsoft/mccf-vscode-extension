@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { execSync } from "child_process";
 import { window } from "vscode";
-import {subscriptionList} from "./subscriptionList";
+import { subscriptionList } from "./subscriptionList";
 
 export async function listMCCFInstances() {
   const subscriptionId = await subscriptionList();
@@ -14,21 +14,36 @@ export async function listMCCFInstances() {
     );
     return;
   }
+  const message = execSync(
+    `az resource list --resource-group ${resourceGroup} --output table --only-show-errors`,
+  );
   try {
-    execSync(`az resource list --resource-group ${resourceGroup} --output table --only-show-errors`);
+    const final = message.toString();
+    if (final === "") {
+      vscode.window.showErrorMessage(
+        "No resources found. Please enter a valid resource group and try again",
+      );
+      return;
+    }
   } catch (error) {
-    vscode.window.showErrorMessage('An error occurred while retrieving the resources. Please enter a valid resource group and try again');
+    vscode.window.showErrorMessage(
+      "An error occurred while retrieving the resources. Please enter a valid resource group and try again",
+    );
   }
+
   interface Subscription {
     name: string;
     id: string;
   }
 
-//command is ran in the terminal
-const command = `az confidentialledger managedccfs list --subscription ${subscriptionId} --resource-group ${resourceGroup.toLowerCase()} --only-show-errors --query "[].name" -o tsv`;
+  // command is ran in the terminal
+  const command = `az confidentialledger managedccfs list --subscription ${subscriptionId} --resource-group ${resourceGroup.toLowerCase()} --only-show-errors --query "[].name" -o tsv`;
   let output = execSync(command).toString();
-  if(output === "") {
-    vscode.window.showErrorMessage('No instances found. Please enter a valid resource group and try again');
+
+  if (output === "") {
+    vscode.window.showErrorMessage(
+      "No instances found. Please enter a valid resource group and try again",
+    );
   }
   const instances = output.trim().split("\n");
   console.log(instances);
@@ -43,5 +58,7 @@ const command = `az confidentialledger managedccfs list --subscription ${subscri
   const selectedInstance = await vscode.window.showQuickPick(items);
   console.log(selectedInstance?.label);
 
-  vscode.window.showInformationMessage(`Selected instance: ${selectedInstance?.label}`);
+  vscode.window.showInformationMessage(
+    `Selected instance: ${selectedInstance?.label}`,
+  );
 }
