@@ -8,15 +8,15 @@ source common_utils.sh
 function create_member_proposal {
   local certFile=$1
   local keyFile=$2
-  local setUserFile="set_${id}.json"
+  local setUserFile=$3
 
   cert=$(< "$certFile" sed '$!G' | paste -sd '\\n' -)
   key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
-  
+
   json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n", "encryption_pub_key": "'${key}'\n"} }  ]}'
-  
-  echo "$json" > "$setUserFile"
-}
+
+    echo "$json" > "$setUserFile"
+  }
 
 function usage {
   echo ""
@@ -64,25 +64,7 @@ elif [ -z "$id" ]; then
   failed "Missing parameter --id"
 fi
 
-check_existence=$(ls $cert_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-  echo "Cert file \"$cert_file\" does not exist."
-  exit 1
-fi
-
-check_existence=$(ls $pubk_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-  echo "Public key file \"$pubk_file\" does not exist."
-  exit 1
-fi
-
-if [ "${cert_file##*.}" != "pem" -o "${pubk_file##*.}" != "pem" ]
-then
-  echo "Wrong file extensions. Only \".pem\" files are supported."
-  exit 1
-fi
-
-proposal_json_file="'${dest_folder}/set_${id}.json'"
+proposal_json_file="${dest_folder}/set_${id}.json"
 
 echo "Creating member json proposal file..."
 create_member_proposal "$cert_file" "$pubk_file" "$proposal_json_file"
