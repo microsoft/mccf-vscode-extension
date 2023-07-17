@@ -12,20 +12,10 @@ function create_member_proposal {
 
   cert=$(< "$certFile" sed '$!G' | paste -sd '\\n' -)
   key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
-
-  cat <<JSON > $setUserFile
-{
-  "actions": [
-  {
-    "name": "set_member",
-    "args": {
-    "cert": "${cert}\n",
-    "encryption_pub_key": "${key}\n"
-    }
-  }
-  ]
-}
-JSON
+  
+  json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n", "encryption_pub_key": "'${key}'\n"} }  ]}'
+  
+  echo "$json" > "$setUserFile"
 }
 
 function usage {
