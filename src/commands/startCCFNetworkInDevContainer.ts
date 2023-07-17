@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
 // Build and start a CCF network inside the devcontainer
 export async function startCCFNetworkDevContainer() {
@@ -35,17 +36,8 @@ export async function startCCFNetworkDevContainer() {
 
     const finalCommand = commandsSequence.join(" && ");
 
-    // Create terminal
-    const terminal = vscode.window.createTerminal({
-      name: "Start CCF Network Terminal",
-      isTransient: true,
-    });
-
-    // Show terminal
-    terminal.show();
-
-    // Run command
-    terminal.sendText(finalCommand);
+    // Run the command in the terminal
+    runCommandInTerminal("Start CCF Network Terminal", finalCommand);
   } catch (error) {
     console.error("CCF network could not be started", error);
     vscode.window.showErrorMessage("CCF network failed to start");
