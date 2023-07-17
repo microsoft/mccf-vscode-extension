@@ -49,10 +49,6 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
 
                 const pubkPath = utilities.getExtensionPathOSAgnostic(path.join(certificatePath, `${id}_enc_pubk.pem`));
 
-                //FIXME: Trace the correct path to the cert-file and pubk-file. They are located inside of the certificate folder
-                // Run the add_member_2.sh script to add the member to the network using execSync
-                //execSync(`(cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id})`);
-
                 // Get the terminal with the name "Generate Identity" if it exists, otherwise create it
                 const terminal = vscode.window.terminals.find((t) => t.name === "Generate Proposal") || vscode.window.createTerminal("Generate Proposal");
                 terminal.show();
