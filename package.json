@@ -34,10 +34,6 @@
         "title": "MCCF: Submit Proposal"
       },
       {
-        "command": "vscode-azure-managed-ccf.addMember",
-        "title": "MCCF: Add Member"
-      },
-      {
         "command": "vscode-azure-managed.ccf.generateIdentity",
         "title": "MCCF: Generate Identity"
       }

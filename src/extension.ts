@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
-import { addMember } from "./commands/addMember";
 import { submitProposal } from "./commands/submitProposal";
 import { generateIdentity } from "./commands/generateIdentity";
 
@@ -31,13 +30,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.startCCFNetworkDocker",
       startCCFNetworkDocker,
-    ),
-  );
-
-  // COMMAND: Add member
-  context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-azure-managed-ccf.addMember", () =>
-      addMember(context),
     ),
   );
 
