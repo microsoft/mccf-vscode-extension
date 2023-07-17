@@ -44,7 +44,5 @@ export async function subscriptionList() {
     return;
   }
 
-  const subscriptionId = selectedSubscription.description;
-
-  vscode.window.showInformationMessage(`Selected Subscription ID: ${subscriptionId}`);
-}
+    return selectedSubscription.description;
+  }

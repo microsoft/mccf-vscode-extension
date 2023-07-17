@@ -51,3 +51,7 @@ After starting the network in a Docker Container, your output should look simila
 ![Alt text](image-2.png)
 
 > TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
+
+### Creating a MCCF Instance
+
+Within this specific
