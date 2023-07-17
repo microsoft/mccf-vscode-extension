@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
 import * as vscode from "vscode";
+import {subscriptionList} from "./subscriptionList";
 
 interface Subscription {
   name: string;
@@ -15,27 +16,8 @@ export async function createMCCFInstance() {
     return console.log("Please install Azure CLI before proceeding: " + error);
   }
 
-  // Retrieve a list of subscriptions
-  const subscriptionsOutput = execSync("az account list --output json").toString();
-  const subscriptions: Subscription[] = JSON.parse(subscriptionsOutput);
 
-  // Convert the subscriptions to QuickPick items
-  const subscriptionItems = subscriptions.map((subscription) => ({
-    label: subscription.name,
-    description: subscription.id,
-  }));
-
-  // Let the user choose a subscription using QuickPick
-  const selectedSubscription = await window.showQuickPick(subscriptionItems, {
-    placeHolder: "Select a subscription",
-  });
-
-  if (!selectedSubscription) {
-    vscode.window.showErrorMessage("Please select a subscription");
-    return;
-  }
-
-  const subscriptionId = selectedSubscription.description;
+  const subscriptionId = subscriptionList();
 
   // Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
 

@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
 import { execSync } from "child_process";
 import { window } from "vscode";
+import {subscriptionList} from "./subscriptionList";
 
 export async function listMCCFInstances() {
+  const subscriptionId = await subscriptionList();
   const resourceGroup = await vscode.window.showInputBox({
     prompt: "Enter the resource group:",
   });
@@ -21,27 +23,6 @@ export async function listMCCFInstances() {
     name: string;
     id: string;
   }
-
-  const subscriptionsOutput = execSync("az account list --output json").toString();
-  const subscriptions: Subscription[] = JSON.parse(subscriptionsOutput);
-
-  // Convert the subscriptions to QuickPick items
-  const subscriptionItems = subscriptions.map((subscription) => ({
-    label: subscription.name,
-    description: subscription.id,
-  }));
-
-  // Let the user choose a subscription using QuickPick
-  const selectedSubscription = await window.showQuickPick(subscriptionItems, {
-    placeHolder: "Select a subscription",
-  });
-
-  if (!selectedSubscription) {
-    vscode.window.showErrorMessage("Please select a subscription");
-    return;
-  }
-
-  const subscriptionId = selectedSubscription.description;
 
 //command is ran in the terminal
 const command = `az confidentialledger managedccfs list --subscription ${subscriptionId} --resource-group ${resourceGroup.toLowerCase()} --only-show-errors --query "[].name" -o tsv`;
