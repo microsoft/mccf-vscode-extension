@@ -106,7 +106,7 @@ export async function createDevContainerCommand(
       folderUtils.createFolder(newFolderPath);
 
       // Get path to the extension
-      const extensionPath = osUtils.getPathOSAgnostic(context.extensionPath);
+      const extensionPath = context.extensionPath;
 
       // Get path to the templates folder
       const templatePath = path.join(extensionPath, "dist", "templates");
