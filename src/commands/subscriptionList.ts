@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
-const { exec } = require("child_process");
+import { exec } from "child_process";
 import * as vscode from "vscode";
 
 interface Subscription {
@@ -14,7 +14,7 @@ export async function subscriptionList() {
       if (error) {
         console.log(error);
         return console.log(
-          "Please install Azure CLI before proceeding: " + error
+          "Please install Azure CLI before proceeding: " + error,
         );
       }
     });
@@ -24,7 +24,9 @@ export async function subscriptionList() {
   }
 
   // Retrieve a list of subscriptions
-  const subscriptionsOutput = execSync("az account list --output json").toString();
+  const subscriptionsOutput = execSync(
+    "az account list --output json",
+  ).toString();
   const subscriptions: Subscription[] = JSON.parse(subscriptionsOutput);
 
   // Convert the subscriptions to QuickPick items
@@ -44,5 +46,5 @@ export async function subscriptionList() {
     return;
   }
 
-    return selectedSubscription.description;
-  }
+  return selectedSubscription.description;
+}

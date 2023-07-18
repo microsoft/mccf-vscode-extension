@@ -1,31 +1,54 @@
 import * as vscode from "vscode";
-import { openRepositoryInDevContainerCommand } from "./constants";
+import * as path from "path";
+import * as fs from "fs";
+import * as constants from "./constants";
+import * as folderUtils from "../Utilities/folderUtils";
+import * as osUtils from "../Utilities/osUtilities";
 
 // Options for the CCF application templates
-const standardTemplateOption = {
-  label: "Standard CCF Template",
-  description: "Create a CCF application from generic template",
-  repository: "https://github.com/andpiccione/ccf-app-template",
+
+const emptyAppOption = {
+  label: "Empty App Template",
+  description: "Create a CCF project from an empty template",
+  sourceFolder: "empty-app",
+};
+
+const sampleBasicAppOption = {
+  label: "Sample Basic App",
+  description: "Create a CCF project from a basic CCF application",
+  sourceFolder: "basic-app",
 };
 
 const sampleBankingAppOption = {
   label: "Sample Banking App",
-  description: "Create a sample CCF application from a banking app template",
-  repository: "https://github.com/andpiccione/ccf-sample-banking-app",
+  description: "Create a CCF project from a sample banking application",
+  sourceFolder: "banking-app",
 };
 
-const customProjectOption = {
-  label: "Custom project",
-  description: "Create a CCF application from a custom URL",
+const sampleLoggingAppOption = {
+  label: "Sample Logging App",
+  description: "Create a CCF project from a sample logging application",
+  sourceFolder: "logging-app",
+};
+
+const sampleDataReconciliationAppOption = {
+  label: "Sample Data Reconciliation App",
+  description:
+    "Create a CCF project from a sample data reconciliation application",
+  sourceFolder: "data-reconciliation-app",
 };
 
 // Create a devcontainer from a CCF application template
-export async function createDevContainerCommand() {
+export async function createDevContainerCommand(
+  context: vscode.ExtensionContext,
+) {
   try {
     const templateOptions = [
-      standardTemplateOption,
+      emptyAppOption,
+      sampleBasicAppOption,
       sampleBankingAppOption,
-      customProjectOption,
+      sampleLoggingAppOption,
+      sampleDataReconciliationAppOption,
     ];
 
     const template = await vscode.window.showQuickPick(templateOptions, {
@@ -37,50 +60,110 @@ export async function createDevContainerCommand() {
       return;
     }
 
-    // Create a devcontainer from the ccf app template
-    if (template.label === standardTemplateOption.label) {
-      console.log("Creating dev container for " + standardTemplateOption.label);
+    // Get the destination folder where to store the template
+    const appFolderUri = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
+      canSelectMany: false,
+      openLabel: "Select destination folder",
+      title: "Select destination folder",
+    });
 
-      // Opens the dev container with the corresponding repository
-      vscode.commands.executeCommand(
-        openRepositoryInDevContainerCommand,
-        standardTemplateOption.repository,
-      );
+    // If no folder is selected, report it to the user
+    if (!appFolderUri || appFolderUri.length === 0) {
+      vscode.window.showInformationMessage("No folder selected");
+      return;
     }
 
-    // Create a devcontainer from the sample banking app
-    else if (template.label === sampleBankingAppOption.label) {
-      // Create a CCF application from a banking app template
-      console.log("Creating dev container for " + sampleBankingAppOption.label);
+    // Get the path of the folder
+    const folderPath = appFolderUri[0].fsPath;
 
-      // Opens the dev container with the corresponding repository
-      vscode.commands.executeCommand(
-        openRepositoryInDevContainerCommand,
-        sampleBankingAppOption.repository,
-      );
-    } else if (template.label === customProjectOption.label) {
-      // Get the repository URL
-      const repositoryUrl = await vscode.window.showInputBox({
-        prompt: "Enter the repository URL",
-        placeHolder: "https://github.com/username/repo.git",
-        ignoreFocusOut: true,
-      });
+    // Get the name of the folder where to store the template
+    const folderName = await vscode.window.showInputBox({
+      prompt: "Enter the new folder name",
+      placeHolder: "mccf-project",
+      ignoreFocusOut: true,
+    });
 
-      if (!repositoryUrl) {
-        vscode.window.showInformationMessage("No repository URL entered");
-        return;
-      }
-
-      // Create the devcontainer with the input URL
-      vscode.commands.executeCommand(
-        openRepositoryInDevContainerCommand,
-        repositoryUrl,
-      );
+    // If no name is given, report it to the user
+    if (!folderName || folderName.length === 0) {
+      vscode.window.showInformationMessage("No folder name entered");
+      return;
     }
+
+    // Create new project folder with the given parameters
+    const newFolderPath = path.join(folderPath, folderName);
+
+    // If the folder already exists, report it to the user
+    if (fs.existsSync(newFolderPath)) {
+      vscode.window.showErrorMessage(
+        "Folder already exists. Please choose a different name",
+      );
+      return;
+    }
+
+    try {
+      folderUtils.createFolder(newFolderPath);
+
+      // Get path to the extension
+      const extensionPath = osUtils.getPathOSAgnostic(context.extensionPath);
+
+      // Get path to the templates folder
+      const templatePath = path.join(extensionPath, "dist", "templates");
+
+      // Create a devcontainer from one of the provided templates
+      console.log("Creating dev container for template " + template.label);
+
+      // Create template and start devcontainer
+      initializeProjectFolder(
+        templatePath,
+        template.sourceFolder,
+        newFolderPath,
+      );
+    } catch (error) {
+      console.error(
+        "Error initializing template folder and devcontainer",
+        error,
+      );
+      // Delete the folder and any file created upon exception
+      fs.rmSync(newFolderPath, { force: true, recursive: true });
+      throw error;
+    }
+
+    vscode.window.showInformationMessage(
+      "CCF Project successfully initialized",
+    );
   } catch (error) {
     console.error("CCF project could not be created", error);
     vscode.window.showErrorMessage("CCF project creation failed");
   }
+}
+function initializeProjectFolder(
+  templatePath: string,
+  appPath: string,
+  destPath: string,
+) {
+  // Copy the shared template files into the destination folder
+  folderUtils.copyDirectoryRecursiveSync(
+    path.join(templatePath, "shared-template"),
+    destPath,
+  );
 
-  vscode.window.showInformationMessage("CCF Project successfully initialized");
+  // Copy the files specific to the application into the destination folder
+  folderUtils.copyDirectoryRecursiveSync(
+    path.join(templatePath, appPath),
+    destPath,
+    true, // overwrite files copied from the template if they already exist in the destination folder
+  );
+
+  // Set proper permissions for the destination folder
+  folderUtils.setPermissionsRecursively(destPath, 0o755);
+
+  // Opens the folder in a new window. It does not automatically open a devcontainer
+  // as this is currently not supported by the remote containers API (see https://github.com/microsoft/vscode-remote-release/issues/8422).
+  // Still, the user will be prompted with a dialog to open the folder in a devcontainer after the new window is opened.
+  vscode.commands.executeCommand(
+    constants.openFolderInDevContainerCommand,
+    vscode.Uri.file(destPath),
+  );
 }

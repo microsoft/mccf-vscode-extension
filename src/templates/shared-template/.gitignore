@@ -1,0 +1,11 @@
+**/build/**
+*.deb
+**/.venv_ccf_sandbox
+**/.venv_ccf_verify_receipt
+**/workspace/
+**/node_modules
+*.pem
+*.pfx
+**/dist
+**/coverage
+aad.env

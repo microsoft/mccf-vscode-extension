@@ -1,12 +1,7 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
 import * as vscode from "vscode";
-import {subscriptionList} from "./subscriptionList";
-
-interface Subscription {
-  name: string;
-  id: string;
-}
+import { subscriptionList } from "./subscriptionList";
 
 export async function createMCCFInstance() {
   try {
@@ -16,10 +11,7 @@ export async function createMCCFInstance() {
     return console.log("Please install Azure CLI before proceeding: " + error);
   }
 
-
   const subscriptionId = subscriptionList();
-
-  // Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
 
   const certificateDir = await vscode.window.showOpenDialog({
     canSelectFiles: true,
@@ -60,16 +52,21 @@ export async function createMCCFInstance() {
   } else if (!resourceGroup) {
     vscode.window.showErrorMessage("Please enter a resource group");
   } else if (!nodes) {
-    vscode.window.showErrorMessage("Please enter the amount of nodes you want this instance to have");
+    vscode.window.showErrorMessage(
+      "Please enter the amount of nodes you want this instance to have",
+    );
   }
 
   resourceGroup = resourceGroup?.toLowerCase();
   console.log(resourceGroup);
 
-  const progressBar = window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  const progressBar = window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+  );
   progressBar.text = "$(sync~spin) Creating MCCF instance...";
   progressBar.show();
 
+<<<<<<< HEAD
      // Wait for a few seconds to allow the instance to be created before checking its status
      await new Promise((resolve) => setTimeout(resolve, 5000));
 
@@ -109,4 +106,32 @@ export async function createMCCFInstance() {
           vscode.window.showErrorMessage("Failed to create MCCF instance: " + error);
           progressBar.hide();
    }
+=======
+  await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: "Creating MCCF instance...",
+      cancellable: false,
+    },
+    async () => {
+      try {
+        await execSync(
+          `az confidentialledger managedccfs create --members "[{certificate:'${certificateDirString}',identifier:'${identifier}}',group:'group1'}]" --node-count ${nodes} --name ${names} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
+        );
+        progressBar.text = "MCCF instance created successfully";
+        progressBar.hide();
+        vscode.window.showInformationMessage(
+          "MCCF instance created successfully",
+        );
+      } catch (error) {
+        progressBar.text = "MCCF instance creation failed";
+        progressBar.hide();
+        console.log(error);
+        vscode.window.showErrorMessage(
+          "Failed to create MCCF instance: " + error,
+        );
+      }
+    },
+  );
+>>>>>>> 8814a19bc671deba21e87bb0c0a94dc56910bbdb
 }
