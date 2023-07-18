@@ -70,26 +70,43 @@ export async function createMCCFInstance() {
   progressBar.text = "$(sync~spin) Creating MCCF instance...";
   progressBar.show();
 
-  await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      title: "Creating MCCF instance...",
-      cancellable: false,
-    },
-    async () => {
-      try {
-        await execSync(
-          `az confidentialledger managedccfs create --members "[{certificate:'${certificateDirString}',identifier:'${identifier}}',group:'group1'}]" --node-count ${nodes} --name ${names} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
-        );
-        progressBar.text = "MCCF instance created successfully";
-        progressBar.hide();
-        vscode.window.showInformationMessage("MCCF instance created successfully");
+     // Wait for a few seconds to allow the instance to be created before checking its status
+     await new Promise((resolve) => setTimeout(resolve, 5000));
+
+     // Function to check if the MCCF instance was created successfully
+     const checkInstanceCreated = () => {
+       try {
+         // Run the `az confidentialledger managedccfs show` command to get the instance details
+         const instanceInfo = execSync(
+           `az confidentialledger managedccfs show --name ${names} --resource-group ${resourceGroup} --subscription ${subscriptionId}`
+         ).toString();
+ 
+         // Parse the JSON output of the `az confidentialledger managedccfs show` command
+         const instanceDetails = JSON.parse(instanceInfo);
+ 
+         // Check the status of the instance (you can customize this based on the output structure)
+         if (instanceDetails?.provisioningState === "Succeeded") {
+           progressBar.text = "MCCF instance created successfully";
+           vscode.window.showInformationMessage("MCCF instance created successfully");
+         } else {
+           progressBar.text = "MCCF instance creation failed";
+           vscode.window.showErrorMessage("Failed to create MCCF instance");
+         }
+       } catch (error) {
+         progressBar.text = "MCCF instance creation failed";
+         console.log(error);
+         vscode.window.showErrorMessage("Failed to create MCCF instance: " + error);
+       } finally {
+         progressBar.hide();
+       }
+     };
+ 
+     // Call the function to check if the instance was created after a delay (you can adjust the delay as needed)
+     try {setTimeout(checkInstanceCreated, 15000);
       } catch (error) {
-        progressBar.text = "MCCF instance creation failed";
-        progressBar.hide();
-        console.log(error);
-        vscode.window.showErrorMessage("Failed to create MCCF instance: " + error);
-      }
-    }
-  );
+          progressBar.text = "MCCF instance creation failed";
+          console.log(error);
+          vscode.window.showErrorMessage("Failed to create MCCF instance: " + error);
+          progressBar.hide();
+   }
 }
