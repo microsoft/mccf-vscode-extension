@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import { execSync } from "child_process";
-import { window } from "vscode";
 import { subscriptionList } from "./subscriptionList";
 
 export async function listMCCFInstances() {
   const subscriptionId = await subscriptionList();
+
   const resourceGroup = await vscode.window.showInputBox({
     prompt: "Enter the resource group:",
   });
@@ -14,10 +14,12 @@ export async function listMCCFInstances() {
     );
     return;
   }
-  const message = execSync(
-    `az resource list --resource-group ${resourceGroup} --output table --only-show-errors`,
-  );
+
   try {
+    const message = execSync(
+      `az resource list --resource-group ${resourceGroup} --output table --only-show-errors`,
+    );
+
     const final = message.toString();
     if (final === "") {
       vscode.window.showErrorMessage(
@@ -29,11 +31,6 @@ export async function listMCCFInstances() {
     vscode.window.showErrorMessage(
       "An error occurred while retrieving the resources. Please enter a valid resource group and try again",
     );
-  }
-
-  interface Subscription {
-    name: string;
-    id: string;
   }
 
   // command is ran in the terminal

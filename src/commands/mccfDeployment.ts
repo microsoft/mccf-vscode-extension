@@ -3,11 +3,6 @@ import { window } from "vscode";
 import * as vscode from "vscode";
 import { subscriptionList } from "./subscriptionList";
 
-interface Subscription {
-  name: string;
-  id: string;
-}
-
 export async function createMCCFInstance() {
   try {
     execSync("az --version");
@@ -17,8 +12,6 @@ export async function createMCCFInstance() {
   }
 
   const subscriptionId = subscriptionList();
-
-  // Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
 
   const certificateDir = await vscode.window.showOpenDialog({
     canSelectFiles: true,

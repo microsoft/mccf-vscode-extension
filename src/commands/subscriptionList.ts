@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
-const { exec } = require("child_process");
+import { exec } from "child_process";
 import * as vscode from "vscode";
 
 interface Subscription {
