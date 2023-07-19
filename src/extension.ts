@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.createProposal",
-      () => submitProposal(context),
+      () => createProposal(context),
     ),
   );
 }

@@ -10,7 +10,7 @@ export async function createProposal(specialContext: vscode.ExtensionContext) {
     // Prompt user to enter Member name to generate the proposal for:
     const idName = await vscode.window.showInputBox({
         prompt: "Enter the ID to generate the proposal for",
-        placeHolder: "ID",
+        placeHolder: "member0",
     });
     
     // If no member name is entered, report it to the user
@@ -19,7 +19,6 @@ export async function createProposal(specialContext: vscode.ExtensionContext) {
         return;
     }
 
-    // Create a certificate directory folder name accessible by all functions in this command
     const certificateFolder = "Certificates";
 
     // Get a certificate directory path accessible by all functions
