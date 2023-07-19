@@ -14,5 +14,5 @@ export function getPathOSAgnostic(filePath: string): string {
 }
 
 export function runInTerminal(arg0: string, arg1: string) {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }

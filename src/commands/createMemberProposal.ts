@@ -3,6 +3,8 @@ import * as vscode from "vscode";
 import path = require("path");
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
+import { runInTerminal } from "../Utilities/osUtilities";
+
 
 export async function createMemberProposal(specialContext: vscode.ExtensionContext) {
 
@@ -64,6 +66,9 @@ export async function createMemberProposal(specialContext: vscode.ExtensionConte
     const certPath = certFile[0].fsPath;
     const pubkPath = pubkFile[0].fsPath;
     const destFolderPath = destFolder[0].fsPath;
+
+    // Call the generateProposal function
+    generateProposal(certPath, pubkPath, destFolderPath, idName, specialContext.extensionPath);
 }
 
 // Create member proposal function that runs the add_member_2.sh script to generate member proposals
@@ -84,8 +89,7 @@ async function generateProposal(
         vscode.window.showInformationMessage("Generating proposal...");
 
         // Use the runInTerminal function to run the add_member_2.sh script
-        utilities.runInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertPath}" --pubk-file "${wslPubkPath}" --dest-folder "${wslDestFolderPath}" --id ${id}`);
-
+        runInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertPath}" --pubk-file "${wslPubkPath}" --dest-folder "${wslDestFolderPath}" --id ${id}`);
         vscode.window.showInformationMessage("Proposal generated at: " + destFolderPath);
     } catch (error) {
         vscode.window.showErrorMessage(`Error generating proposal: ${error}`);

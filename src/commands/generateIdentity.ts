@@ -69,9 +69,6 @@ async function idGenerator(
 
     runCommandInTerminal("Generate Identity", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
 
-    // Run Script through terminal
-    // terminal.sendText(`cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
-
     // Show success message to user
     vscode.window.showInformationMessage(
       id + " created successfully",
