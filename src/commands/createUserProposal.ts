@@ -1,11 +1,13 @@
+/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import path = require("path");
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
-export async function createUserProposal(specialContext: vscode.ExtensionContext){
-
+export async function createUserProposal(
+    specialContext: vscode.ExtensionContext,
+) {
     // Show user an open dialogue box to choose the cert-file
     const certFile = await vscode.window.showOpenDialog({
         canSelectFiles: true,
@@ -46,4 +48,32 @@ export async function createUserProposal(specialContext: vscode.ExtensionContext
         return;
     }
 
+    // Get the path of the certFile & destination folder
+    const certPath = utilities.getPathOSAgnostic(certFile[0].fsPath);
+    const destPath = utilities.getPathOSAgnostic(destFolder[0].fsPath);
+
+    // Call the generateProposal function
+    generateProposal(certPath, destPath, idName, specialContext.extensionPath);
+}
+
+// Create user proposal function that runs add_user_2.sh script to generate proposal
+async function generateProposal(
+    certPath: string,
+    destPath: string,
+    idName: string,
+    extensionPath: string,
+) {
+    try{
+        // Display progress message to user
+        vscode.window.showInformationMessage("Generating User Proposal...");
+
+        runCommandInTerminal(
+            "Create User Proposal",
+            `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_user_2.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
+        );
+        vscode.window.showInformationMessage("User Proposal Generated at:" + destPath);
+    } catch (error) {
+        vscode.window.showErrorMessage(`Error generating proposal: ${error}`);
+    }
+    
 }

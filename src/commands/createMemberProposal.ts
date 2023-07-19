@@ -62,12 +62,12 @@ export async function createMemberProposal(specialContext: vscode.ExtensionConte
     }
 
     // Get the path of the cert-file, pubk-file, and destination folder
-    const certPath = certFile[0].fsPath;
-    const pubkPath = pubkFile[0].fsPath;
-    const destFolderPath = destFolder[0].fsPath;
+    const certPath = utilities.getPathOSAgnostic(certFile[0].fsPath);
+    const pubkPath = utilities.getPathOSAgnostic(pubkFile[0].fsPath);
+    const destPath = utilities.getPathOSAgnostic(destFolder[0].fsPath);
 
     // Call the generateProposal function
-    generateProposal(certPath, pubkPath, destFolderPath, idName, specialContext.extensionPath);
+    generateProposal(certPath, pubkPath, destPath, idName, specialContext.extensionPath);
 }
 
 // Create member proposal function that runs the add_member_2.sh script to generate member proposals
@@ -79,16 +79,11 @@ async function generateProposal(
     extensionPath: string,
 ) {
     try {
-        // Convert the paths to be OS agnostic -- compatible with linux environment
-        const wslCertPath = utilities.getPathOSAgnostic(certPath);
-        const wslPubkPath = utilities.getPathOSAgnostic(pubkPath);
-        const wslDestFolderPath = utilities.getPathOSAgnostic(destFolderPath);
-
         // Display progress message to user
-        vscode.window.showInformationMessage("Generating proposal...");
+        vscode.window.showInformationMessage("Generating Member Proposal...");
 
         // Use the runInTerminal function to run the add_member_2.sh script
-        runCommandInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertPath}" --pubk-file "${wslPubkPath}" --dest-folder "${wslDestFolderPath}" --id ${id}`);
+        runCommandInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${destFolderPath}" --id ${id}`);
         vscode.window.showInformationMessage("Proposal generated at: " + destFolderPath);
     } catch (error) {
         vscode.window.showErrorMessage(`Error generating proposal: ${error}`);
