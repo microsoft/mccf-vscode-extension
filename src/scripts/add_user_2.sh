@@ -29,7 +29,7 @@ function usage {
     echo ""
     echo "Generate set_user.json proposal for adding users to CCF."
     echo ""
-    echo "usage: ./add_user.sh --cert-file string --id string"
+    echo "usage: ./add_user.sh --cert-file string --dest-folder string --id string"
     echo ""
     echo "  --cert-file     string     The certificate .pem file for the user"
     echo "  --dest-folder   string     The destination folder for the proposal file"

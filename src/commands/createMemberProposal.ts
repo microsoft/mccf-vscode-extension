@@ -3,8 +3,7 @@ import * as vscode from "vscode";
 import path = require("path");
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
-import { runInTerminal } from "../Utilities/osUtilities";
-
+import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
 export async function createMemberProposal(specialContext: vscode.ExtensionContext) {
 
@@ -89,7 +88,7 @@ async function generateProposal(
         vscode.window.showInformationMessage("Generating proposal...");
 
         // Use the runInTerminal function to run the add_member_2.sh script
-        runInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertPath}" --pubk-file "${wslPubkPath}" --dest-folder "${wslDestFolderPath}" --id ${id}`);
+        runCommandInTerminal("Generate Member Proposal", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${wslCertPath}" --pubk-file "${wslPubkPath}" --dest-folder "${wslDestFolderPath}" --id ${id}`);
         vscode.window.showInformationMessage("Proposal generated at: " + destFolderPath);
     } catch (error) {
         vscode.window.showErrorMessage(`Error generating proposal: ${error}`);
