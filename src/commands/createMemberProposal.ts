@@ -5,17 +5,17 @@ const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { execSync } from "child_process";
 
-export async function createProposal(specialContext: vscode.ExtensionContext) {
+export async function createMemberProposal(specialContext: vscode.ExtensionContext) {
 
     // Prompt user to enter Member name to generate the proposal for:
     const idName = await vscode.window.showInputBox({
-        prompt: "Enter the ID to generate the proposal for",
-        placeHolder: "member0",
+        prompt: "Enter the member ID to generate the proposal for",
+        placeHolder: "Ex: member0",
     });
     
     // If no member name is entered, report it to the user
     if (!idName || idName.length === 0) {
-        vscode.window.showInformationMessage("No name entered");
+        vscode.window.showInformationMessage("No id entered");
         return;
     }
 
@@ -24,12 +24,12 @@ export async function createProposal(specialContext: vscode.ExtensionContext) {
     // Get a certificate directory path accessible by all functions
     const certificatePath = path.join(process.cwd(), certificateFolder);
 
-    proposalCreator(idName, certificatePath, specialContext.extensionPath);
+    memberProposalCreator(idName, certificatePath, specialContext.extensionPath);
 
 }
 
 // Create function that will check read files in the certificate folder and make sure that the member name entered exists
-async function proposalCreator(id: string, certificatePath: string, extensionPath: string) {
+async function memberProposalCreator(id: string, certificatePath: string, extensionPath: string) {
 
     // Check if the member name entered exists in the certificate folder
     try {
@@ -46,7 +46,7 @@ async function proposalCreator(id: string, certificatePath: string, extensionPat
                 const pubkPath = utilities.getPathOSAgnostic(path.join(certificatePath, `${id}_enc_pubk.pem`));
 
                 // Get the terminal with the name "Generate Identity" if it exists, otherwise create it
-                const terminal = vscode.window.terminals.find((t) => t.name === "Generate Proposal") || vscode.window.createTerminal("Generate Proposal");
+                const terminal = vscode.window.terminals.find((t) => t.name === "Generate Member Proposal") || vscode.window.createTerminal("Generate Proposal");
                 terminal.show();
                 terminal.sendText(`cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member_2.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${wslCertificatePath}" --id ${id}`);
             

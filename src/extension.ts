@@ -5,7 +5,7 @@ import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
 import { createMCCFInstance } from "./commands/mccfDeployment";
 import { listMCCFInstances } from "./commands/listMCCFInstance";
 import { submitProposal } from "./commands/submitProposal";
-import { createProposal } from "./commands/createProposal";
+import { createMemberProposal } from "./commands/createMemberProposal";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -60,8 +60,8 @@ export function activate(context: vscode.ExtensionContext) {
   // COMMAND: Create proposal
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createProposal",
-      () => createProposal(context),
+      "vscode-azure-managed-ccf.createMemberProposal",
+      () => createMemberProposal(context),
     ),
   );
 }
