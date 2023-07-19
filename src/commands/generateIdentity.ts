@@ -61,7 +61,7 @@ async function idGenerator(
     }
     vscode.window.showInformationMessage(
       `Generating certificates in folder ${certificatesFolderPath}`,
-    ); // show in the extension environment
+    ); 
 
     // Change certificatesFolderPath to a wsl path
     const wslCertificatePath = utilities.getPathOSAgnostic(
@@ -70,15 +70,11 @@ async function idGenerator(
 
     runCommandInTerminal("Generate Identity", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
 
-    // Run Script through terminal
-    // terminal.sendText(`cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
-
     // Show success message to user
     vscode.window.showInformationMessage(
       id + " created successfully",
     );
 
-    // have command to change directory inside of the dist folder
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating certificates");
