@@ -1,12 +1,13 @@
 import * as vscode from "vscode";
 
-// Open a terminal and run command in it
 export function runCommandInTerminal(terminalName: string, command: string) {
-  // Create terminal
-  const terminal = vscode.window.createTerminal({
-    name: terminalName,
-    isTransient: true,
-  });
+  // Create terminal if it doesn't already exist with the inputted terminalName:
+  const terminal =
+    vscode.window.terminals.find((t) => t.name === terminalName) ||
+    vscode.window.createTerminal({
+      name: terminalName,
+      isTransient: true,
+    });
 
   // Show terminal
   terminal.show();

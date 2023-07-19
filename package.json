@@ -34,7 +34,7 @@
         "title": "MCCF: Submit Proposal"
       },
       {
-        "command": "vscode-azure-managed.ccf.generateIdentity",
+        "command": "vscode-azure-managed-ccf.generateIdentity",
         "title": "MCCF: Generate Identity"
       }
     ]
