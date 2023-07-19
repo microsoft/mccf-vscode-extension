@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
+import { createMCCFInstance } from "./commands/mccfDeployment";
+import { listMCCFInstances } from "./commands/listMCCFInstance";
 import { submitProposal } from "./commands/submitProposal";
 import { generateIdentity } from "./commands/generateIdentity";
 

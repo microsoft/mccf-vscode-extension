@@ -36,6 +36,14 @@
       {
         "command": "vscode-azure-managed-ccf.generateIdentity",
         "title": "MCCF: Generate Identity"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.mccfDeployment",
+        "title": "MCCF: Create MCCF Instance"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.listMccfDeployment",
+        "title": "MCCF: List MCCF Instances"
       }
     ]
   },

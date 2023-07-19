@@ -106,7 +106,7 @@ export async function createDevContainerCommand(
       folderUtils.createFolder(newFolderPath);
 
       // Get path to the extension
-      const extensionPath = osUtils.getPathOSAgnostic(context.extensionPath);
+      const extensionPath = context.extensionPath;
 
       // Get path to the templates folder
       const templatePath = path.join(extensionPath, "dist", "templates");
@@ -158,6 +158,9 @@ function initializeProjectFolder(
 
   // Set proper permissions for the destination folder
   folderUtils.setPermissionsRecursively(destPath, 0o755);
+
+  // Convert line endings to LF
+  folderUtils.convertLineEndingsRecursive(destPath);
 
   // Opens the folder in a new window. It does not automatically open a devcontainer
   // as this is currently not supported by the remote containers API (see https://github.com/microsoft/vscode-remote-release/issues/8422).
