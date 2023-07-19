@@ -64,7 +64,7 @@ elif [ -z "$id" ]; then
   failed "Missing parameter --id"
 fi
 
-proposal_json_file="${dest_folder}/set_${id}.json"
+proposal_json_file="${dest_folder}/${id}.json"
 
 echo "Creating member json proposal file..."
 create_member_proposal "$cert_file" "$pubk_file" "$proposal_json_file"

@@ -52,7 +52,7 @@ export async function createMemberProposal(specialContext: vscode.ExtensionConte
     // Prompt user to enter the name of the json folder
     const idName = await vscode.window.showInputBox({
         prompt: "Enter proposal file ID",
-        placeHolder: "member0",
+        placeHolder: "Ex: set_member0",
     });
 
     // If no id is entered, report it to the user

@@ -42,6 +42,10 @@
         "title": "MCCF: Generate Member Proposal"
       },
       {
+        "command": "vscode-azure-managed-ccf.createUserProposal",
+        "title": "MCCF: Generate User Proposal"
+      },
+      {
         "command": "vscode-azure-managed-ccf.generateIdentity",
         "title": "MCCF: Generate Identity Keys"
       }

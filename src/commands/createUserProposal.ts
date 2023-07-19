@@ -39,7 +39,7 @@ export async function createUserProposal(
     // Prompt user to enter the name of the json folder
     const idName = await vscode.window.showInputBox({
         prompt: "Enter proposal file ID",
-        placeHolder: "user0",
+        placeHolder: "Ex: set_user0",
     });
 
     // If no id is entered, report it to the user

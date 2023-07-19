@@ -78,7 +78,7 @@ then
     exit 0
 fi
 
-proposal_json_file="${dest_folder}/set_${id}.json"
+proposal_json_file="${dest_folder}/${id}.json"
 
 echo "Creating user json proposal file..."
 create_user_proposal "$cert_file" "$proposal_json_file"
