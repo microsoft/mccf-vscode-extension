@@ -51,3 +51,9 @@ After starting the network in a Docker Container, your output should look simila
 ![Alt text](image-2.png)
 
 > TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
+
+## Submit a Proposal
+1. In order to submit a proposal you would need to provide four parameters which are the network url,signing key,certificate key and the proposal file. Choose the correct the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
+
+2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
+
