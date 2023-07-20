@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { execSync } from "child_process";
 import { window } from "vscode";
 const { exec } = require("child_process");

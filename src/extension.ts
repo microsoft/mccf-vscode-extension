@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";

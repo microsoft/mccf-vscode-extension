@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import { execSync } from "child_process";
 import { window } from "vscode";
