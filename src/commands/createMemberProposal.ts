@@ -73,6 +73,14 @@ export async function createMemberProposal(
     return;
   }
 
+  // Check if idName already exists in the destination folder
+  if (fs.existsSync(path.join(destFolder[0].fsPath, idName + ".json"))) {
+    vscode.window.showInformationMessage(
+      "Proposal file with that name already exists in destination folder.",
+    );
+    return;
+  }
+
   // Get the path of the cert-file, pubk-file, and destination folder
   const certPath = utilities.getPathOSAgnostic(certFile[0].fsPath);
   const pubkPath = utilities.getPathOSAgnostic(pubkFile[0].fsPath);
@@ -97,24 +105,13 @@ async function generateProposal(
   extensionPath: string,
 ) {
   try {
-    // Read the contents of the destination folder
-    const destFolderContents = fs.readdirSync(destFolderPath);
-
-    // If the folder contains a file with the id already, report it to the user and return
-    if (destFolderContents.includes(`${id}.json`)) {
-      vscode.window.showInformationMessage(
-        "Proposal with the same ID already exists. Please enter a unique ID.",
-      );
-      return;
-    }
-
     // Display progress message to user
     vscode.window.showInformationMessage("Generating Member Proposal...");
 
     // Use the runInTerminal function to run the add_member_2.sh script
     runCommandInTerminal(
       "Generate Member Proposal",
-      `cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_member.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${destFolderPath}" --id ${id}`,
+      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${destFolderPath}" --id ${id}`,
     );
     vscode.window.showInformationMessage(
       "Proposal generated at: " + destFolderPath,

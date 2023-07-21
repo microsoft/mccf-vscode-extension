@@ -39,7 +39,7 @@ export async function createUserProposal(
     return;
   }
 
-  // Prompt user to enter the name of the json file. If present in dest folder already, prompt user to enter name again
+  // Prompt user to enter the name of the json file
   const idName = await vscode.window.showInputBox({
     prompt: "Enter proposal file ID",
     placeHolder: "Ex: set_user0",
@@ -48,6 +48,14 @@ export async function createUserProposal(
   // If no id is entered, report it to the user
   if (!idName || idName.length === 0) {
     vscode.window.showInformationMessage("No ID entered");
+    return;
+  }
+
+  // Check if proposal file with that name already exists in destination folder
+  if (fs.existsSync(path.join(destFolder[0].fsPath, idName + ".json"))) {
+    vscode.window.showInformationMessage(
+      "Proposal file with that name already exists in destination folder",
+    );
     return;
   }
 
@@ -67,23 +75,12 @@ async function generateProposal(
   extensionPath: string,
 ) {
   try {
-    // Read files in the destination folder
-    const files = fs.readdirSync(destPath);
-
-    // Check if the proposal file already exists in files
-    if (files.includes(`${idName}.json`)) {
-      vscode.window.showInformationMessage(
-        "Proposal with the same ID already exists. Please enter a unique ID.",
-      );
-      return;
-    }
-
     // Display progress message to user
     vscode.window.showInformationMessage("Generating User Proposal...");
 
     runCommandInTerminal(
       "Create User Proposal",
-      `cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_user.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
+      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_user.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
     );
     vscode.window.showInformationMessage(
       "User Proposal Generated at:" + destPath,
