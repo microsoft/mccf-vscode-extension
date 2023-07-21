@@ -22,7 +22,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select signing cert",
+    openLabel: "Select signing certificate",
   });
 
   // Check if signing cert is undefined
@@ -37,6 +37,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFolders: false,
     canSelectMany: false,
     openLabel: "Select signing key (privk.pem file)",
+    filters: {"Privk.pem files": ["pem"]"},
   });
 
   // Check if signing key is undefined
@@ -63,6 +64,8 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFolders: false,
     canSelectMany: false,
     openLabel: "Select proposal file",
+    filters: {
+      "JSON files": ["json"]},
   });
 
   // Check if proposal file is undefined
