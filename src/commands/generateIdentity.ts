@@ -1,10 +1,11 @@
-/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 const fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
-export async function generateIdentity(specialContext: vscode.ExtensionContext) {
+export async function generateIdentity(
+  specialContext: vscode.ExtensionContext,
+) {
   // Prompt user to enter name
   const idName = await vscode.window.showInputBox({
     prompt: "Enter ID",
@@ -48,11 +49,7 @@ async function idGenerator(
   const files = fs.readdirSync(certificatesFolderPath);
   try {
     // If the folder contains a file with id already, report it to the user and do not overwrite certificates
-    if (
-      files.includes(
-        id + "_cert.pem" || files.includes(id + "_privk.pem"),
-      )
-    ) {
+    if (files.includes(id + "_cert.pem" || files.includes(id + "_privk.pem"))) {
       vscode.window.showWarningMessage(
         "ID already exists. Please enter a unique ID",
       );
@@ -67,17 +64,17 @@ async function idGenerator(
       certificatesFolderPath,
     );
 
-    runCommandInTerminal("Generate Identity", `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`);
+    runCommandInTerminal(
+      "Generate Identity",
+      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`,
+    );
 
     // Show success message to user
-    vscode.window.showInformationMessage(
-      id + " created successfully",
-    );
+    vscode.window.showInformationMessage(id + " created successfully");
 
     // have command to change directory inside of the dist folder
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating certificates");
   }
-
 }

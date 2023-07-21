@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import path = require("path");
 const fs = require("fs");
@@ -13,7 +12,9 @@ export async function createUserProposal(
         canSelectFiles: true,
         canSelectFolders: false,
         canSelectMany: false,
-        openLabel: "Select the user cert.pem file",
+        filters: {
+            "Pem files": ["pem"],
+        },
     });
 
     // Check if certFile is undefined
@@ -36,7 +37,7 @@ export async function createUserProposal(
         return;
     }
 
-    // Prompt user to enter the name of the json folder
+    // Prompt user to enter the name of the json file
     const idName = await vscode.window.showInputBox({
         prompt: "Enter proposal file ID",
         placeHolder: "Ex: set_user0",
@@ -64,12 +65,22 @@ async function generateProposal(
     extensionPath: string,
 ) {
     try{
+
+        // Read files in the destination folder
+        const files = fs.readdirSync(destPath);
+
+        // Check if the proposal file already exists in files
+        if (files.includes(`${idName}.json`)) {
+            vscode.window.showInformationMessage("Proposal with the same ID already exists. Please enter a unique ID.");
+            return;
+        }
+
         // Display progress message to user
         vscode.window.showInformationMessage("Generating User Proposal...");
 
         runCommandInTerminal(
             "Create User Proposal",
-            `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_user_2.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
+            `cd ${extensionPath}/dist && ${utilities.getBashCommand()} add_user.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
         );
         vscode.window.showInformationMessage("User Proposal Generated at:" + destPath);
     } catch (error) {
