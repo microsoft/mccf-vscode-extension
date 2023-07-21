@@ -11,7 +11,8 @@ export async function createMemberProposal(
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select the member cert.pem file",
+    openLabel: "Select signing certificate",
+    title: "Select signing certificate",
     filters: {
       "Pem files": ["pem"],
     },
@@ -28,7 +29,8 @@ export async function createMemberProposal(
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select the member pubk.pem file",
+    openLabel: "Select signing key",
+    title: "Select signing key",
     filters: {
       "Pem files": ["pem"],
     },
