@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 
 // Open a terminal and run command in it
