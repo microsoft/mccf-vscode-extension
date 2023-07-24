@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { execSync } from "child_process";
 import { window } from "vscode";
 import { exec } from "child_process";
@@ -11,9 +10,8 @@ interface Subscription {
 }
 
 export async function subscriptionList() {
-
   azVersion();
-  
+
   // Retrieve a list of subscriptions
   const subscriptionsOutput = execSync(
     "az account list --output json",
