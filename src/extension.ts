@@ -59,22 +59,6 @@ export function activate(context: vscode.ExtensionContext) {
       () => votingProcedure(context),
     ),
   );
-
-  // COMMAND: Create MCCF instance
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.mccfDeployment",
-      () => createMCCFInstance(),
-    ),
-  );
-
-  // COMMAND: List MCCF instances
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.listMCCFInstances",
-      () => listMCCFInstances(),
-    ),
-  );
 }
 
 // This method is called when your extension is deactivated

@@ -3,10 +3,9 @@ import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
 export async function votingProcedure(specialContext: vscode.ExtensionContext) {
-  // echo "usage: ./vote_proposal.sh --network-url string --signing-cert string --signing-key string --proposal-id string --vote-file string"
-
   // Prompt user to enter network url
   const networkUrl = await vscode.window.showInputBox({
+    ignoreFocusOut: true,
     prompt: "Enter network url",
     placeHolder: "Network url",
   });
@@ -37,7 +36,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select signing key (privk.pem file)",
+    openLabel: "Select signing key",
     filters: { "Privk.pem files": ["pem"] },
   });
 
@@ -49,6 +48,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
 
   // Prompt user to enter proposal id (for now have user input proposal id)
   const proposalId = await vscode.window.showInputBox({
+    ignoreFocusOut: true,
     prompt: "Enter proposal id",
     placeHolder: "Proposal id",
   });
@@ -59,6 +59,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
+  /*
   // Prompt user to select the vote file via file explorer
   const voteFile = await vscode.window.showOpenDialog({
     canSelectFiles: true,
@@ -76,10 +77,16 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
+  */
+
   // Retrieve paths of sign cert, sign key, and voting file
   const signingCertPath = utilities.getPathOSAgnostic(signingCert[0].fsPath);
   const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
-  const votingFilePath = utilities.getPathOSAgnostic(voteFile[0].fsPath);
+
+  // TODO: Get the path of the vote.json file
+  const votingFilePath = utilities.getPathOSAgnostic(
+    specialContext.extensionPath + "/dist/vote.json",
+  );
 
   // Call the vote proposal function
   voteProposal(
