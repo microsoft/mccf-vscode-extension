@@ -43,6 +43,7 @@ export async function createUserProposal(
   const idName = await vscode.window.showInputBox({
     prompt: "Enter proposal file ID",
     placeHolder: "Ex: set_user0",
+    ignoreFocusOut: true,
   });
 
   // If no id is entered, report it to the user

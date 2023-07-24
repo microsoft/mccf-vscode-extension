@@ -60,11 +60,13 @@ export async function createMemberProposal(
   const proposalName = await vscode.window.showInputBox({
     prompt: "Enter proposal file name",
     placeHolder: "Ex: set_member0",
+    ignoreFocusOut: true,
   });
 
   const idName = await vscode.window.showInputBox({
     prompt: "Enter proposal file ID",
     placeHolder: "Ex: set_member0",
+    ignoreFocusOut: true,
   });
 
   // If no id is entered, report it to the user
