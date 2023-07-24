@@ -10,6 +10,7 @@ export async function generateIdentity(
   const idName = await vscode.window.showInputBox({
     prompt: "Enter ID",
     placeHolder: "ID Name",
+    ignoreFocusOut: true,
   });
 
   // If no id is entered, report it to the user
@@ -32,14 +33,16 @@ export async function generateIdentity(
     return;
   }
 
-  // Get a certificate directory path accessible by all functions
-  const certificatePath = certificateFolderUri[0].fsPath;
-
-  // Check to see if ID already exists in the certificate folder
-  if (fs.existsSync(`${certificatePath}/${idName}_cert.pem`)) {
+  // Check to see if ID already exists in the certificate folder to prevent duplicate
+  if (fs.existsSync(`${certificateFolderUri[0].fsPath}/${idName}_cert.pem`)) {
     vscode.window.showInformationMessage("ID already exists");
     return;
   }
+
+  // Get the path of the certificate folder and make it OS agnostic
+  const certificatePath = utilities.getPathOSAgnostic(
+    certificateFolderUri[0].fsPath,
+  );
 
   // Call the id generator function
   idGenerator(idName, certificatePath, specialContext.extensionPath);
@@ -54,22 +57,15 @@ async function idGenerator(
   try {
     vscode.window.showInformationMessage(
       `Generating certificates in folder ${certificatesFolderPath}`,
-    ); // show in the extension environment
-
-    // Change certificatesFolderPath to a wsl path
-    const wslCertificatePath = utilities.getPathOSAgnostic(
-      certificatesFolderPath,
     );
 
     runCommandInTerminal(
       "Generate Identity",
-      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${wslCertificatePath}" --enc-key`,
+      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${certificatesFolderPath}" --enc-key`,
     );
 
     // Show success message to user
     vscode.window.showInformationMessage(id + " created successfully");
-
-    // have command to change directory inside of the dist folder
   } catch (error: any) {
     console.error(error.message);
     vscode.window.showErrorMessage("Error generating certificates");
