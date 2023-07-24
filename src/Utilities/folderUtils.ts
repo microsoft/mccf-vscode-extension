@@ -56,28 +56,6 @@ export function copyDirectoryRecursiveSync(
   }
 }
 
-// Convert line endings of all files in a directory recursively to LF (\n)
-export function convertLineEndingsRecursive(targetDir: string) {
-  try {
-    const files = fs.readdirSync(targetDir);
-
-    files.forEach((file) => {
-      const filePath = path.join(targetDir, file);
-
-      if (fs.statSync(filePath).isDirectory()) {
-        convertLineEndingsRecursive(filePath);
-      } else {
-        const content = fs.readFileSync(filePath, "utf8");
-        const unixContent = content.replace(/\r\n/g, "\n");
-        fs.writeFileSync(filePath, unixContent, { encoding: "utf8"});
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
 // Set the given permission for all files and folders inside a directory recursively
 export function setPermissionsRecursively(targetDir: string, mode: number) {
   try {
