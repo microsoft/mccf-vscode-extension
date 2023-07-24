@@ -1,7 +1,9 @@
+/* eslint-disable prettier/prettier */
 import { execSync } from "child_process";
 import { window } from "vscode";
 import { exec } from "child_process";
 import * as vscode from "vscode";
+import { azVersion } from "./azureUtilities";
 
 interface Subscription {
   name: string;
@@ -9,20 +11,9 @@ interface Subscription {
 }
 
 export async function subscriptionList() {
-  try {
-    exec("az --version", (error: any) => {
-      if (error) {
-        console.log(error);
-        return console.log(
-          "Please install Azure CLI before proceeding: " + error,
-        );
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    return Promise.reject(error);
-  }
 
+  azVersion();
+  
   // Retrieve a list of subscriptions
   const subscriptionsOutput = execSync(
     "az account list --output json",
@@ -43,7 +34,7 @@ export async function subscriptionList() {
 
   if (!selectedSubscription) {
     vscode.window.showErrorMessage("Please select a subscription");
-    return;
+    throw new Error("No subscription selected");
   }
 
   return selectedSubscription.description;
