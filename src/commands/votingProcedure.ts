@@ -23,6 +23,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFolders: false,
     canSelectMany: false,
     openLabel: "Select signing certificate",
+    filters: { "Cert.pem files": ["pem"] },
   });
 
   // Check if signing cert is undefined
@@ -37,7 +38,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     canSelectFolders: false,
     canSelectMany: false,
     openLabel: "Select signing key (privk.pem file)",
-    filters: {"Privk.pem files": ["pem"]"},
+    filters: { "Privk.pem files": ["pem"] },
   });
 
   // Check if signing key is undefined
@@ -58,26 +59,27 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
-  // Prompt user to select the proposal file via file explorer
-  const proposalFile = await vscode.window.showOpenDialog({
+  // Prompt user to select the vote file via file explorer
+  const voteFile = await vscode.window.showOpenDialog({
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select proposal file",
+    openLabel: "Select voting file",
     filters: {
-      "JSON files": ["json"]},
+      "JSON files": ["json"],
+    },
   });
 
-  // Check if proposal file is undefined
-  if (!proposalFile) {
-    vscode.window.showInformationMessage("No proposal file selected");
+  // Check if voting file is undefined
+  if (!voteFile) {
+    vscode.window.showInformationMessage("No voting file selected");
     return;
   }
 
-  // Retrieve paths of sign cert, sign key, and proposal file
+  // Retrieve paths of sign cert, sign key, and voting file
   const signingCertPath = utilities.getPathOSAgnostic(signingCert[0].fsPath);
   const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
-  const proposalFilePath = utilities.getPathOSAgnostic(proposalFile[0].fsPath);
+  const votingFilePath = utilities.getPathOSAgnostic(voteFile[0].fsPath);
 
   // Call the vote proposal function
   voteProposal(
@@ -85,7 +87,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     signingCertPath,
     signingKeyPath,
     proposalId,
-    proposalFilePath,
+    votingFilePath,
     specialContext.extensionPath,
   );
 }
@@ -96,11 +98,11 @@ async function voteProposal(
   signingCert: string,
   signingKey: string,
   proposalId: string,
-  proposalFile: string,
+  voteFile: string,
   extensionPath: string,
 ) {
   try {
-    const command = `cd ${extensionPath}/dist; ${utilities.getBashCommand()} ./vote_proposal.sh --network-url ${networkUrl} --signing-cert ${signingCert} --signing-key ${signingKey} --proposal-id ${proposalId} --vote-file ${proposalFile}`;
+    const command = `cd ${extensionPath}/dist; ${utilities.getBashCommand()} ./vote_proposal.sh --network-url ${networkUrl} --signing-cert ${signingCert} --signing-key ${signingKey} --proposal-id ${proposalId} --vote-file ${voteFile}`;
     runCommandInTerminal("Proposal Voting", command);
   } catch (error: unknown) {
     if (error instanceof Error) {
