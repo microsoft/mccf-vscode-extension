@@ -58,6 +58,12 @@ After starting the network in a Docker Container, your output should look simila
 2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
 
 
+## Submit a Proposal
+1. In order to submit a proposal you would need to provide four parameters which are the network url,signing key,certificate key and the proposal file. Choose the correct the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
+
+2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
+
+
 Users can create instances based on their specific preferences including node count,name,resource group location,certificate ,and identifier which require their specific subscription key.In addition,users can review all of their current instances that are currently running on their Azure account.
 
 ## Create an MCCF Instance

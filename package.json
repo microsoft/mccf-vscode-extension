@@ -30,8 +30,12 @@
         "title": "MCCF: Start CCF Network in Docker container"
       },
       {
-        "command": "vscode-azure-managed-ccf.addMember",
-        "title": "MCCF: Add Member"
+        "command": "vscode-azure-managed-ccf.submitProposal",
+        "title": "MCCF: Submit Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.generateIdentity",
+        "title": "MCCF: Generate Identity"
       },
       {
         "command": "vscode-azure-managed-ccf.mccfDeployment",
@@ -70,7 +74,7 @@
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
     "ts-loader": "^9.4.3",
-    "typescript": "^5.1.3",
+    "typescript": "^5.1.6",
     "webpack": "^5.85.0",
     "webpack-cli": "^5.1.1"
   }

@@ -12,7 +12,11 @@
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUnusedParameters": true /* Report errors on unused parameters. */
   },
+<<<<<<< HEAD
   "include":[
+=======
+  "include": [
+>>>>>>> main
     "src/**/*"
   ]
 }
