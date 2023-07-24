@@ -59,31 +59,9 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
-  /*
-  // Prompt user to select the vote file via file explorer
-  const voteFile = await vscode.window.showOpenDialog({
-    canSelectFiles: true,
-    canSelectFolders: false,
-    canSelectMany: false,
-    openLabel: "Select voting file",
-    filters: {
-      "JSON files": ["json"],
-    },
-  });
-
-  // Check if voting file is undefined
-  if (!voteFile) {
-    vscode.window.showInformationMessage("No voting file selected");
-    return;
-  }
-
-  */
-
   // Retrieve paths of sign cert, sign key, and voting file
   const signingCertPath = utilities.getPathOSAgnostic(signingCert[0].fsPath);
   const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
-
-  // TODO: Get the path of the vote.json file
   const votingFilePath = utilities.getPathOSAgnostic(
     specialContext.extensionPath + "/dist/vote.json",
   );
