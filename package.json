@@ -48,6 +48,10 @@
       {
         "command": "vscode-azure-managed-ccf.generateIdentity",
         "title": "MCCF: Generate Identity Keys"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.submitProposal",
+        "title": "MCCF: Submit Proposal"
       }
     ]
   },

@@ -84,7 +84,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     const command =
       `cd "${
         context.extensionPath + "/dist/"
-      }" && ${utilities.getBashCommand()} ` +
+      }"; ${utilities.getBashCommand()} ` +
       "submit_proposal.sh" +
       " --network-url " +
       networkUrl +
