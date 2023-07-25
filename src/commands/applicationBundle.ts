@@ -5,23 +5,25 @@ import { window } from "vscode";
 
 export async function applicationBundle() {
   try {
-    const appDir = await vscode.window.showOpenDialog({
+    /*
+    const appDir = vscode.window.showOpenDialog({
       canSelectFiles: true,
       canSelectFolders: false,
       canSelectMany: false,
       openLabel: "Select App File",
       title: "Select Application File",
     });
-    execSync(`cd ${appDir}`);
+    runCommandInTerminal("Application Bundle", `cd ${appDir}`);
+    */
     const progressBar = window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
     );
-    progressBar.text = "$(sync~spin) Creating MCCF instance...";
+    progressBar.text = "$(sync~spin) Creating Application Bundle...";
     progressBar.show();
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: "Creating MCCF instance...",
+        title: "Creating Application Bundle...",
         cancellable: false,
       },
       async () => {
