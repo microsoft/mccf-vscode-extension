@@ -70,7 +70,7 @@ export function convertLineEndingsRecursive(targetDir: string) {
       } else {
         const content = fs.readFileSync(filePath, "utf8");
         const unixContent = content.replace(/\r\n/g, "\n");
-        fs.writeFileSync(filePath, unixContent, { encoding: "utf8" });
+        fs.writeFileSync(filePath, unixContent, { encoding: "utf8"});
       }
     });
   } catch (error) {
