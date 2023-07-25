@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { execSync } from "child_process";
 import * as utilities from "../Utilities/osUtilities";
 import { isValidUrl } from "../Utilities/urlUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
@@ -84,7 +83,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     const command =
       `cd "${
         context.extensionPath + "/dist/"
-      }" && ${utilities.getBashCommand()} ` +
+      }"; ${utilities.getBashCommand()} ` +
       "submit_proposal.sh" +
       " --network-url " +
       networkUrl +
