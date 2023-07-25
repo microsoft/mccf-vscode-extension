@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-const fs = require("fs");
+import fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
@@ -33,12 +33,6 @@ export async function generateIdentity(
     return;
   }
 
-  // Check to see if ID already exists in the certificate folder to prevent duplicate
-  if (fs.existsSync(`${certificateFolderUri[0].fsPath}/${idName}_cert.pem`)) {
-    vscode.window.showInformationMessage("ID already exists");
-    return;
-  }
-
   // Get the path of the certificate folder and make it OS agnostic
   const certificatePath = utilities.getPathOSAgnostic(
     certificateFolderUri[0].fsPath,
@@ -54,7 +48,16 @@ async function idGenerator(
   certificatesFolderPath: string,
   extensionPath: string,
 ) {
+  // Access the files in the certificate folder directory
+  const files = fs.readdirSync(certificatesFolderPath);
   try {
+    // If the folder contains a file with id already, report it to the user and do not overwrite certificates
+    if (files.includes(id + "_cert.pem") || files.includes(id + "_privk.pem")) {
+      vscode.window.showWarningMessage(
+        "ID already exists. Please enter a unique ID",
+      );
+      return;
+    }
     vscode.window.showInformationMessage(
       `Generating certificates in folder ${certificatesFolderPath}`,
     );

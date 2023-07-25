@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { execSync } from "child_process";
 import * as utilities from "../Utilities/osUtilities";
 import { isValidUrl } from "../Utilities/urlUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";

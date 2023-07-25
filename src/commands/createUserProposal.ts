@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import path = require("path");
-const fs = require("fs");
+import fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 
