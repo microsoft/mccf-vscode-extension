@@ -17,7 +17,7 @@ export async function listMCCFInstances() {
   );
   try {
     const final = message.toString();
-    if (final == "") {
+    if (final === "") {
       vscode.window.showErrorMessage(
         "No resources found. Please enter a valid resource group and try again",
       );

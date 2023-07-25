@@ -12,8 +12,6 @@ export async function createMCCFInstance() {
 
     const subscriptionId = await subscriptionList();
 
-    // Test Subscription ID (027da7f8-2fc6-46d4-9be9-560706b60fec)
-
     const certificateDir = await vscode.window.showOpenDialog({
       canSelectFiles: true,
       canSelectFolders: false,
