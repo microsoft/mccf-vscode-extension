@@ -18,7 +18,21 @@ export async function applicationBundle() {
     );
     progressBar.text = "$(sync~spin) Creating MCCF instance...";
     progressBar.show();
-    runCommandInTerminal("Application Bundle", "npm run build");
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Creating MCCF instance...",
+        cancellable: false,
+      },
+      async () => {
+        runCommandInTerminal("Application Bundle", "npm run build");
+        progressBar.text = "MCCF instance created successfully";
+        progressBar.hide();
+        vscode.window.showInformationMessage(
+          "MCCF instance created successfully",
+        );
+      },
+    );
   } catch (error) {
     console.log(error);
     throw new Error("Application Bundle Process Failed" + error);
