@@ -1,65 +1,83 @@
 import { execSync } from "child_process";
 import { window } from "vscode";
 import * as vscode from "vscode";
-import { subscriptionList } from "../Utilities/subscriptionList";
-import { azVersion } from "../Utilities/azureUtilities";
-import { azureLogin } from "../Utilities/azureLogin";
+import {
+  azureLogin,
+  listResourceGroups,
+  listSubscriptions,
+} from "../Utilities/azureUtilities";
 
 export async function createMCCFInstance() {
   try {
-    azVersion();
+    // Login to Azure CLI
     azureLogin();
 
-    const subscriptionId = await subscriptionList();
+    // Get the subscription ID
+    const subscriptionId = await listSubscriptions();
 
-    const certificateDir = await vscode.window.showOpenDialog({
-      canSelectFiles: true,
-      canSelectFolders: false,
-      canSelectMany: false,
-      openLabel: "Select Certificate",
-      title: "Select Certificate",
+    // Get the resource group
+    const resourceGroup = (
+      await listResourceGroups(subscriptionId)
+    )?.toLowerCase();
+
+    // Get the name of the MCCF instance
+    const instanceName = await window.showInputBox({
+      prompt: "Enter the name of the MCCF instance",
+      placeHolder: "my-mccf-instance",
+      ignoreFocusOut: true,
     });
 
-    if (!certificateDir) {
+    if (!instanceName || instanceName.length === 0) {
       vscode.window.showErrorMessage(
-        "Please enter a directory for the certificate",
+        "Please enter a valid name for the MCCF instance",
       );
       return;
     }
-    const certificateDirString = certificateDir[0].fsPath;
-    const identifier = await window.showInputBox({
-      prompt: "Enter the identifier:",
-    });
-    const names = await window.showInputBox({
-      prompt: "Enter the name of your CCF Network",
-    });
-    let resourceGroup = await window.showInputBox({
-      prompt: "Enter the resource group you want this instance to be placed",
-    });
-    const nodes = await window.showInputBox({
-      prompt: "Enter the amount of nodes you want this instance to have",
+
+    // Get the member certificate
+    const memberCertificate = await vscode.window.showOpenDialog({
+      canSelectFiles: true,
+      canSelectFolders: false,
+      canSelectMany: false,
+      openLabel: "Select member certificate",
+      title: "Select member certificate",
+      filters: {
+        "Pem files": ["pem"],
+      },
     });
 
-    if (!certificateDir) {
+    if (!memberCertificate) {
       vscode.window.showErrorMessage(
-        "Please enter a directory for the certificate",
+        "Please enter a valid member certificate file",
       );
-    } else if (!identifier) {
-      vscode.window.showErrorMessage("Please enter an identifier");
-    } else if (!names) {
-      vscode.window.showErrorMessage(
-        "Please enter a name for your CCF Network",
-      );
-    } else if (!resourceGroup) {
-      vscode.window.showErrorMessage("Please enter a resource group");
-    } else if (!nodes) {
-      vscode.window.showErrorMessage(
-        "Please enter the amount of nodes you want this instance to have",
-      );
+      return;
     }
 
-    resourceGroup = resourceGroup?.toLowerCase();
-    console.log(resourceGroup);
+    const memberCertificateString = memberCertificate[0].fsPath;
+
+    // Get the name of the member
+    const memberIdentifier = await window.showInputBox({
+      prompt: "Enter the member identifier",
+      placeHolder: "member0",
+      ignoreFocusOut: true,
+    });
+
+    if (!memberIdentifier || memberIdentifier.length === 0) {
+      vscode.window.showErrorMessage("Please enter a valid member identifier");
+      return;
+    }
+
+    const numNodes = await window.showInputBox({
+      prompt: "Enter the amount of nodes you want this instance to have",
+      placeHolder: "3",
+      ignoreFocusOut: true,
+    });
+
+    if (!numNodes || numNodes.length === 0 || isNaN(Number(numNodes))) {
+      vscode.window.showErrorMessage(
+        "Please enter a valid positive integer for the number of nodes",
+      );
+    }
 
     const progressBar = window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
@@ -75,29 +93,20 @@ export async function createMCCFInstance() {
       },
 
       async () => {
-        try {
-          await execSync(
-            `az confidentialledger managedccfs create --members "[{certificate:'${certificateDirString}',identifier:'${identifier}}',group:'group1'}]" --node-count ${nodes} --name ${names} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
-          );
-          progressBar.text = "MCCF instance created successfully";
-          progressBar.hide();
-          vscode.window.showInformationMessage(
-            "MCCF instance created successfully",
-          );
-        } catch (error) {
-          progressBar.text = "MCCF instance creation failed";
-          progressBar.hide();
-          console.log(error);
-          vscode.window.showErrorMessage(
-            "Failed to create MCCF instance: " + error,
-          );
-        }
+        execSync(
+          `az confidentialledger managedccfs create --members "[{certificate:'${memberCertificateString}',identifier:'${memberIdentifier}}',group:'group1'}]" --node-count ${numNodes} --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
+        );
+        progressBar.text = "MCCF instance created successfully";
+        progressBar.hide();
+        vscode.window.showInformationMessage(
+          "MCCF instance created successfully",
+        );
       },
     );
   } catch (error) {
+    console.log(error);
     vscode.window.showErrorMessage(
       "An error occurred while creating the MCCF instance",
     );
-    console.log(error);
   }
 }

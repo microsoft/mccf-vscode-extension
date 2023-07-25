@@ -8,8 +8,9 @@ export async function submitProposal(context: vscode.ExtensionContext) {
   try {
     // Prompt user for network URL
     const networkUrl = await vscode.window.showInputBox({
-      prompt: "Enter the network URL",
-      placeHolder: "https://example.confidential-ledger.azure.com", // temporary placeholder
+      prompt: "Enter the CCF network URL",
+      placeHolder: "https://example.confidential-ledger.azure.com",
+      ignoreFocusOut: true,
     });
 
     // If no URL is entered, report it to the user

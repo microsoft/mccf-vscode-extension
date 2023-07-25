@@ -9,7 +9,7 @@ export async function generateIdentity(
   // Prompt user to enter name
   const idName = await vscode.window.showInputBox({
     prompt: "Enter ID",
-    placeHolder: "ID Name",
+    placeHolder: "member0",
     ignoreFocusOut: true,
   });
 
