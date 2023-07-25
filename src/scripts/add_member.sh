@@ -64,6 +64,22 @@ elif [ -z "$id" ]; then
   failed "Missing parameter --id"
 fi
 
+check_existence=$(ls $cert_file 2>/dev/null || true)
+if [ -z "$check_existence" ]; then
+    echo "Cert file \"$cert_file\" does not exist."
+    exit 0
+fi
+check_existence=$(ls $pubk_file 2>/dev/null || true)
+if [ -z "$check_existence" ]; then
+    echo "Public key file \"$pubk_file\" does not exist."
+    exit 0
+fi
+if [ "${cert_file##*.}" != "pem" -o "${pubk_file##*.}" != "pem" ]
+then
+    echo "Wrong file extensions. Only \".pem\" files are supported."
+    exit 0
+fi
+
 proposal_json_file="${dest_folder}/${id}.json"
 
 echo "Creating member json proposal file..."
