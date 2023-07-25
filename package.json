@@ -30,20 +30,32 @@
         "title": "MCCF: Start CCF Network in Docker container"
       },
       {
-        "command": "vscode-azure-managed-ccf.submitProposal",
-        "title": "MCCF: Submit Proposal"
-      },
-      {
-        "command": "vscode-azure-managed-ccf.generateIdentity",
-        "title": "MCCF: Generate Identity"
-      },
-      {
         "command": "vscode-azure-managed-ccf.mccfDeployment",
         "title": "MCCF: Create MCCF Instance"
       },
       {
         "command": "vscode-azure-managed-ccf.listMccfDeployment",
         "title": "MCCF: List MCCF Instances"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.createMemberProposal",
+        "title": "MCCF: Generate Member Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.createUserProposal",
+        "title": "MCCF: Generate User Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.generateIdentity",
+        "title": "MCCF: Generate Identity Keys"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.submitProposal",
+        "title": "MCCF: Submit Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.votingProcedure",
+        "title": "MCCF: Vote on Proposal"
       }
     ]
   },

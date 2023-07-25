@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { execSync } from "child_process";
 import * as utilities from "../Utilities/osUtilities";
 import { isValidUrl } from "../Utilities/urlUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
@@ -9,8 +8,9 @@ export async function submitProposal(context: vscode.ExtensionContext) {
   try {
     // Prompt user for network URL
     const networkUrl = await vscode.window.showInputBox({
-      prompt: "Enter the network URL",
-      placeHolder: "https://example.confidential-ledger.azure.com", // temporary placeholder
+      prompt: "Enter the CCF network URL",
+      placeHolder: "https://example.confidential-ledger.azure.com",
+      ignoreFocusOut: true,
     });
 
     // If no URL is entered, report it to the user
@@ -84,7 +84,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     const command =
       `cd "${
         context.extensionPath + "/dist/"
-      }" && ${utilities.getBashCommand()} ` +
+      }"; ${utilities.getBashCommand()} ` +
       "submit_proposal.sh" +
       " --network-url " +
       networkUrl +
