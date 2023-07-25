@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import * as fs from "fs";
+import { execSync } from "child_process";
 
 export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter network url
@@ -46,14 +48,11 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
-  // Prompt user to enter proposal id (for now have user input proposal id)
-  const proposalId = await vscode.window.showInputBox({
-    ignoreFocusOut: true,
-    placeHolder: "Proposal id",
-  });
+  // Prompt user to enter proposal id
+  const proposalId = displayProposals(networkUrl);
 
   // If no proposal id is entered, report it to the user
-  if (!proposalId || proposalId.length === 0) {
+  if (!proposalId) {
     vscode.window.showInformationMessage("No proposal id entered");
     return;
   }
@@ -70,7 +69,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     networkUrl,
     signingCertPath,
     signingKeyPath,
-    proposalId,
+    await proposalId,
     votingFilePath,
     specialContext.extensionPath,
   );
@@ -92,5 +91,57 @@ async function voteProposal(
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error.message);
     }
+  }
+}
+
+async function displayProposals(networkUrl: string): Promise<string> {
+  try {
+    const command = `${utilities.getWsl()} curl ${networkUrl}/gov/proposals -k`;
+
+    // Run the command and store the output
+    let proposals = execSync(command).toString();
+
+    if (proposals.length === 0) {
+      vscode.window.showInformationMessage("No active proposals found");
+      return "";
+    }
+
+    // remove the first and last character of the output
+    proposals = proposals.slice(1, -1);
+
+    const regex = /(".{64}":{.*?})(?=,".{64}":|\s*$)/g;
+    const proposalArray = proposals.match(regex);
+
+    console.log(proposalArray);
+
+    // Create a quick pick item for each proposal only displaying the proposal id
+    const proposalQuickPickItems: vscode.QuickPickItem[] = [];
+    proposalArray?.forEach((proposal) => {
+      const proposalId = proposal.slice(1, 65);
+      proposalQuickPickItems.push({
+        label: proposalId,
+      });
+    });
+
+    const selectedProposal = await vscode.window.showQuickPick(
+      proposalQuickPickItems,
+      {
+        ignoreFocusOut: true,
+        placeHolder: "Select a proposal ID to vote on",
+      },
+    );
+
+    // Show the proposal id of the selected proposal in message window
+    vscode.window.showInformationMessage(
+      `Selected proposal id: ${selectedProposal?.label}`,
+    );
+
+    // Return the proposal id of the selected proposal
+    return selectedProposal?.label ?? "";
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      vscode.window.showErrorMessage(error.message);
+    }
+    return "";
   }
 }
