@@ -10,12 +10,12 @@ Use MCCF functions to quickly create the development environment with all necess
 
 ![This photo displays the choice of commands appearing to the user with the MCCF: Create CCF App Environment in DevContainer as the option highlighted with a red outline and should be chosen first by the user.](images/first_commandView.png)
 
-2.  Next, select the template you would like to begin building your project from. You can choose from 5 different options, an empty app template, a  sample basic app, a sample banking app,a sample logging app ,and a sample data reconciliation app.
+2.  Next, select the template you would like to begin building your project from. You can choose from 3 different options, a generic template, a sample banking app, or a custom project given you have the github repository link
 
-![Here there are 5 options displayed that appear after choosing to create a CCF app environment.All templates live inside the extension repository](images/choose_template1.png)
+![Here there are 3 options displayed that appear after choosing to create a CCF app environment. The options are: Standard CCF Template where the user can create a CCF application from a generic template; a Sample Banking app, a specific sample template; or the option to create a custom project where the developer can create a CCF application from a custom github repository link](images/choose_template.png)
 
 3. After choosing your template, the application will open in a development container with all of the necessary dependencies where the app will be ready for network initialization
-   > The feature allows users to run and build CCF app in its development container with ease. Users are able to choose between already existing CCF apps' templates that already have the files and dependencies installed. The empty app template however provides a template with no code for users to start from scratch.
+   > The feature allows users to run and build CCF app in its development container with ease. Users are able to choose between already existing CCF apps' templates that already have the files and dependencies installed
 
 ## Start a CCF Network
 
@@ -57,26 +57,3 @@ After starting the network in a Docker Container, your output should look simila
 
 2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
 
-
-## Submit a Proposal
-1. In order to submit a proposal you would need to provide four parameters which are the network url,signing key,certificate key and the proposal file. Choose the correct the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
-
-2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
-
-
-Users can create instances based on their specific preferences including node count,name,resource group location,certificate ,and identifier which require their specific subscription key.In addition,users can review all of their current instances that are currently running on their Azure account.
-
-## Create an MCCF Instance
-1. Activate the specific command and select the certificate of your choice which could be pre generated or created using the key-generator script located in the extension command.
-
-2. Name the identifier for the insance,along with a name,location of deployment(specific resource group) ,and the node count.
-
-3. After this information has been entered, your output will show a progress of creating the instance displaying its status. Your output should look similar to the following output:
-
-![Alt text](images/image3.png)
-
-
-### List an MCCF Instance
-1. Select the specific subscription ID connected to your account.
-
-2. Select the specific resource group which allows the extension to display all instances in that resource group.
