@@ -6,8 +6,8 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter network url
   const networkUrl = await vscode.window.showInputBox({
     ignoreFocusOut: true,
-    prompt: "Enter network url",
-    placeHolder: "Network url",
+    prompt: "Enter the CCF network URL",
+    placeHolder: "https://example.confidential-ledger.azure.com",
   });
 
   // If no network url is entered, report it to the user
@@ -49,7 +49,6 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter proposal id (for now have user input proposal id)
   const proposalId = await vscode.window.showInputBox({
     ignoreFocusOut: true,
-    prompt: "Enter proposal id",
     placeHolder: "Proposal id",
   });
 

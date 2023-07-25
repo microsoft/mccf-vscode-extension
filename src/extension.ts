@@ -38,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
+  // COMMAND: Create MCCF instance
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.mccfDeployment",
@@ -45,18 +46,11 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
+  // COMMAND: List MCCF instances
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.listMccfDeployment",
       listMCCFInstances,
-    ),
-  );
-
-  // COMMAND: Submit proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.submitProposal",
-      () => submitProposal(context),
     ),
   );
 
@@ -81,6 +75,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.generateIdentity",
       () => generateIdentity(context),
+    ),
+  );
+
+  // COMMAND: Submit proposal
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-azure-managed-ccf.submitProposal",
+      () => submitProposal(context),
     ),
   );
 
