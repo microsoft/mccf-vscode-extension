@@ -20,8 +20,8 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to select an active proposal
   const proposalId = await displayProposals(networkUrl);
 
-  // If no proposal id is entered, report it to the user
-  if (!proposalId || (await proposalId).length === 0) {
+  // If no proposal id is selected, report it to the user
+  if (!proposalId || proposalId.length === 0) {
     return;
   }
 
@@ -124,7 +124,7 @@ async function displayProposals(networkUrl: string): Promise<string> {
       proposalQuickPickItems,
       {
         ignoreFocusOut: true,
-        placeHolder: "Select a proposal ID to vote on",
+        title: "Select a proposal ID to vote on",
       },
     );
 
