@@ -7,7 +7,6 @@ import { listMCCFInstances } from "./commands/listMCCFInstance";
 //import { addMember } from "./commands/addMember";
 import { submitProposal } from "./commands/submitProposal";
 import { applicationBundle } from "./commands/applicationBundle";
-
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
   console.log("Extension Activated");
@@ -68,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.createApplicationBundle",
-      () => applicationBundle,
+      applicationBundle,
     ),
   );
 }
