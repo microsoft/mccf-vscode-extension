@@ -124,7 +124,7 @@ async function displayProposals(networkUrl: string): Promise<string> {
       proposalQuickPickItems,
       {
         ignoreFocusOut: true,
-        placeHolder: "Select a proposal ID to vote on",
+        title: "Select a proposal ID to vote on",
       },
     );
 
