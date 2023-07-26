@@ -129,6 +129,12 @@ async function displayProposals(networkUrl: string): Promise<string> {
       },
     );
 
+    // Check if no proposal was selected
+    if (!selectedProposal) {
+      vscode.window.showInformationMessage("No proposal selected");
+      return "";
+    }
+
     // Show the proposal id of the selected proposal in message window
     vscode.window.showInformationMessage(
       `Selected proposal id: ${selectedProposal?.label}`,
