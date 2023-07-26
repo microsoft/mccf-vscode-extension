@@ -17,6 +17,14 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     return;
   }
 
+  // Prompt user to enter proposal id
+  const proposalId = displayProposals(networkUrl);
+
+  // If no proposal id is entered, report it to the user
+  if (!proposalId || (await proposalId).length === 0) {
+    return;
+  }
+
   // Prompt user to enter signing cert via file explorer
   const signingCert = await vscode.window.showOpenDialog({
     canSelectFiles: true,
@@ -44,14 +52,6 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Check if signing key is undefined
   if (!signingKey) {
     vscode.window.showInformationMessage("No signing key selected");
-    return;
-  }
-
-  // Prompt user to enter proposal id
-  const proposalId = displayProposals(networkUrl);
-
-  // If no proposal id is entered, report it to the user
-  if (!proposalId || (await proposalId).length === 0) {
     return;
   }
 
@@ -102,6 +102,11 @@ async function displayProposals(networkUrl: string): Promise<string> {
     // Remove the first and last character of the output
     proposals = proposals.slice(1, -1);
 
+    if (proposals.length === 0) {
+      vscode.window.showInformationMessage("No active proposals found");
+      return "";
+    }
+
     // Split the output into an array of proposals
     const regex = /(".{64}":{.*?})(?=,".{64}":|\s*$)/g;
     const proposalArray = proposals.match(regex);
@@ -114,12 +119,6 @@ async function displayProposals(networkUrl: string): Promise<string> {
         label: proposalId,
       });
     });
-
-    // Check if there are no proposals
-    if (proposalQuickPickItems.length === 0) {
-      vscode.window.showInformationMessage("No active proposals found");
-      return "";
-    }
 
     const selectedProposal = await vscode.window.showQuickPick(
       proposalQuickPickItems,
