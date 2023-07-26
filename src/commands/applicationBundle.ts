@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 import * as vscode from "vscode";
 import { window } from "vscode";
+import { applicationBundleSource } from "../Utilities/applicationBundleSource";
 
 export async function applicationBundle() {
   try {
@@ -14,12 +15,12 @@ export async function applicationBundle() {
       title: "Select project folder",
     });
 
-    //Get path of app directory and store it in appDirString
-    const appDirArray = await appDir;
-    if (!appDirArray) {
+    // If the user cancels the dialog, return
+    if (!appDir) {
       throw new Error("No app directory selected");
     }
-    const appDirString = appDirArray[0].fsPath;
+    //Get path of app directory
+    const appDirPath = appDir[0].fsPath;
 
     const progressBar = window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
@@ -33,9 +34,10 @@ export async function applicationBundle() {
         cancellable: false,
       },
       async () => {
+        await applicationBundleSource(appDirPath);
         runCommandInTerminal(
           "Application Bundle",
-          `cd ${appDirArray}; npm run build`,
+          `cd ${appDirPath}; npm run build`,
         );
         progressBar.text = "Application Bundle created successfully";
         progressBar.hide();
