@@ -18,7 +18,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   }
 
   // Prompt user to select an active proposal
-  const proposalId = displayProposals(networkUrl);
+  const proposalId = await displayProposals(networkUrl);
 
   // If no proposal id is entered, report it to the user
   if (!proposalId || (await proposalId).length === 0) {
@@ -67,7 +67,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
     networkUrl,
     signingCertPath,
     signingKeyPath,
-    await proposalId,
+    proposalId,
     votingFilePath,
     specialContext.extensionPath,
   );
@@ -133,11 +133,6 @@ async function displayProposals(networkUrl: string): Promise<string> {
       vscode.window.showInformationMessage("No proposal selected");
       return "";
     }
-
-    // Show the proposal id of the selected proposal in message window
-    vscode.window.showInformationMessage(
-      `Selected proposal id: ${selectedProposal?.label}`,
-    );
 
     // Return the proposal id of the selected proposal
     return selectedProposal?.label ?? "";
