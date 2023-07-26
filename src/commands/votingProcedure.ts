@@ -20,7 +20,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to select an active proposal
   const proposalId = displayProposals(networkUrl);
 
-  // If no proposal id is entered, report it to the user
+  // If no proposal id is selected, report it to the user
   if (!proposalId || (await proposalId).length === 0) {
     return;
   }
