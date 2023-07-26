@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
-import * as fs from "fs";
 import { execSync } from "child_process";
 
 export async function votingProcedure(specialContext: vscode.ExtensionContext) {
@@ -52,8 +51,7 @@ export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   const proposalId = displayProposals(networkUrl);
 
   // If no proposal id is entered, report it to the user
-  if (!proposalId) {
-    vscode.window.showInformationMessage("No proposal id entered");
+  if (!proposalId || (await proposalId).length === 0) {
     return;
   }
 
@@ -101,18 +99,12 @@ async function displayProposals(networkUrl: string): Promise<string> {
     // Run the command and store the output
     let proposals = execSync(command).toString();
 
-    if (proposals.length === 0) {
-      vscode.window.showInformationMessage("No active proposals found");
-      return "";
-    }
-
-    // remove the first and last character of the output
+    // Remove the first and last character of the output
     proposals = proposals.slice(1, -1);
 
+    // Split the output into an array of proposals
     const regex = /(".{64}":{.*?})(?=,".{64}":|\s*$)/g;
     const proposalArray = proposals.match(regex);
-
-    console.log(proposalArray);
 
     // Create a quick pick item for each proposal only displaying the proposal id
     const proposalQuickPickItems: vscode.QuickPickItem[] = [];
@@ -122,6 +114,12 @@ async function displayProposals(networkUrl: string): Promise<string> {
         label: proposalId,
       });
     });
+
+    // Check if there are no proposals
+    if (proposalQuickPickItems.length === 0) {
+      vscode.window.showInformationMessage("No active proposals found");
+      return "";
+    }
 
     const selectedProposal = await vscode.window.showQuickPick(
       proposalQuickPickItems,
