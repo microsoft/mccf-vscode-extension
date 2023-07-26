@@ -1,0 +1,31 @@
+{
+    "$schema": "https://aka.ms/codetour-schema",
+    "title": "basic ccf app",
+    "steps": [
+      {
+        "file": "abc/README.md",
+        "description": "This file explains how to quickly create and build CCF apps using this basic template which serves as a building block for developers.",
+        "line": 7
+      },
+      {
+        "file": "abc/scripts/submit_proposal.sh",
+        "description": "Use this bash script to automate the process of submitting a CCF proposal",
+        "line": 1
+      },
+      {
+        "file": "abc/scripts/submit_proposal.sh",
+        "description": "Run './submit_proposal.sh' in the terminal to make sure the script is running on your local machine. ",
+        "line": 5
+      },
+      {
+        "file": "abc/README.md",
+        "description": "You can build the sample application by running the following steps. Make sure the dependencies have been installed. ",
+        "line": 18
+      },
+      {
+        "file": "abc/.devcontainer/devcontainer.json",
+        "description": "Creates a development environment that includes certain features to build CCF apps in a Docker container",
+        "line": 1
+      }
+    ]
+  }

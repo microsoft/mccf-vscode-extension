@@ -12,7 +12,7 @@ Use MCCF functions to quickly create the development environment with all necess
 
 2.  Next, select the template you would like to begin building your project from. You can choose from 5 different options, an empty app template, a  sample basic app, a sample banking app,a sample logging app ,and a sample data reconciliation app.
 
-![Here there are 5 options displayed that appear after choosing to create a CCF app environment.All templates live inside the extension repository](images/choose_template1.png)
+![Here there are 5 options displayed that appear after choosing to create a CCF app environment.All templates live inside the extension repository](images/choose_template.png)
 
 3. After choosing your template, the application will open in a development container with all of the necessary dependencies where the app will be ready for network initialization
    > The feature allows users to run and build CCF app in its development container with ease. Users are able to choose between already existing CCF apps' templates that already have the files and dependencies installed. The empty app template however provides a template with no code for users to start from scratch.
@@ -42,20 +42,23 @@ Activate a network with one node and member to start a network all from docker *
 ### Start Network in Docker Container
 
 1. To build a runtime image of the JavaScript application via docker, you will get the option to "Select Dockerfile." Select the file in the path: /workspaces/{your-chosen-template}/docker/ccf_app_js.virtual
-   ![Alt text](image-1.png)
+![Alt text](images/image-1.png)
 
-2. When choosing project folder, ensure that you are in the root folder of your project workspace: ![Alt text](image.png)
+2. When choosing project folder, ensure that you are in the root folder of your project workspace: ![Alt text](images/image.png)
 
 After starting the network in a Docker Container, your output should look similar to the following output:
 
-![Alt text](image-2.png)
+![Alt text](images/image-2.png)
 
 > TIP: Always double check your current directory selection. If you're not in the right place, these commands may not execute as expected
 
 ## Submit a Proposal
 1. In order to submit a proposal you would need to provide four parameters which are the network url,signing key,certificate key and the proposal file. Choose the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
 
+![Alt text](images/image_parameters.png)
+
 2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
+![Alt text](images/image_sp.png)
 
 
 Users can create instances based on their specific preferences including node count,name,resource group location,certificate ,and identifier which require their specific subscription key.In addition,users can review all of their current instances that are currently running on their Azure account.
