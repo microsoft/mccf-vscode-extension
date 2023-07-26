@@ -5,16 +5,22 @@ import { window } from "vscode";
 
 export async function applicationBundle() {
   try {
-    /*
-    const appDir = vscode.window.showOpenDialog({
-      canSelectFiles: true,
-      canSelectFolders: false,
+    //Create a open dialog that allows the user to select the specific app directory
+    const appDir = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
       canSelectMany: false,
-      openLabel: "Select App File",
-      title: "Select Application File",
+      openLabel: "Select project folder",
+      title: "Select project folder",
     });
-    runCommandInTerminal("Application Bundle", `cd ${appDir}`);
-    */
+
+    //Get path of app directory and store it in appDirString
+    const appDirArray = await appDir;
+    if (!appDirArray) {
+      throw new Error("No app directory selected");
+    }
+    const appDirString = appDirArray[0].fsPath;
+
     const progressBar = window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
     );
@@ -27,11 +33,14 @@ export async function applicationBundle() {
         cancellable: false,
       },
       async () => {
-        runCommandInTerminal("Application Bundle", "npm run build");
-        progressBar.text = "MCCF instance created successfully";
+        runCommandInTerminal(
+          "Application Bundle",
+          `cd ${appDirArray}; npm run build`,
+        );
+        progressBar.text = "Application Bundle created successfully";
         progressBar.hide();
         vscode.window.showInformationMessage(
-          "MCCF instance created successfully",
+          "Application Bundle  successfully",
         );
       },
     );
