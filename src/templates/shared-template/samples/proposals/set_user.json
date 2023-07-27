@@ -1,0 +1,10 @@
+{
+    "actions": [
+        {
+            "name": "set_user",
+            "args": {
+                "cert": "<user-cert>"
+            }
+        }
+    ]
+}

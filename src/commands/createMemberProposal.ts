@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import path = require("path");
 import fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
 export async function createMemberProposal(
   specialContext: vscode.ExtensionContext,
 ) {

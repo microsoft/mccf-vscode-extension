@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as utilities from "../Utilities/osUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
 import { execSync } from "child_process";
 
 export async function voteProposal(specialContext: vscode.ExtensionContext) {

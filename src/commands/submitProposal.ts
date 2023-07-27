@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import * as utilities from "../Utilities/osUtilities";
 import { isValidUrl } from "../Utilities/urlUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
+import { logAndDisplayError } from "../Utilities/errorUtils";
 
 // context: vscode.ExtensionContext is for the extension to be able to access the extension path
 export async function submitProposal(context: vscode.ExtensionContext) {
@@ -97,8 +98,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // Run the command in the terminal
     runCommandInTerminal("Submit Proposal Terminal", command);
-  } catch (error) {
-    console.error("Proposal could not be submitted", error);
-    vscode.window.showErrorMessage("Proposal failed to submit");
+  } catch (error: any) {
+    logAndDisplayError("Proposal could not be submitted", error);
   }
 }

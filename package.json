@@ -30,12 +30,12 @@
         "title": "MCCF: Start CCF Network in Docker container"
       },
       {
-        "command": "vscode-azure-managed-ccf.mccfDeployment",
+        "command": "vscode-azure-managed-ccf.createMCCFInstance",
         "title": "MCCF: Create MCCF Instance"
       },
       {
-        "command": "vscode-azure-managed-ccf.listMccfDeployment",
-        "title": "MCCF: List MCCF Instances"
+        "command": "vscode-azure-managed-ccf.getMCCFInstanceDetails",
+        "title": "MCCF: Get MCCF Instance Details"
       },
       {
         "command": "vscode-azure-managed-ccf.createMemberProposal",

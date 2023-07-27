@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
+import { logAndDisplayError } from "../Utilities/errorUtils";
 
 export async function generateIdentity(
   specialContext: vscode.ExtensionContext,
@@ -70,7 +71,6 @@ async function idGenerator(
     // Show success message to user
     vscode.window.showInformationMessage(id + " created successfully");
   } catch (error: any) {
-    console.error(error.message);
-    vscode.window.showErrorMessage("Error generating certificates");
+    logAndDisplayError("Error generating certificates", error);
   }
 }

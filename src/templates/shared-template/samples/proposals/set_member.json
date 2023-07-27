@@ -1,0 +1,11 @@
+{
+    "actions": [
+        {
+            "name": "set_member",
+            "args": {
+                "cert": "<member-cert>",
+                "encryption_pub_key": "<member-encryption-key>"
+            }
+        }
+    ]
+}
