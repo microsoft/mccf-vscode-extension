@@ -18,7 +18,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
   }
 
   // Prompt user to select an active proposal
-  const proposalId = await sendBallot(networkUrl);
+  const proposalId = await getProposal(networkUrl);
 
   // If no proposal id is selected, report it to the user
   if (!proposalId || proposalId.length === 0) {
@@ -26,7 +26,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
   }
 
   // Prompt user to cast a vote
-  const vote = await castVote();
+  const vote = await castVote(specialContext);
 
   // If no vote is selected, report it to the user
   if (!vote || vote.length === 0) {
@@ -67,9 +67,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
   // Retrieve paths of sign cert, sign key, and voting file
   const signingCertPath = utilities.getPathOSAgnostic(signingCert[0].fsPath);
   const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
-  const votingFilePath = utilities.getPathOSAgnostic(
-    specialContext.extensionPath + vote,
-  );
+  const votingFilePath = utilities.getPathOSAgnostic(vote);
 
   // Call the vote proposal function
   voteForProposal(
@@ -101,7 +99,7 @@ async function voteForProposal(
   }
 }
 
-async function sendBallot(networkUrl: string): Promise<string> {
+async function getProposal(networkUrl: string): Promise<string> {
   try {
     const command = `${utilities.getWsl()} curl ${networkUrl}/gov/proposals -k`;
 
@@ -121,25 +119,22 @@ async function sendBallot(networkUrl: string): Promise<string> {
     const proposalArray = proposals.match(regex);
 
     // Create a quick pick item for each ballot only displaying the ballot id
-    const ballotQuickPickItems: vscode.QuickPickItem[] = [];
-    proposalArray?.forEach((ballot) => {
-      if (!ballot.includes("return false")) {
-        const ballotId = ballot.slice(1, 65);
-        ballotQuickPickItems.push({
-          label: ballotId,
-        });
-      }
+    const proposalQuickPickItems: vscode.QuickPickItem[] = [];
+    proposalArray?.forEach((proposal) => {
+      const ballotId = proposal.slice(1, 65);
+      proposalQuickPickItems.push({
+        label: ballotId,
+      });
     });
 
-    // FIXME: If there is only 1 proposal and it has been voted as false, the quick pick menu will not display
-    // check if there are no ballotquickpick items
-    if (ballotQuickPickItems.length === 0) {
+    // Check if there are no ballotquickpick items
+    if (proposalQuickPickItems.length === 0) {
       vscode.window.showInformationMessage("No active proposals found");
       return "";
     }
 
-    const selectedBallot = await vscode.window.showQuickPick(
-      ballotQuickPickItems,
+    const selectedProposal = await vscode.window.showQuickPick(
+      proposalQuickPickItems,
       {
         ignoreFocusOut: true,
         placeHolder: "Select a ballot",
@@ -147,13 +142,13 @@ async function sendBallot(networkUrl: string): Promise<string> {
     );
 
     // Check if no proposal was selected
-    if (!selectedBallot) {
+    if (!selectedProposal) {
       vscode.window.showInformationMessage("No ballot selected");
       return "";
     }
 
     // Return the proposal id of the selected proposal
-    return selectedBallot?.label ?? "";
+    return selectedProposal?.label ?? "";
   } catch (error: unknown) {
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error.message);
@@ -163,7 +158,9 @@ async function sendBallot(networkUrl: string): Promise<string> {
 }
 
 // Function that retrieves the appropriate voting file
-export async function castVote(): Promise<string> {
+export async function castVote(
+  extContext: vscode.ExtensionContext,
+): Promise<string> {
   // Display a quick pick menu with vote accept or vote reject options
   const voteQuickPickItems: vscode.QuickPickItem[] = [
     {
@@ -171,6 +168,9 @@ export async function castVote(): Promise<string> {
     },
     {
       label: "Reject",
+    },
+    {
+      label: "Custom",
     },
   ];
 
@@ -187,9 +187,21 @@ export async function castVote(): Promise<string> {
   // Return the appropriate voting file
   if (selectedVote.label === "Accept") {
     // return path of accept vote file
-    return "/dist/vote_accept.json";
-  } else {
+    return extContext + "/src/scripts/vote_accept.json";
+  } else if (selectedVote.label === "Reject") {
     // return path of reject vote file
-    return "/dist/vote_reject.json";
+    return extContext + "/src/scripts/vote_reject.json";
+  } else {
+    // Prompt user to enter custom voting file via file explorer
+    const customVote = await vscode.window.showOpenDialog({
+      canSelectFiles: true,
+      canSelectFolders: false,
+      canSelectMany: false,
+      openLabel: "Select custom voting file",
+      filters: { "JSON files": ["json"] },
+    });
+
+    // Return the path of the custom voting file
+    return customVote ? customVote[0].fsPath : "";
   }
 }
