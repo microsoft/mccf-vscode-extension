@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
-import { createMCCFInstance } from "./commands/mccfDeployment";
-import { listMCCFInstances } from "./commands/listMCCFInstance";
+import { createMCCFInstance } from "./commands/createMCCFInstance";
+import { getMCCFInstanceDetails } from "./commands/getMCCFInstanceDetails";
 import { submitProposal } from "./commands/submitProposal";
 import { createMemberProposal } from "./commands/createMemberProposal";
 import { createUserProposal } from "./commands/createUserProposal";
@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
   // COMMAND: Create MCCF instance
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.mccfDeployment",
+      "vscode-azure-managed-ccf.createMCCFInstance",
       createMCCFInstance,
     ),
   );
@@ -49,8 +49,8 @@ export function activate(context: vscode.ExtensionContext) {
   // COMMAND: List MCCF instances
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.listMccfDeployment",
-      listMCCFInstances,
+      "vscode-azure-managed-ccf.getMCCFInstanceDetails",
+      getMCCFInstanceDetails,
     ),
   );
 

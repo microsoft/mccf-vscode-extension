@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as utilities from "../Utilities/osUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
 
 export async function votingProcedure(specialContext: vscode.ExtensionContext) {
   // Prompt user to enter network url
