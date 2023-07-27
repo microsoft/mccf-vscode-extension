@@ -29,10 +29,11 @@ function usage {
     echo ""
     echo "Generate set_user.json proposal for adding users to CCF."
     echo ""
-    echo "usage: ./add_user.sh --cert-file string "
+    echo "usage: ./add_user.sh --cert-file string --dest-folder string --id string"
     echo ""
     echo "  --cert-file     string     The certificate .pem file for the user"
     echo "  --dest-folder   string     The destination folder for the proposal file"
+    echo "  --id            string     The ID for the user"
     echo ""
     exit 0
 }
@@ -50,6 +51,7 @@ do
     case "--$name"  in
         --cert_file) cert_file="$2"; shift;;
         --dest_folder) dest_folder="$2"; shift;;
+        --id) id="$2"; shift;;
         --help) usage; exit 0; shift;;
         --) shift;;
     esac
@@ -76,7 +78,7 @@ then
     exit 0
 fi
 
-proposal_json_file="${dest_folder}/set_user.json"
+proposal_json_file="${dest_folder}/${id}.json"
 
 echo "Creating user json proposal file..."
 create_user_proposal "$cert_file" "$proposal_json_file"

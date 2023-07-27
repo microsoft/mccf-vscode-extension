@@ -1,0 +1,10 @@
+{
+    "actions": [
+        {
+            "name": "transition_service_to_open",
+            "args": {
+                "next_service_identity": "<next-service-identity-cert>"
+            }
+        }
+    ]
+}

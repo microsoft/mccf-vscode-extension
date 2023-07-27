@@ -65,10 +65,10 @@ proposal0_id=$( jq -r  '.proposal_id' <<< "${proposal0_out}" )
 echo $proposal0_id
 
 # proposal submitter vote for proposal
-ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal0_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content @${app_dir}/configs/vote/vote_accept.json | curl "$network_url/gov/proposals/$proposal0_id/ballots" --cacert "$service_cert" --data-binary @- -H "content-type: application/cose" --silent | jq
+ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal0_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content @${app_dir}/samples/ballots/vote_accept.json | curl "$network_url/gov/proposals/$proposal0_id/ballots" --cacert "$service_cert" --data-binary @- -H "content-type: application/cose" --silent | jq
 
 for ((i = 1 ; i < $member_count ; i++)); do
   signing_cert="$certificate_dir/member${i}_cert.pem"
   signing_key="$certificate_dir/member${i}_privk.pem"
-  ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal0_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content @${app_dir}/configs/vote/vote_accept.json | curl "$network_url/gov/proposals/$proposal0_id/ballots" --cacert "$service_cert" --data-binary @- -H "content-type: application/cose" --silent | jq
+  ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal0_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content @${app_dir}/samples/ballots/vote_accept.json | curl "$network_url/gov/proposals/$proposal0_id/ballots" --cacert "$service_cert" --data-binary @- -H "content-type: application/cose" --silent | jq
 done

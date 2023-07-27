@@ -1,16 +1,17 @@
 import * as vscode from "vscode";
-import { execSync } from "child_process";
 import * as utilities from "../Utilities/osUtilities";
 import { isValidUrl } from "../Utilities/urlUtilities";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
+import { logAndDisplayError } from "../Utilities/errorUtils";
 
 // context: vscode.ExtensionContext is for the extension to be able to access the extension path
 export async function submitProposal(context: vscode.ExtensionContext) {
   try {
     // Prompt user for network URL
     const networkUrl = await vscode.window.showInputBox({
-      prompt: "Enter the network URL",
-      placeHolder: "https://example.confidential-ledger.azure.com", // temporary placeholder
+      prompt: "Enter the CCF network URL",
+      placeHolder: "https://example.confidential-ledger.azure.com",
+      ignoreFocusOut: true,
     });
 
     // If no URL is entered, report it to the user
@@ -84,7 +85,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     const command =
       `cd "${
         context.extensionPath + "/dist/"
-      }" && ${utilities.getBashCommand()} ` +
+      }"; ${utilities.getBashCommand()} ` +
       "submit_proposal.sh" +
       " --network-url " +
       networkUrl +
@@ -97,8 +98,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // Run the command in the terminal
     runCommandInTerminal("Submit Proposal Terminal", command);
-  } catch (error) {
-    console.error("Proposal could not be submitted", error);
-    vscode.window.showErrorMessage("Proposal failed to submit");
+  } catch (error: any) {
+    logAndDisplayError("Proposal could not be submitted", error);
   }
 }
