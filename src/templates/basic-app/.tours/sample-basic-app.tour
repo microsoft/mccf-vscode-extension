@@ -1,0 +1,21 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "sample basic app",
+  "steps": [
+    {
+      "file": "src/templates/basic-app/README.md",
+      "description": "This file explains how to quickly create and build CCF apps using this basic template which serves as a building block for developers.",
+      "line": 7
+    },
+    {
+      "file": "src/templates/basic-app/README.md",
+      "description": "You can build the sample application by running the following steps. Make sure the dependencies have been installed.",
+      "line": 16
+    },
+    {
+      "file": "src/templates/basic-app/app.json",
+      "description": "Functions such as read and write have already been implemented such that data and configurations can be read and written securely. ",
+      "line": 1
+    }
+  ]
+}
