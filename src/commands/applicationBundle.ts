@@ -2,14 +2,7 @@ import { execSync } from "child_process";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 import * as vscode from "vscode";
 import { window } from "vscode";
-import {
-  getAllFiles,
-  removePrefix,
-  rootDir,
-  metadata,
-  srcDir,
-  toTrim,
-} from "../Utilities/build_bundle";
+import { buildBundle } from "../Utilities/build_bundle";
 
 export async function applicationBundle() {
   try {
@@ -41,7 +34,8 @@ export async function applicationBundle() {
         cancellable: false,
       },
       async () => {
-        await applicationBundleSource(appDirPath);
+        // FIXME: This is not with the correct parameters yet
+        await buildBundle(appDirPath, appDirPath);
         runCommandInTerminal(
           "Application Bundle",
           `cd ${appDirPath}; npm run build`,
