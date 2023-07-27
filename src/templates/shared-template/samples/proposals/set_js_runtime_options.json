@@ -1,0 +1,14 @@
+{
+    "actions": [
+        {
+            "name": "set_js_runtime_options",
+            "args": {
+                "max_heap_bytes": 1024,
+                "max_stack_bytes": 1024,
+                "max_execution_time_ms": 1200,
+                "log_exception_details": false,
+                "return_exception_details": false
+            }
+        }
+    ]
+}
