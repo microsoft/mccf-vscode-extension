@@ -9,7 +9,7 @@ import {
   metadata,
   srcDir,
   toTrim,
-} from "../Utilities/applicationBundleSource";
+} from "../Utilities/build_bundle";
 
 export async function applicationBundle() {
   try {

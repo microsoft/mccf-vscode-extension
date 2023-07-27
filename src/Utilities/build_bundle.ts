@@ -3,7 +3,7 @@ import { join, posix, sep } from "path";
 
 const args = process.argv.slice(2);
 
-export function getAllFiles(
+const getAllFiles = function (
   dirPath: string,
   arrayOfFiles: any | undefined,
 ): string[] {
@@ -20,23 +20,24 @@ export function getAllFiles(
   }
 
   return arrayOfFiles;
-}
+};
 
-export function removePrefix(s: string, prefix: string): string {
+const removePrefix = function (s: string, prefix: string) {
   return s.substr(prefix.length).split(sep).join(posix.sep);
-}
+};
 
-export const rootDir = args[0];
+// FIXME: Update 29 - on into a function to be called from applicationBundle.ts
+const rootDir = args[0];
 
 const metadataPath = join(rootDir, "app.json");
-export const metadata = JSON.parse(readFileSync(metadataPath, "utf-8"));
+const metadata = JSON.parse(readFileSync(metadataPath, "utf-8"));
 
-export const srcDir = join(rootDir, "src");
+const srcDir = join(rootDir, "src");
 const allFiles = getAllFiles(srcDir, undefined);
 
 // The trailing / is included so that it is trimmed in removePrefix.
 // This produces "foo/bar.js" rather than "/foo/bar.js"
-export const toTrim = srcDir + "/";
+const toTrim = srcDir + "/";
 
 const modules = allFiles.map(function (filePath: string) {
   return {
@@ -46,11 +47,25 @@ const modules = allFiles.map(function (filePath: string) {
 });
 
 const bundlePath = join(args[0], "bundle.json");
+const appRegPath = join(args[0], "set_js_app.json");
 const bundle = {
   metadata: metadata,
   modules: modules,
 };
+const app_reg = {
+  actions: [
+    {
+      name: "set_js_app",
+      args: {
+        bundle: bundle,
+        disable_bytecode_cache: false,
+      },
+    },
+  ],
+};
+
 console.log(
   `Writing bundle containing ${modules.length} modules to ${bundlePath}`,
 );
 writeFileSync(bundlePath, JSON.stringify(bundle));
+writeFileSync(appRegPath, JSON.stringify(app_reg));
