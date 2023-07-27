@@ -187,9 +187,9 @@ export async function castVote(): Promise<string> {
   // Return the appropriate voting file
   if (selectedVote.label === "Accept") {
     // return path of accept vote file
-    return "/src/templates/shared-template/samples/ballots/vote_accept.json";
+    return "/dist/vote_accept.json";
   } else {
     // return path of reject vote file
-    return "/src/templates/shared-template/samples/ballots/vote_reject.json";
+    return "/dist/vote_reject.json";
   }
 }
