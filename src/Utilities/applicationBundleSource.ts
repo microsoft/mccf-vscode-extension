@@ -3,7 +3,10 @@ import { join, posix, sep } from "path";
 
 const args = process.argv.slice(2);
 
-const getAllFiles = function (dirPath, arrayOfFiles) {
+export function getAllFiles(
+  dirPath: string,
+  arrayOfFiles: any | undefined,
+): string[] {
   arrayOfFiles = arrayOfFiles || [];
 
   const files = readdirSync(dirPath);
@@ -17,25 +20,25 @@ const getAllFiles = function (dirPath, arrayOfFiles) {
   }
 
   return arrayOfFiles;
-};
+}
 
-const removePrefix = function (s, prefix) {
+export function removePrefix(s: string, prefix: string): string {
   return s.substr(prefix.length).split(sep).join(posix.sep);
-};
+}
 
-const rootDir = args[0];
+export const rootDir = args[0];
 
 const metadataPath = join(rootDir, "app.json");
-const metadata = JSON.parse(readFileSync(metadataPath, "utf-8"));
+export const metadata = JSON.parse(readFileSync(metadataPath, "utf-8"));
 
-const srcDir = join(rootDir, "src");
-const allFiles = getAllFiles(srcDir);
+export const srcDir = join(rootDir, "src");
+const allFiles = getAllFiles(srcDir, undefined);
 
 // The trailing / is included so that it is trimmed in removePrefix.
 // This produces "foo/bar.js" rather than "/foo/bar.js"
-const toTrim = srcDir + "/";
+export const toTrim = srcDir + "/";
 
-const modules = allFiles.map(function (filePath) {
+const modules = allFiles.map(function (filePath: string) {
   return {
     name: removePrefix(filePath, toTrim),
     module: readFileSync(filePath, "utf-8"),

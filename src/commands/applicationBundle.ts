@@ -2,7 +2,14 @@ import { execSync } from "child_process";
 import { runCommandInTerminal } from "../Utilities/terminalUtils";
 import * as vscode from "vscode";
 import { window } from "vscode";
-import { applicationBundleSource } from "../Utilities/applicationBundleSource";
+import {
+  getAllFiles,
+  removePrefix,
+  rootDir,
+  metadata,
+  srcDir,
+  toTrim,
+} from "../Utilities/applicationBundleSource";
 
 export async function applicationBundle() {
   try {
