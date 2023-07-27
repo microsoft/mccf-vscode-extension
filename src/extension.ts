@@ -8,7 +8,7 @@ import { submitProposal } from "./commands/submitProposal";
 import { createMemberProposal } from "./commands/createMemberProposal";
 import { createUserProposal } from "./commands/createUserProposal";
 import { generateIdentity } from "./commands/generateIdentity";
-import { votingProcedure } from "./commands/votingProcedure";
+import { voteProposal } from "./commands/votingProcedure";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -90,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.votingProcedure",
-      () => votingProcedure(context),
+      () => voteProposal(context),
     ),
   );
 }

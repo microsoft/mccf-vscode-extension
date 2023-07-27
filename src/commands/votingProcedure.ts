@@ -25,6 +25,15 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
     return;
   }
 
+  // Prompt user to cast a vote
+  const vote = await castVote();
+
+  // If no vote is selected, report it to the user
+  if (!vote || vote.length === 0) {
+    vscode.window.showInformationMessage("No vote selected");
+    return;
+  }
+
   // Prompt user to enter signing cert via file explorer
   const signingCert = await vscode.window.showOpenDialog({
     canSelectFiles: true,
@@ -59,7 +68,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
   const signingCertPath = utilities.getPathOSAgnostic(signingCert[0].fsPath);
   const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
   const votingFilePath = utilities.getPathOSAgnostic(
-    specialContext.extensionPath + "/dist/vote.json",
+    specialContext.extensionPath + vote,
   );
 
   // Call the vote proposal function
@@ -114,17 +123,26 @@ async function sendBallot(networkUrl: string): Promise<string> {
     // Create a quick pick item for each ballot only displaying the ballot id
     const ballotQuickPickItems: vscode.QuickPickItem[] = [];
     proposalArray?.forEach((ballot) => {
-      const ballotId = ballot.slice(1, 65);
-      ballotQuickPickItems.push({
-        label: ballotId,
-      });
+      if (!ballot.includes("return false")) {
+        const ballotId = ballot.slice(1, 65);
+        ballotQuickPickItems.push({
+          label: ballotId,
+        });
+      }
     });
+
+    // FIXME: If there is only 1 proposal and it has been voted as false, the quick pick menu will not display
+    // check if there are no ballotquickpick items
+    if (ballotQuickPickItems.length === 0) {
+      vscode.window.showInformationMessage("No active proposals found");
+      return "";
+    }
 
     const selectedBallot = await vscode.window.showQuickPick(
       ballotQuickPickItems,
       {
         ignoreFocusOut: true,
-        title: "Select a ballot to vote on",
+        placeHolder: "Select a ballot",
       },
     );
 
@@ -141,5 +159,37 @@ async function sendBallot(networkUrl: string): Promise<string> {
       vscode.window.showErrorMessage(error.message);
     }
     return "";
+  }
+}
+
+// Function that retrieves the appropriate voting file
+export async function castVote(): Promise<string> {
+  // Display a quick pick menu with vote accept or vote reject options
+  const voteQuickPickItems: vscode.QuickPickItem[] = [
+    {
+      label: "Accept",
+    },
+    {
+      label: "Reject",
+    },
+  ];
+
+  const selectedVote = await vscode.window.showQuickPick(voteQuickPickItems, {
+    ignoreFocusOut: true,
+    placeHolder: "Select a vote",
+  });
+
+  // Check if no vote was selected
+  if (!selectedVote) {
+    return "";
+  }
+
+  // Return the appropriate voting file
+  if (selectedVote.label === "Accept") {
+    // return path of accept vote file
+    return "/src/templates/shared-template/samples/ballots/vote_accept.json";
+  } else {
+    // return path of reject vote file
+    return "/src/templates/shared-template/samples/ballots/vote_reject.json";
   }
 }
