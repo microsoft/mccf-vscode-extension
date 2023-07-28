@@ -4,7 +4,7 @@
     "steps": [
       {
         "file": "abc/README.md",
-        "description": "Welcome! You have created an empty template for a CCF application that allows you to start from a blank slate. ",
+        "description": "Welcome! You have created an empty template for a CCF application that allows you to start from a blank slate.",
         "line": 3
       },
       {

@@ -14,12 +14,12 @@
     },
     {
       "file": "src/templates/banking-app/README.md",
-      "description": "Utilize these to perform tasks such as check  account balance,deposit money ,and transfer money",
+      "description": "Utilize these to perform tasks such as check account balance, deposit money, and transfer money.",
       "line": 23
     },
     {
       "file": "src/templates/banking-app/src/app.ts",
-      "description": "Includes various operations that allow managing ,and performing financial transactions. ",
+      "description": "Includes various operations that allow managing, and performing financial transactions.",
       "line": 1
     },
     {

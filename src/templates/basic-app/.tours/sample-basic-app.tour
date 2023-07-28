@@ -14,7 +14,7 @@
     },
     {
       "file": "src/templates/basic-app/app.json",
-      "description": "Functions such as read and write have already been implemented such that data and configurations can be read and written securely. ",
+      "description": "Functions such as read and write have already been implemented such that data and configurations can be read and written securely.",
       "line": 1
     }
   ]

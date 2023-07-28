@@ -24,7 +24,7 @@ Use MCCF functions to quickly create the development environment with all necess
 
 ![Here there are 5 options displayed that appear after choosing to create a CCF app environment.](images/choose_template.png)
 
-3. After choosing your template, the application will open in a development container with all of the necessary dependencies where the app will be ready for network initialization.
+3. After choosing your template, users are prompted to choose the destination folder where the application opens in a development container, with all necessary dependencies, ready for network initialization.
 
    > The feature allows users to run and build the CCF app in its development container with ease. Users can choose between already existing CCF apps' templates that already have the files and dependencies installed. 
 
@@ -61,13 +61,13 @@ Activate a network with one node and member to start a network all from docker *
 
 2. When choosing a project folder, ensure that you are in the root folder of your project workspace:![Alt text](images/image.png)
 
-After starting the network in a Docker Container, your output should look similar to the following output:
+After starting the network in a Docker Container, your output should look similar to the following :
 
 ![Alt text](images/image-2.png)
 
 > TIP: Always double-check your current directory selection. If you're not in the right place, these commands may not execute as expected.
 
-## Adding New  Members 
+## Adding New  Members or Users
 
 - ### GENERATE MEMBER IDENTITY 
 The Generate Identity Keys creates all of the certificates necessary to add members and users to an MCCF network and ensures that all IDs are unique. After entering a unique key identifying name, the user will be prompted to select the folder where they would like to store their keys within the file system.
@@ -115,7 +115,7 @@ The generate member proposal allows for the developer to easily generate member 
 ![Alt text](images/image_sp.png)
 
 - ### VOTE ON A PROPOSAL  
-This feature allows the developer to easily vote on a proposal to add a user to a network. The certificate and signing keys are the authorization member's certificates.
+This feature allows the developer to easily vote on a proposal to add a user to a network via the certificate/key of the member(s) of the network. The certificate and signing keys are the authorization member's certificates.
 
 1. Enter the network URL and select a ballot.
 ![Alt text](images/image_ballot.png)
@@ -123,6 +123,8 @@ This feature allows the developer to easily vote on a proposal to add a user to 
 
 2. Select a vote.
 ![Alt text](images/image_vote.png)
+
+> The custom option allows users to choose their specific ballot from their files.
 
 
 ## Create an MCCF Instance
@@ -143,6 +145,8 @@ Users can create instances based on their specific preferences which require the
 2. Select the specific resource group which allows the extension to display various instances in that resource group and their specified details.
 
 ![Alt text](images/image4.png)
+
+**3. Select any instance of your choosing
 
 ## Creating an Application Bundle
 
