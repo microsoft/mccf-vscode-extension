@@ -84,7 +84,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     // Create the command to run in the terminal
     const command =
       `cd "${
-        context.extensionPath + "/dist/"
+        context.extensionPath + "/dist/scripts"
       }"; ${utilities.getBashCommand()} ` +
       "submit_proposal.sh" +
       " --network-url " +
@@ -98,6 +98,9 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // Run the command in the terminal
     runCommandInTerminal("Submit Proposal Terminal", command);
+
+    // Display message to the user
+    vscode.window.showInformationMessage("Proposal submission in progress");
   } catch (error: any) {
     logAndDisplayError("Proposal could not be submitted", error);
   }

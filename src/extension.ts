@@ -8,7 +8,7 @@ import { submitProposal } from "./commands/submitProposal";
 import { createMemberProposal } from "./commands/createMemberProposal";
 import { createUserProposal } from "./commands/createUserProposal";
 import { generateIdentity } from "./commands/generateIdentity";
-import { votingProcedure } from "./commands/votingProcedure";
+import { voteProposal } from "./commands/voteProposal";
 import { applicationBundle } from "./commands/applicationBundle";
 import { listMCCFInstances } from "./commands/listMCCFInstance";
 
@@ -151,8 +151,8 @@ export function activate(context: vscode.ExtensionContext) {
   // COMMAND: Vote on proposal
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.votingProcedure",
-      () => votingProcedure(context),
+      "vscode-azure-managed-ccf.voteProposal",
+      () => voteProposal(context),
     ),
   );
 }

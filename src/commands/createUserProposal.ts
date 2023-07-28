@@ -68,7 +68,7 @@ export async function createUserProposal(
   generateProposal(certPath, destPath, idName, specialContext.extensionPath);
 }
 
-// Create user proposal function that runs add_user_2.sh script to generate proposal
+// Create user proposal function that runs add_user.sh script to generate proposal
 async function generateProposal(
   certPath: string,
   destPath: string,
@@ -81,7 +81,7 @@ async function generateProposal(
 
     runCommandInTerminal(
       "Create User Proposal",
-      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_user.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
+      `cd ${extensionPath}/dist/scripts; ${utilities.getBashCommand()} add_user.sh --cert-file "${certPath}" --dest-folder "${destPath}" --id ${idName}`,
     );
     vscode.window.showInformationMessage(
       "User Proposal Generated at:" + destPath,
