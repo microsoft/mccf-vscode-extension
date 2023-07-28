@@ -63,7 +63,7 @@ async function idGenerator(
 
     runCommandInTerminal(
       "Generate Identity",
-      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${utilities.getPathOSAgnostic(
+      `cd ${extensionPath}/dist/scripts; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${utilities.getPathOSAgnostic(
         certificatesFolderPath,
       )}" --enc-key`,
     );

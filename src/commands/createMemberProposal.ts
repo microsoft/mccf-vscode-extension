@@ -91,7 +91,7 @@ export async function createMemberProposal(
   );
 }
 
-// Create member proposal function that runs the add_member_2.sh script to generate member proposals
+// Create member proposal function that runs the add_member.sh script to generate member proposals
 async function generateProposal(
   certPath: string,
   pubkPath: string,
@@ -103,10 +103,10 @@ async function generateProposal(
     // Display progress message to user
     vscode.window.showInformationMessage("Generating Member Proposal...");
 
-    // Use the runInTerminal function to run the add_member_2.sh script
+    // Use the runInTerminal function to run the add_member.sh script
     runCommandInTerminal(
       "Generate Member Proposal",
-      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} add_member.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${destFolderPath}" --id ${id}`,
+      `cd ${extensionPath}/dist/scripts; ${utilities.getBashCommand()} add_member.sh --cert-file "${certPath}" --pubk-file "${pubkPath}" --dest-folder "${destFolderPath}" --id ${id}`,
     );
     vscode.window.showInformationMessage(
       "Proposal generated at: " + destFolderPath,
