@@ -54,8 +54,8 @@
         "title": "MCCF: Submit Proposal"
       },
       {
-        "command": "vscode-azure-managed-ccf.votingProcedure",
-        "title": "MCCF: Vote on Proposal"
+        "command": "vscode-azure-managed-ccf.voteProposal",
+        "title": "MCCF: Vote for Proposal"
       }
     ]
   },
