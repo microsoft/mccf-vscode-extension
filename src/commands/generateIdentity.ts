@@ -35,9 +35,7 @@ export async function generateIdentity(
   }
 
   // Get the path of the certificate folder and make it OS agnostic
-  const certificatePath = utilities.getPathOSAgnostic(
-    certificateFolderUri[0].fsPath,
-  );
+  const certificatePath = certificateFolderUri[0].fsPath;
 
   // Call the id generator function
   idGenerator(idName, certificatePath, specialContext.extensionPath);
@@ -65,7 +63,9 @@ async function idGenerator(
 
     runCommandInTerminal(
       "Generate Identity",
-      `cd ${extensionPath}/dist; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${certificatesFolderPath}" --enc-key`,
+      `cd ${extensionPath}/dist/scripts; ${utilities.getBashCommand()} generate_keys.sh --id ${id} --dest-folder "${utilities.getPathOSAgnostic(
+        certificatesFolderPath,
+      )}" --enc-key`,
     );
 
     // Show success message to user
