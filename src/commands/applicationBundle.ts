@@ -115,8 +115,23 @@ export async function applicationBundle() {
     console.log(
       `Writing bundle containing ${modules.length} modules to ${bundlePath}`,
     );
+
+    // Create a progress bar
+    const progress = vscode.window.createStatusBarItem(
+      vscode.StatusBarAlignment.Left,
+    );
+    progress.text = "Writing bundle...";
+    progress.show();
+
+    // Write the bundle and app registration files
     writeFileSync(bundlePath, JSON.stringify(bundle));
     writeFileSync(appRegPath, JSON.stringify(appReg));
+
+    // Update the progress bar
+    progress.text = "Bundle written!";
+    setTimeout(() => {
+      progress.dispose();
+    }, 3000);
   } catch (error) {
     console.error(error);
     throw new Error("Application Bundle Process Failed" + error);
