@@ -10,7 +10,6 @@ import { createUserProposal } from "./commands/createUserProposal";
 import { generateIdentity } from "./commands/generateIdentity";
 import { voteProposal } from "./commands/voteProposal";
 import { applicationBundle } from "./commands/applicationBundle";
-import { listMCCFInstances } from "./commands/listMCCFInstance";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -37,27 +36,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.startCCFNetworkDocker",
       startCCFNetworkDocker,
-    ),
-  );
-
-  // COMMAND: Add member
-  context.subscriptions.push(
-    vscode.commands.registerCommand("vscode-azure-managed-ccf.addMember", () =>
-      addMember(context),
-    ),
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.mccfDeployment",
-      createMCCFInstance,
-    ),
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.listMccfDeployment",
-      listMCCFInstances,
     ),
   );
 
@@ -162,5 +140,8 @@ export function deactivate() {
   console.log("Extension Deactivated");
 }
 function addMember(context: vscode.ExtensionContext): any {
+  throw new Error("Function not implemented.");
+}
+function votingProcedure(context: vscode.ExtensionContext): any {
   throw new Error("Function not implemented.");
 }

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as vscode from "vscode";
 import { runCommandInTerminal } from "../Utilities/extensionUtils";
 import { logAndDisplayError } from "../Utilities/errorUtils";
