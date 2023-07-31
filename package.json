@@ -56,6 +56,10 @@
       {
         "command": "vscode-azure-managed-ccf.voteProposal",
         "title": "MCCF: Vote for Proposal"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.createApplicationBundle",
+        "title": "MCCF: Create Application Bundle"
       }
     ]
   },
@@ -95,6 +99,6 @@
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
-    "vsce": "^2.15.0"
+    "@vscode/vsce": "^2.20.0"
   }
 }
