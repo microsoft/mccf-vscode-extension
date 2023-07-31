@@ -14,13 +14,13 @@ export function getAllHandler(request: ccfapp.Request<any>): ccfapp.Response<CCF
   // check if caller has a valid identity
   const isValidIdentity = authenticationService.isAuthenticated(request);
   if (isValidIdentity.failure)
-    return ApiResult.AuthFailure();
+    {return ApiResult.AuthFailure();}
 
   // caller unique identifier
   const callerId = isValidIdentity.content;
 
   const response = reportingService.getData(callerId);
-  if (response.failure) return ApiResult.Failed(response);
+  if (response.failure) {return ApiResult.Failed(response);}
 
   // map summary data-model to result model
   const mappedRecords = DataSchema.mapSummaryRecords(response.content);
@@ -38,7 +38,7 @@ export function getByIdHandler(request: ccfapp.Request<any>): ccfapp.Response<CC
   // check if caller has a valid identity
   const isValidIdentity = authenticationService.isAuthenticated(request);
   if (isValidIdentity.failure)
-    return ApiResult.AuthFailure();
+    {return ApiResult.AuthFailure();}
 
   // caller unique identifier
   const callerId = isValidIdentity.content;
@@ -48,7 +48,7 @@ export function getByIdHandler(request: ccfapp.Request<any>): ccfapp.Response<CC
 
   // get report summary data
   const response = reportingService.getDataById(callerId, key);
-  if (response.failure) return ApiResult.Failed(response);
+  if (response.failure) {return ApiResult.Failed(response);}
 
   // map summary data-model to result model
   const mappedRecords = DataSchema.mapSummaryRecord(response.content);

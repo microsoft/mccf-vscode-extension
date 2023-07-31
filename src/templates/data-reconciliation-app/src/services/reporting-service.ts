@@ -24,15 +24,15 @@ export class ReportingService implements IReportingService {
 
   getDataById(memberId: string, key: string): ServiceResult<SummaryRecord> {
     if (!key || key.length == 0)
-      return ServiceResult.Failed({
+      {return ServiceResult.Failed({
         errorMessage: "Error: key cannot be null or empty",
         errorType: "InvalidKey",
-      });
+      });}
 
     const record = this.repository.get(key);
 
     if (record.failure)
-      return ServiceResult.Failed(record.error, record.statusCode);
+      {return ServiceResult.Failed(record.error, record.statusCode);}
 
     return SummaryRecord.create(memberId, record.content);
   }
@@ -42,14 +42,14 @@ export class ReportingService implements IReportingService {
 
     this.repository.forEach((key, value) => {
       const summary = SummaryRecord.create(memberId, value);
-      if (summary.success) result.push(summary.content);
+      if (summary.success) {result.push(summary.content);}
     });
 
     if (result.length == 0)
-      return ServiceResult.Failed({
+      {return ServiceResult.Failed({
         errorMessage: "Error: No data to Report",
         errorType: "NoDataToReport",
-      });
+      });}
 
     return ServiceResult.Succeeded(result);
   }
