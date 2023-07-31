@@ -1,4 +1,4 @@
-# MCCF VSCode Extension
+# Visual Studio Code extension for Managed CCF
 
 [![Build Status](https://msazure.visualstudio.com/One/_apis/build/status%2FOneBranch%2Fmccf-vscode-extension%2Fmccf-vscode-extension-Official?repoName=mccf-vscode-extension&branchName=main)](https://msazure.visualstudio.com/One/_build/latest?definitionId=326742&repoName=mccf-vscode-extension&branchName=main)
 
