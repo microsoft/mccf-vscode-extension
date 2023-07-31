@@ -136,7 +136,7 @@ export function getSwaggerOauthRedirectHandler(): ccfapp.Response<string> {
   </script>
   </body>
   </html>
-  `
+  `;
   return ApiResult.Html(body);
 }
 

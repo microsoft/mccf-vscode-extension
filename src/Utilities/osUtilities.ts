@@ -12,3 +12,7 @@ export function getPathOSAgnostic(filePath: string): string {
     return filePath;
   }
 }
+
+export function getWsl(): string {
+  return os.platform() === "win32" ? `wsl` : ` `;
+}

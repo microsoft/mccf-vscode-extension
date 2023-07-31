@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as constants from "./constants";
 import * as folderUtils from "../Utilities/folderUtils";
-import * as osUtils from "../Utilities/osUtilities";
+import { logAndDisplayError, logAndThrowError } from "../Utilities/errorUtils";
 
 // Options for the CCF application templates
 
@@ -52,7 +52,8 @@ export async function createDevContainerCommand(
     ];
 
     const template = await vscode.window.showQuickPick(templateOptions, {
-      placeHolder: "Select a template for your CCF application",
+      title: "Select a template for your CCF application",
+      ignoreFocusOut: true,
     });
 
     if (!template) {
@@ -120,22 +121,20 @@ export async function createDevContainerCommand(
         template.sourceFolder,
         newFolderPath,
       );
-    } catch (error) {
-      console.error(
-        "Error initializing template folder and devcontainer",
-        error,
-      );
+    } catch (error: any) {
       // Delete the folder and any file created upon exception
       fs.rmSync(newFolderPath, { force: true, recursive: true });
-      throw error;
+      logAndThrowError(
+        "Error initializing template folder in devcontainer",
+        error,
+      );
     }
 
     vscode.window.showInformationMessage(
       "CCF Project successfully initialized",
     );
-  } catch (error) {
-    console.error("CCF project could not be created", error);
-    vscode.window.showErrorMessage("CCF project creation failed");
+  } catch (error: any) {
+    logAndDisplayError("CCF project could not be created", error);
   }
 }
 function initializeProjectFolder(

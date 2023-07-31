@@ -1,0 +1,5 @@
+{
+
+    "ballot": "export function vote (proposal, proposerId) { return false }"
+
+}
