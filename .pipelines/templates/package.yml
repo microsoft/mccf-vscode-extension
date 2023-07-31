@@ -1,0 +1,18 @@
+steps:
+- task: Npm@1
+  displayName: 'Package'
+  inputs:
+    command: custom
+    customCommand: run package
+
+- task: Npm@1
+  displayName: 'Create Package'
+  inputs:
+    command: custom
+    customCommand: run create-package
+
+- task: CopyFiles@2
+  displayName: 'Copy vsix to output directory'
+  inputs:
+    Contents: '$(Build.SourcesDirectory)/**/*.vsix'
+    TargetFolder: '$(Build.SourcesDirectory)/out'

@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { logAndThrowError } from "./errorUtils";
 
 // Create a directory from a given path
 export function createFolder(folderPath: string) {
@@ -11,9 +12,8 @@ export function createFolder(folderPath: string) {
     } else {
       throw new Error("Directory already exists at " + folderPath);
     }
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: any) {
+    logAndThrowError("Failed to create folder", error);
   }
 }
 
@@ -50,9 +50,8 @@ export function copyDirectoryRecursiveSync(
           : fs.copyFileSync(srcPath, destPath, fs.constants.COPYFILE_EXCL);
       }
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: any) {
+    logAndThrowError("Failed to copy directory", error);
   }
 }
 
@@ -69,12 +68,11 @@ export function convertLineEndingsRecursive(targetDir: string) {
       } else {
         const content = fs.readFileSync(filePath, "utf8");
         const unixContent = content.replace(/\r\n/g, "\n");
-        fs.writeFileSync(filePath, unixContent, { encoding: "utf8"});
+        fs.writeFileSync(filePath, unixContent, { encoding: "utf8" });
       }
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: any) {
+    logAndThrowError("Failed to convert line endings", error);
   }
 }
 
@@ -98,8 +96,7 @@ export function setPermissionsRecursively(targetDir: string, mode: number) {
         setPermissionsRecursively(filePath, mode);
       }
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: any) {
+    logAndThrowError("Failed to set permissions", error);
   }
 }

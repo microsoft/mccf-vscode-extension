@@ -49,17 +49,22 @@ const extensionConfig = {
     new copyWebpackPlugin({
       patterns: [
         {
-          from: "**/*.sh",
-          to: "[name][ext]",
-          context: "src",
-        },
-        {
           from: "templates/**/*",
           to: "[path][name][ext]",
           context: "src",
           globOptions: {
             dot: true,
           },
+        },
+        {
+          from: "scripts/*.sh",
+          to: "[path][name][ext]",
+          context: "src",
+        },
+        {
+          from: "votes/*.json",
+          to: "[path][name][ext]",
+          context: "src",
         },
       ],
     }),

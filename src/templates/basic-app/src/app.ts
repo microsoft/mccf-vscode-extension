@@ -1,6 +1,6 @@
 import { ccf } from "@microsoft/ccf-app/global";
 
-function parse_request_query(request) {
+function parse_request_query(request: string) {
   const elements = request.query.split("&");
   const obj = {};
   for (const kv of elements) {

@@ -20,7 +20,7 @@ export class JwtConfigsGenerator {
     const proposalFilePath = `${this.workspaceFolderPath}/set_jwt_issuer_test_proposal.json`;
     const sandboxConfigFilePath = `${this.workspaceFolderPath}/set_jwt_issuer_test_sandbox.json`;
     if (fs.existsSync(sandboxConfigFilePath) && fs.existsSync(proposalFilePath))
-      return;
+      {return;}
 
     // make sure the workspace folder exists.
     await fs.promises.mkdir(this.workspaceFolderPath, { recursive: true }).catch(console.error);
@@ -104,7 +104,7 @@ export class JwtConfigsGenerator {
     const proposalFilePath = `${this.workspaceFolderPath}/set_jwt_issuer_ms_proposal.json`;
     const sandboxConfigFilePath = `${this.workspaceFolderPath}/set_jwt_issuer_ms_sandbox.json`;
     if (fs.existsSync(sandboxConfigFilePath) && fs.existsSync(proposalFilePath))
-      return;
+      {return;}
 
     // make sure the workspace folder exists.
     await fs.promises.mkdir(this.workspaceFolderPath, { recursive: true }).catch(console.error);

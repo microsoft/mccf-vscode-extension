@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { runCommandInTerminal } from "../Utilities/terminalUtils";
+import { runCommandInTerminal } from "../Utilities/extensionUtils";
+import { logAndDisplayError } from "../Utilities/errorUtils";
 
 // Build and run a CCF network inside a docker container
 export async function startCCFNetworkDocker() {
@@ -60,8 +61,7 @@ export async function startCCFNetworkDocker() {
 
     // Run the command in the terminal
     runCommandInTerminal("Start CCF Network Terminal", finalCommand);
-  } catch (error) {
-    console.error("CCF network could not be started", error);
-    vscode.window.showErrorMessage("CCF network failed to start");
+  } catch (error: any) {
+    logAndDisplayError("CCF network could not be started", error);
   }
 }
