@@ -1,0 +1,11 @@
+steps:
+- task: NodeTool@0
+  displayName: 'Use Node 16.x'
+  inputs:
+    versionSpec: 16.x
+
+- task: Npm@1
+  displayName: 'Build'
+  inputs:
+    command: custom
+    customCommand: run compile

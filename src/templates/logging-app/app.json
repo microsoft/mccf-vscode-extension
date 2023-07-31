@@ -2,7 +2,7 @@
     "endpoints": {
       "/log": {
         "get": {
-          "js_module": "endpoints/log.js",
+          "js_module": "app.js",
           "js_function": "getLogItem",
           "forwarding_required": "always",
           "authn_policies": ["user_cert", "member_cert"],
@@ -31,7 +31,7 @@
           }
         },
         "post": {
-          "js_module": "endpoints/log.js",
+          "js_module": "app.js",
           "js_function": "setLogItem",
           "forwarding_required": "always",
           "authn_policies": ["member_cert"],
@@ -62,7 +62,7 @@
       },
       "/users/{user_id}/permission": {
         "put": {
-          "js_module": "endpoints/log.js",
+          "js_module": "app.js",
           "js_function": "setUserPermission",
           "forwarding_required": "always",
           "authn_policies": ["member_cert"],

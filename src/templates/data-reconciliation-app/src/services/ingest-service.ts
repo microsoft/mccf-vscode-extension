@@ -25,11 +25,11 @@ export class IngestService implements IIngestService {
 
     for (const record of dataRecords) {
       const hasRecord = this.keyValueRepo.has(record.key);
-      if (hasRecord.failure) return ServiceResult.Failed(hasRecord.error);
+      if (hasRecord.failure) {return ServiceResult.Failed(hasRecord.error);}
 
       if (hasRecord.content) {
         const getRecord = this.keyValueRepo.get(record.key);
-        if (getRecord.failure) return ServiceResult.Failed(getRecord.error);
+        if (getRecord.failure) {return ServiceResult.Failed(getRecord.error);}
 
         const updateRecord = ReconciledRecord.update(
           getRecord.content,
@@ -37,24 +37,24 @@ export class IngestService implements IIngestService {
           userId
         );
         if (updateRecord.failure)
-          return ServiceResult.Failed(updateRecord.error);
+          {return ServiceResult.Failed(updateRecord.error);}
 
         const saveRecord = this.keyValueRepo.set(
           record.key,
           updateRecord.content
         );
-        if (saveRecord.failure) return ServiceResult.Failed(saveRecord.error);
+        if (saveRecord.failure) {return ServiceResult.Failed(saveRecord.error);}
       } else {
         const createRecord = ReconciledRecord.create(record, userId);
         if (createRecord.failure)
-          return ServiceResult.Failed(createRecord.error);
+          {return ServiceResult.Failed(createRecord.error);}
 
         const saveReconRecord = this.keyValueRepo.set(
           record.key,
           createRecord.content
         );
         if (saveReconRecord.failure)
-          return ServiceResult.Failed(saveReconRecord.error);
+          {return ServiceResult.Failed(saveReconRecord.error);}
       }
     }
 
