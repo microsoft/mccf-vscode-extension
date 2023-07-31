@@ -1,0 +1,31 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "sample banking app",
+  "steps": [
+    {
+      "file": "src/templates/banking-app/README.md",
+      "description": "Welcome! This application is a CCF sample application that works as a bank system",
+      "line": 3
+    },
+    {
+      "file": "src/templates/banking-app/README.md",
+      "description": "This sample application uses a REST API which is a web API that uses HTTP methods.",
+      "line": 21
+    },
+    {
+      "file": "src/templates/banking-app/README.md",
+      "description": "Utilize these to perform tasks such as check account balance, deposit money, and transfer money.",
+      "line": 23
+    },
+    {
+      "file": "src/templates/banking-app/src/app.ts",
+      "description": "Includes various operations that allow managing, and performing financial transactions.",
+      "line": 1
+    },
+    {
+      "file": "src/templates/banking-app/app.json",
+      "description": "These endpoints define how the banking application's API can be used to create accounts, make deposits, check balances, transfer money, and retrieve transaction receipts.",
+      "line": 1
+    }
+  ]
+}

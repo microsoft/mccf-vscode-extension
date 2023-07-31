@@ -1,0 +1,26 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "sample DRA",
+  "steps": [
+    {
+      "file": "src/templates/data-reconciliation-app/README.md",
+      "description": "This sample application allows data to be reconciled in a confidential manner.",
+      "line": 7
+    },
+    {
+      "file": "src/templates/data-reconciliation-app/Makefile",
+      "description": "Provides different commands to build, test, and run the data reconciliation application.",
+      "line": 1
+    },
+    {
+      "file": "src/templates/data-reconciliation-app/src/endpoints/app.json",
+      "description": "Provides application endpoints which includes APIs for data ingestion, reconciliation, and reporting.",
+      "line": 1
+    },
+    {
+      "file": "src/templates/data-reconciliation-app/test/README.md",
+      "description": "Learn about different test cases for this sample application such as unit tests and end-to-end tests.",
+      "line": 1
+    }
+  ]
+}
