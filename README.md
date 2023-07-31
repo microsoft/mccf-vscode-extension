@@ -1,5 +1,7 @@
 # MCCF VSCode Extension
 
+[![Build Status](https://msazure.visualstudio.com/One/_apis/build/status%2FOneBranch%2Fmccf-vscode-extension%2Fmccf-vscode-extension-Official?repoName=mccf-vscode-extension&branchName=main)](https://msazure.visualstudio.com/One/_build/latest?definitionId=326742&repoName=mccf-vscode-extension&branchName=main)
+
 This Visual Studio Code extension for [Managed CCF](https://techcommunity.microsoft.com/t5/azure-confidential-computing/microsoft-introduces-preview-of-azure-managed-confidential/ba-p/3648986) simplifies and enhances the development experience. With this extension, users can seamlessly create, test, manage, and deploy their CCF applications directly within Visual Studio Code. By eliminating the need for external tools and [documentation](https://microsoft.github.io/CCF/main/build_apps/get_started.html), user workflow is faster and more efficient for Managed CCF customers.
 
 Use MCCF functions to quickly create the development environment with all necessary dependencies with templating, and easily test and deploy CCF applications to Managed CCF instances in Azure. All of these features combined enables users to build **confidential multi-party applications** with **customizable governance** and **auditability**.
@@ -56,3 +58,4 @@ After starting the network in a Docker Container, your output should look simila
 1. In order to submit a proposal you would need to provide four parameters which are the network url,signing key,certificate key and the proposal file. Choose the correct the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
 
 2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
+

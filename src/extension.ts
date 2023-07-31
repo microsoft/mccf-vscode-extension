@@ -70,51 +70,12 @@ export function activate(context: vscode.ExtensionContext) {
       () => createUserProposal(context),
     ),
   );
-  // COMMAND: Submit proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createApplicationBundle",
-      applicationBundle,
-    ),
-  );
 
-  // COMMAND: Create MCCF instance
+  // COMMAND: Generate identity
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createMCCFInstance",
-      createMCCFInstance,
-    ),
-  );
-
-  // COMMAND: List MCCF instances
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.getMCCFInstanceDetails",
-      getMCCFInstanceDetails,
-    ),
-  );
-
-  // COMMAND: Create Member proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createMemberProposal",
-      () => createMemberProposal(context),
-    ),
-  );
-
-  // COMMAND: Create User proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.createUserProposal",
-      () => createUserProposal(context),
-    ),
-  );
-
-  // COMMAND: Vote on proposal
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "vscode-azure-managed-ccf.votingProcedure",
-      () => votingProcedure(context),
+      "vscode-azure-managed-ccf.generateIdentity",
+      () => generateIdentity(context),
     ),
   );
 
@@ -133,15 +94,17 @@ export function activate(context: vscode.ExtensionContext) {
       () => voteProposal(context),
     ),
   );
+
+  // COMMAND: Create application bundle
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-azure-managed-ccf.createApplicationBundle",
+      applicationBundle,
+    ),
+  );
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
   console.log("Extension Deactivated");
-}
-function addMember(context: vscode.ExtensionContext): any {
-  throw new Error("Function not implemented.");
-}
-function votingProcedure(context: vscode.ExtensionContext): any {
-  throw new Error("Function not implemented.");
 }

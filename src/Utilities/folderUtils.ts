@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as fs from "fs";
 import * as path from "path";
 import { logAndThrowError } from "./errorUtils";
