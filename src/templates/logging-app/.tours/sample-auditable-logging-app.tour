@@ -1,0 +1,31 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "sample auditable logging app",
+  "steps": [
+    {
+      "file": "src/templates/logging-app/README.md",
+      "description": "Welcome to building and managing your auditable logging application!",
+      "line": 10
+    },
+    {
+      "file": "src/templates/logging-app/README.md",
+      "description": "To get started, checkout these endpoints that enable members to write log records, and retrieve log records based on sequence number.",
+      "line": 12
+    },
+    {
+      "file": "src/templates/logging-app/src/app.ts",
+      "description": "Start managing your sample app by using the functions to handle logging operations and set permission for users.",
+      "line": 1
+    },
+    {
+      "file": "src/templates/logging-app/app.json",
+      "description": "This provides endpoints for reading, creating a log item, and setting permissions for users.",
+      "line": 1
+    },
+    {
+      "file": "src/templates/logging-app/README.md",
+      "description": "Start testing your sample application in a running sandbox by running the command below.",
+      "line": 55
+    }
+  ]
+}

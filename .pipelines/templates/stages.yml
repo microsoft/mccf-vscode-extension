@@ -1,0 +1,44 @@
+stages:
+- stage: build
+  jobs:
+  - job: linux
+    pool:
+      type: linux
+
+    variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+        ob_outputDirectory: '$(Build.SourcesDirectory)/out' # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
+
+    steps: # These steps will be run in unrestricted container's network
+    - template: build_number.yml
+    - template: install.yml
+    - template: lint.yml
+    - template: build.yml
+  
+  - job: windows
+    pool:
+      type: windows
+
+    variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+        ob_outputDirectory: '$(Build.SourcesDirectory)/out' # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
+
+    steps: # These steps will be run in unrestricted container's network
+    - template: build_number.yml
+    - template: install.yml
+    - template: lint.yml
+    - template: build.yml
+
+- stage: package
+  dependsOn: build
+  jobs:
+  - job: extension
+    pool:
+      type: linux
+
+    variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+        ob_outputDirectory: '$(Build.SourcesDirectory)/out' # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
+
+    steps: # These steps will be run in unrestricted container's network
+    - template: build_number.yml
+    - template: install.yml
+    - template: package.yml
+  

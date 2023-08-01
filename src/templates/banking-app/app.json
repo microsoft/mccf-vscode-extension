@@ -2,7 +2,7 @@
   "endpoints": {
     "/account/{user_id}/{account_name}": {
       "put": {
-        "js_module": "endpoints/banking.js",
+        "js_module": "app.js",
         "js_function": "createAccount",
         "forwarding_required": "always",
         "authn_policies": ["member_cert"],
@@ -20,7 +20,7 @@
     },
     "/deposit/{user_id}/{account_name}": {
       "post": {
-        "js_module": "endpoints/banking.js",
+        "js_module": "app.js",
         "js_function": "deposit",
         "forwarding_required": "always",
         "authn_policies": ["member_cert"],
@@ -53,7 +53,7 @@
     },
     "/balance/{account_name}": {
       "get": {
-        "js_module": "endpoints/banking.js",
+        "js_module": "app.js",
         "js_function": "balance",
         "forwarding_required": "always",
         "authn_policies": ["user_cert"],
@@ -71,7 +71,7 @@
     },
     "/transfer/{account_name}": {
       "post": {
-        "js_module": "endpoints/banking.js",
+        "js_module": "app.js",
         "js_function": "transfer",
         "forwarding_required": "always",
         "authn_policies": ["user_cert"],
@@ -110,7 +110,7 @@
     },
     "/receipt": {
       "get": {
-        "js_module": "endpoints/banking.js",
+        "js_module": "app.js",
         "js_function": "getTransactionReceipt",
         "forwarding_required": "always",
         "authn_policies": ["user_cert"],
