@@ -96,14 +96,14 @@
     "ts-loader": "^9.4.3",
     "typescript": "^5.1.6",
     "webpack": "^5.85.0",
-<<<<<<< HEAD
-    "webpack-cli": "^5.1.1",
-    "@microsoft/ccf-app": "^3.0.1"
-=======
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
-    "@vscode/vsce": "^2.20.0"
->>>>>>> 5250acc9b2d05d657bcd6eb315ea9dd59135ddc5
+    "@azure-rest/confidential-ledger": "^1.0.0",
+    "@azure/arm-confidentialledger": "^1.2.0",
+    "@azure/arm-visualstudio": "^3.0.0",
+    "@azure/identity": "^3.2.4",
+    "@vscode/vsce": "^2.20.0",
+    "dotenv": "^16.3.1"
   }
 }
