@@ -101,6 +101,7 @@
   "dependencies": {
     "@azure-rest/confidential-ledger": "^1.0.0",
     "@azure/arm-confidentialledger": "^1.2.0",
+    "@azure/arm-resources": "^5.2.0",
     "@azure/arm-visualstudio": "^3.0.0",
     "@azure/identity": "^3.2.4",
     "@vscode/vsce": "^2.20.0",
