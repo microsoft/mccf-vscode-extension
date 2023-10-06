@@ -2,6 +2,10 @@ import * as vscode from "vscode";
 import { executeCommandAsync } from "./asyncUtils";
 import { showOutputInChannel, withProgressBar } from "./extensionUtils";
 import { logAndThrowError } from "./errorUtils";
+import { SubscriptionClient } from "@azure/arm-subscriptions";
+import { DefaultAzureCredential } from "@azure/identity";
+import {ResourceManagementClient} from "@azure/arm-resources";
+import { ConfidentialLedgerClient } from "@azure/arm-confidentialledger";
 
 // Check if Azure CLI is installed by running the command "az --version"
 export async function checkAzureCli() {
@@ -15,7 +19,7 @@ export async function checkAzureCli() {
 // Login to Azure CLI by running the command "az login"
 export async function azureLogin() {
   try {
-    await withProgressBar("Logging into Azure", false, async () => {
+    await withProgressBar("Logging intoyy Azure", false, async () => {
       await checkAzureCli();
       const accountOutput = await executeCommandAsync("az account show");
       const account = JSON.parse(accountOutput.toString());
@@ -56,26 +60,23 @@ interface Subscription {
 // Show a list of subscriptions and let the user choose one
 export async function listSubscriptions() {
   try {
-    let subscriptions: Subscription[] = [];
+    let subscriptionArray = new Array(); 
 
     // Retrieve a list of subscriptions
     await withProgressBar("Getting subscriptions", false, async () => {
-      const subscriptionsOutput = await executeCommandAsync(
-        "az account list --output json",
-      );
-
-      subscriptions = JSON.parse(subscriptionsOutput);
+      const subscriptionClient = new SubscriptionClient(new DefaultAzureCredential());
+      const subscriptions = await subscriptionClient.subscriptions.list();
+      for await (let item of subscriptions) {
+        subscriptionArray.push({
+          label: item.displayName,
+          description: item.subscriptionId,
+        });
+      }
     });
-
-    // Convert the subscriptions to QuickPick items
-    const subscriptionItems = subscriptions.map((subscription) => ({
-      label: subscription.name,
-      description: subscription.id,
-    }));
 
     // Let the user choose a subscription using QuickPick
     const selectedSubscription = await vscode.window.showQuickPick(
-      subscriptionItems,
+      subscriptionArray,
       {
         title: "Select a subscription",
         ignoreFocusOut: true,
@@ -86,7 +87,7 @@ export async function listSubscriptions() {
       throw new Error("No subscription selected");
     }
 
-    return selectedSubscription.description;
+    return selectedSubscription.subscriptionId;
   } catch (error: any) {
     logAndThrowError("Failed to list subscriptions", error);
     return "";
@@ -96,19 +97,22 @@ export async function listSubscriptions() {
 // List the resource groups in the selected subscription
 export async function listResourceGroups(subscriptionId: string) {
   try {
-    let resourceGroups: string[] = [];
+    let resourceGroupArray = new Array(); 
 
     // Retrieve a list of Resource Groups
     await withProgressBar("Getting resource groups", false, async () => {
-      const rgOutput = await executeCommandAsync(
-        `az group list --subscription ${subscriptionId} --query "[].name" --output json`,
-      );
-
-      resourceGroups = JSON.parse(rgOutput.toString());
+      const resourceClient  = new ResourceManagementClient(new DefaultAzureCredential(), subscriptionId);
+      const resourceGroups = await resourceClient.resourceGroups.list();
+      for await (let item of resourceGroups) {
+        resourceGroupArray.push({
+          label: item.id,
+          description: item.name,
+        });
+      }
     });
 
     // Let the user choose a resource group using QuickPick
-    const selectedRG = await vscode.window.showQuickPick(resourceGroups, {
+    const selectedRG = await vscode.window.showQuickPick(resourceGroupArray, {
       title: "Select a resource group",
       ignoreFocusOut: true,
     });
@@ -136,9 +140,12 @@ export async function showMCCFInstanceDetails(
     "Getting details for the MCCF instance",
     false,
     async () => {
-      mccfInstanceDetails = await executeCommandAsync(
-        `az confidentialledger managedccfs show --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --output json`,
-      );
+      const mccfClient = new ConfidentialLedgerClient(new DefaultAzureCredential(), subscriptionId);
+
+      mccfInstanceDetails = mccfClient.managedCCFOperations.get(
+        resourceGroup,
+        instanceName,
+      ).toString();
     },
   );
 
