@@ -19,7 +19,7 @@ export async function checkAzureCli() {
 // Login to Azure CLI by running the command "az login"
 export async function azureLogin() {
   try {
-    await withProgressBar("Logging intoyy Azure", false, async () => {
+    await withProgressBar("Logging into Azure", false, async () => {
       await checkAzureCli();
       const accountOutput = await executeCommandAsync("az account show");
       const account = JSON.parse(accountOutput.toString());
