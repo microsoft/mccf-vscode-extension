@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
+import * as fs from 'fs';
 import {
-  azureLogin,
   listResourceGroups,
   listSubscriptions,
   showMCCFInstanceDetails,
+  createInstance,
 } from "../Utilities/azureUtilities";
 import { withProgressBar } from "../Utilities/extensionUtils";
 import { executeCommandAsync } from "../Utilities/asyncUtils";
@@ -33,9 +34,6 @@ const weuRegionOption = {
 
 export async function createMCCFInstance() {
   try {
-    // Login to Azure CLI
-    await azureLogin();
-
     // Get the subscription ID
     const subscriptionId = await listSubscriptions();
 
@@ -104,6 +102,7 @@ export async function createMCCFInstance() {
     }
 
     const memberCertificateString = memberCertificate[0].fsPath;
+    const certificateString = fs.readFileSync(memberCertificateString, "utf8");
 
     // Get the name of the member
     const memberIdentifier = await vscode.window.showInputBox({
@@ -134,9 +133,14 @@ export async function createMCCFInstance() {
       "Creating Azure Managed CCF resource",
       false,
       async () => {
-        await executeCommandAsync(
-          `az confidentialledger managedccfs create --members "[{certificate:'${memberCertificateString}',identifier:'${memberIdentifier}}',group:'group1'}]" --location ${region.value} --app-type ${applicationType.value} --node-count ${numNodes} --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
-        );
+        await createInstance(
+          region.value,
+          "JS",
+          certificateString,
+          subscriptionId,
+          resourceGroup,
+          instanceName,
+          Number(numNodes));
       },
     );
 

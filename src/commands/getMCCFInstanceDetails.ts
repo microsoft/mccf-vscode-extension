@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import {
-  azureLogin,
   listResourceGroups,
   listSubscriptions,
   showMCCFInstanceDetails,
@@ -12,9 +11,6 @@ import { DefaultAzureCredential } from "@azure/identity";
 
 export async function getMCCFInstanceDetails() {
   try {
-    // Login to Azure
-    // await azureLogin();
-
     // Get the subscription ID
     const subscriptionId = await listSubscriptions();
 

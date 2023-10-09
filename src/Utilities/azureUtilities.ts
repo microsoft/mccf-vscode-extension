@@ -1,60 +1,47 @@
 import * as vscode from "vscode";
-import { executeCommandAsync } from "./asyncUtils";
 import { showOutputInChannel, withProgressBar } from "./extensionUtils";
 import { logAndThrowError } from "./errorUtils";
 import { SubscriptionClient } from "@azure/arm-subscriptions";
 import { DefaultAzureCredential } from "@azure/identity";
-import {ResourceManagementClient} from "@azure/arm-resources";
-import { ConfidentialLedgerClient } from "@azure/arm-confidentialledger";
+import { ResourceManagementClient } from "@azure/arm-resources";
+import { ConfidentialLedgerClient, ManagedCCF } from "@azure/arm-confidentialledger";
 
-// Check if Azure CLI is installed by running the command "az --version"
-export async function checkAzureCli() {
+// Create a MCCF instance
+export async function createInstance(
+  location: string,
+  language: string,
+  cert: string,
+  subscriptionId: string,
+  resourceGroup: string,
+  appName: string,
+  nodecount: number,
+) {
   try {
-    await executeCommandAsync("az --version");
-  } catch (error: any) {
-    logAndThrowError("Failed to check Azure CLI", error);
-  }
-}
-
-// Login to Azure CLI by running the command "az login"
-export async function azureLogin() {
-  try {
-    await withProgressBar("Logging into Azure", false, async () => {
-      await checkAzureCli();
-      const accountOutput = await executeCommandAsync("az account show");
-      const account = JSON.parse(accountOutput.toString());
-      if (!account.id) {
-        await executeCommandAsync("az login");
+    const mccf : ManagedCCF = {
+      location: location,
+      properties: {
+        deploymentType: {
+          languageRuntime: language
+        },
+        memberIdentityCertificates: [
+          {
+            certificate: cert,
+            encryptionkey: "ledgerencryptionkey"
+          }
+        ],
+        nodeCount: nodecount
       }
-    });
+    };
+
+    const mccfClient = new ConfidentialLedgerClient(new DefaultAzureCredential(), subscriptionId);
+    const res = await mccfClient.managedCCFOperations.beginCreateAndWait(
+      resourceGroup,
+      appName,
+      mccf
+    ); 
   } catch (error: any) {
-    logAndThrowError("Failed to login to Azure", error);
+    logAndThrowError("Failed to create MCCF instance", error);
   }
-}
-
-// Setup Azure Managed CCF
-export async function azureMCCFSetup() {
-  try {
-    await withProgressBar("Registering MCCF provider", false, async () => {
-      // Register the MCCF feature
-      await executeCommandAsync(
-        "az feature registration create --namespace Microsoft.ConfidentialLedger --name ManagedCCF",
-      );
-
-      // Register the Microsoft.ConfidentialLedger provider
-      await executeCommandAsync(
-        "az provider register --namespace Microsoft.ConfidentialLedger",
-      );
-    });
-  } catch (error: any) {
-    logAndThrowError("Failed to setup Azure Managed CCF", error);
-  }
-}
-
-// Subscription interface
-interface Subscription {
-  name: string;
-  id: string;
 }
 
 // Show a list of subscriptions and let the user choose one
@@ -150,7 +137,7 @@ export async function showMCCFInstanceDetails(
   );
 
   const mccfInstanceDetailsJson = JSON.stringify(
-    JSON.parse(mccfInstanceDetails.toString()),
+    JSON.parse(mccfInstanceDetails),
     null,
     2,
   );
