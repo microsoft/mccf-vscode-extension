@@ -6,11 +6,6 @@ This Visual Studio Code extension for [Managed CCF](https://techcommunity.micros
 
 Use MCCF functions to quickly create the development environment with all necessary dependencies with templates, and easily test and deploy CCF applications to Managed CCF instances in Azure. All of these features combined enable users to build **confidential multi-party applications** with **customizable governance** and **auditability**.
 
-## Prerequisite
-- Node.js and npm be installed ([installing npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm))
-- After installation, run `npm install` inside root directory to install required packages
-- Once everything is set up properly, open the project folder and click on `Run` in the menu bar and select `Start Debugging` or use `F5` to start running the extension project
-
 ## Create your CCF Application
 
 1. To start your project, first set up the self-contained development environment
