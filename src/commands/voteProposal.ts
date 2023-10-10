@@ -122,54 +122,39 @@ async function voteForProposal(
 
 async function getProposal(networkUrl: string): Promise<string> {
   try {
-    const command = `${utilities.getWsl()} curl ${networkUrl}/gov/proposals -k`;
+    const command =
+      `${utilities.getWsl()}` + `curl ${networkUrl}/gov/kv/proposals -k`;
 
     // Run the command and store the output
     let proposals = execSync(command).toString();
 
-    // Remove the first and last character of the output
-    proposals = proposals.slice(1, -1);
+    // Assuming 'proposals' is in JSON format and parse in to an object
+    const jsonResponse = JSON.parse(proposals);
 
-    if (proposals.length === 0) {
-      vscode.window.showInformationMessage("No active proposals found");
-      return "";
+    // save all the proposal id to an array
+    const proposalArray: string[] = [];
+    for (const key in jsonResponse) {
+      if (Object.prototype.hasOwnProperty.call(jsonResponse, key)) {
+        proposalArray.push(key);
+      }
     }
 
-    // Split the output into an array of proposals
-    const regex = /(".{64}":{.*?})(?=,".{64}":|\s*$)/g;
-    const proposalArray = proposals.match(regex);
+    if (proposalArray.length === 0) {
+      throw new Error("No active proposals found");
+    }
 
-    // Create a quick pick item for each ballot only displaying the ballot id
-    const proposalQuickPickItems: vscode.QuickPickItem[] = [];
-    proposalArray?.forEach((proposal) => {
-      const ballotId = proposal.slice(1, 65);
-      proposalQuickPickItems.push({
-        label: ballotId,
-      });
+    const selectedProposal = await vscode.window.showQuickPick(proposalArray, {
+      ignoreFocusOut: true,
+      placeHolder: "Select a proposal",
     });
-
-    // Check if there are no ballotquickpick items
-    if (proposalQuickPickItems.length === 0) {
-      vscode.window.showInformationMessage("No active proposals found");
-      return "";
-    }
-
-    const selectedProposal = await vscode.window.showQuickPick(
-      proposalQuickPickItems,
-      {
-        ignoreFocusOut: true,
-        placeHolder: "Select a proposal",
-      },
-    );
 
     // Check if no proposal was selected
     if (!selectedProposal) {
-      vscode.window.showInformationMessage("No proposal selected");
-      return "";
+      throw new Error("No proposal selected");
     }
 
     // Return the proposal id of the selected proposal
-    return selectedProposal?.label ?? "";
+    return selectedProposal ?? "";
   } catch (error: unknown) {
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error.message);

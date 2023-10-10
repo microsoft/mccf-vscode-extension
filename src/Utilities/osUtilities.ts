@@ -14,5 +14,5 @@ export function getPathOSAgnostic(filePath: string): string {
 }
 
 export function getWsl(): string {
-  return os.platform() === "win32" ? `wsl` : ` `;
+  return os.platform() === "win32" ? `wsl ` : ``;
 }
