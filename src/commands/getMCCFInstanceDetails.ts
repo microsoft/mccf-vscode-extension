@@ -23,11 +23,17 @@ export async function getMCCFInstanceDetails() {
 
     // Run command to list MCCF instances
     await withProgressBar("Getting MCCF instances", false, async () => {
-      const mccfClient = new ConfidentialLedgerClient(new DefaultAzureCredential(), subscriptionId);
-      const mccfApps = await mccfClient.managedCCFOperations.listByResourceGroup(resourceGroup);
-      
+      const mccfClient = new ConfidentialLedgerClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
+      );
+      const mccfApps =
+        await mccfClient.managedCCFOperations.listByResourceGroup(
+          resourceGroup,
+        );
+
       for await (let item of mccfApps) {
-        mccfInstances.push(item);
+        mccfInstances.push(item.name);
       }
 
       if (mccfInstances.length === 0) {
@@ -38,13 +44,8 @@ export async function getMCCFInstanceDetails() {
       }
     });
 
-    // This code takes a list of instances and returns a list of items.
-    // The instances are converted into items by mapping each instance
-    // to an item object.
-    const items = mccfInstances.map((instance) => ({ label: instance }));
-
     // Get the selected instance from the user
-    const selectedInstance = await vscode.window.showQuickPick(items, {
+    const selectedInstance = await vscode.window.showQuickPick(mccfInstances, {
       title: "Select a MCCF instance",
       ignoreFocusOut: true,
     });
@@ -55,11 +56,7 @@ export async function getMCCFInstanceDetails() {
     }
 
     // Show the details of the MCCF instance in the output channel
-    showMCCFInstanceDetails(
-      selectedInstance.label,
-      resourceGroup,
-      subscriptionId,
-    );
+    showMCCFInstanceDetails(selectedInstance, resourceGroup, subscriptionId);
   } catch (error: any) {
     logAndDisplayError("Failed to list MCCF instances", error);
   }

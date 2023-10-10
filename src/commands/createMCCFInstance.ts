@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as fs from 'fs';
+import * as fs from "fs";
 import {
   listResourceGroups,
   listSubscriptions,
@@ -130,37 +130,24 @@ export async function createMCCFInstance() {
 
     // Create the MCCF resource
     await withProgressBar(
-      "Creating Azure Managed CCF resource",
+      "Creating Azure Managed CCF resource, this may take a while.",
       false,
       async () => {
         await createInstance(
           region.value,
+          applicationType.value,
           "JS",
           certificateString,
           subscriptionId,
           resourceGroup,
           instanceName,
-          Number(numNodes));
-      },
-    );
-
-    vscode.window.showInformationMessage(
-      "Azure Managed CCF resource was created successfully",
-    );
-
-    // Wait for MCCF instance to be initialized
-    await withProgressBar(
-      "Waiting for the MCCF instance to be initialized. This may take a while.",
-      false,
-      async () => {
-        await executeCommandAsync(
-          `az confidentialledger managedccfs wait --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --created --timeout 600`,
+          Number(numNodes),
         );
       },
     );
 
     vscode.window.showInformationMessage(
-      "The MCCF instance is up and running!",
+      "Azure Managed CCF resource was created successfully",
     );
 
     // Show the details of the MCCF instance in the output channel
