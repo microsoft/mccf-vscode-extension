@@ -9,7 +9,6 @@ Use MCCF functions to quickly create the development environment with all necess
 ## Create your CCF Application
 
 1. To start your project, first set up the self-contained development environment
-
 ![This photo displays the choice of commands appearing to the user with the MCCF: Create CCF App Environment in DevContainer as the option highlighted with a red outline and should be chosen first by the user.](images/first_commandView.png)
 
 2.  Next, select the template you would like to begin building your project from. You can choose from 5 different options: 
@@ -23,7 +22,6 @@ Use MCCF functions to quickly create the development environment with all necess
 - The data reconciliation app template is a sample application that allows members to submit their data for reconciliation and query for reconciliation results. 
 
 - The logging app template is leveraged by users to utilize a secure auditable logging system where only authorized users can access, log, and track activities.
-
 ![Here there are 5 options displayed that appear after choosing to create a CCF app environment.](images/choose_template.png)
 
 3. After choosing your template, users are prompted to choose the destination folder where the application opens in a development container, with all necessary dependencies, ready for network initialization.
@@ -38,13 +36,13 @@ All templates provide governance in CCF which is implemented as a constitution. 
 ## Start a CCF Network
 
 Activate a network with one node and member to start a network all from docker **OR** the development container. The option is left to users as it allows non-development container users to start a CCF network on their local environment.
+![This photo displays the choice of commands appearing to the user with the MCCF: Start CCF Network in DevContainer](mages/start_ccf_network.png)
 
-- ### START NETWORK IN A DEVELOPMENT CONTAINER 
+- ### START NETWORK IN A DEVELOPMENT CONTAINER
 
 1. Upon starting the network in a DevContainer, you will be given the option to choose a project folder. Make sure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)![Alt text](images/image.png)
 
 2. You should see something similar to the following output generating in the terminal. This is how you will know your network has been successfully set up:
-
 ```bash
 [22:07:02.315] Virtual mode enabled
 [22:07:02.316] Starting 1 CCF node...
@@ -72,11 +70,10 @@ After starting the network in a Docker Container, your output should look simila
 ## Adding New  Members or Users
 
 - ### GENERATE MEMBER IDENTITY 
-The Generate Identity Keys creates all of the certificates necessary to add members and users to an MCCF network and ensures that all IDs are unique. After entering a unique key identifying name, the user will be prompted to select the folder where they would like to store their keys within the file system.
+  The Generate Identity Keys creates all of the certificates necessary to add members and users to an MCCF network and ensures that all IDs are unique. After entering a unique key identifying name, the user will be prompted to select the folder where they would like to store their keys within the file system.
 
 1. Select "Generate Identity Keys" 
 ![Alt text](images/image_generatekeys.png)
-
 
 2. Enter the ID for a member/user
 ![Alt text](images/image_memid.png)
@@ -85,9 +82,8 @@ The Generate Identity Keys creates all of the certificates necessary to add memb
 3.  The output should look similar to this : 
 ![Alt text](images/image_output.png)
 
-
 - ### GENERATE USER PROPOSAL 
-The generated user proposal allows the developer to easily generate user proposals for users they would like to add to the network. The user will choose the specific user's signing certificate and the folder in which they would like to store the proposal within their project or computer.
+  The generated user proposal allows the developer to easily generate user proposals for users they would like to add to the network. The user will choose the specific user's signing certificate and the folder in which they would like to store the proposal within their project or computer.
 
 1. Select "Generate user proposal" 
 ![Alt text](images/image_userproposal.png)
@@ -96,13 +92,12 @@ The generated user proposal allows the developer to easily generate user proposa
 
 
 - ### GENERATE MEMBER PROPOSAL
-The generate member proposal allows for the developer to easily generate member proposals for members they would like to add to the network to govern. The user will choose the specific member's signing certificate and the folder in which they'd like to store the proposal in within proposal.
+  The generate member proposal allows for the developer to easily generate member proposals for members they would like to add to the network to govern. The user will choose the specific member's signing certificate and the folder in which they'd like to store the proposal in within proposal.
 
 1. Select "Generate member proposal" 
 ![Alt text](images/image_memberproposal.png)
 
-2.  A member proposal JSON file should generate right away
-
+2. A member proposal JSON file should generate right away
 
  > Signing certificate refers to name_cert.pem while signing key refers to name_privk.pem
 
@@ -110,10 +105,13 @@ The generate member proposal allows for the developer to easily generate member 
 
 - ### SUBMIT A PROPOSAL
 1. To submit a proposal you would need to provide four parameters which are the network URL, signing key, certificate key, and the proposal file. Choose the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
-
 ![Alt text](images/image_parameters.png)
 
-2. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
+2. Here, the newwork URL refers to the URL of the CCF app currently running. If you are following this README, it would be the URL created in the second step [start network](#start-network-in-a-development-container) when starting a network in a development container or a docket container (the default value for this is https://127.0.0.1:8000).
+
+3. The certificate and key used here must be those of a member that is already registered in the node to pass validation. Before adding any member initially, we must use the cert and key information of the starting node's member. The relevant data for the starting node member is set by default in `~/workspace/sandbox_common` (or the path shown in console `Keys and certificates have been copied to the common folder` when starting the network in the second step: [start network](#start-network-in-a-development-container)). For example, in Node [0], you can use `member0_cert.pem` and `member0_privk.pem` for the initial vote.
+
+4. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
 ![Alt text](images/image_sp.png)
 
 - ### VOTE ON A PROPOSAL  
@@ -137,7 +135,6 @@ Users can create instances based on their specific preferences which require the
 2. Name the identifier for the instance, along with a name, location of deployment (specific Azure subscription, and resource group), and the node count.
 
 3. After this information has been entered, your output will show the progress of creating the instance displaying its status. Your output should look similar to the following output:
-
 ![Alt text](images/image3.png)
 
 
@@ -145,7 +142,6 @@ Users can create instances based on their specific preferences which require the
 1. Select the specific subscription ID connected to your account.
 
 2. Select the specific resource group which allows the extension to display various instances in that resource group and their specified details.
-
 ![Alt text](images/image4.png)
 
 **3. Select any instance of your choosing
