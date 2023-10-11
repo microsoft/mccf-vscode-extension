@@ -18,14 +18,21 @@ export async function azureMCCFSetup(subscriptionId: string) {
   try {
     await withProgressBar("Registering MCCF provider", false, async () => {
       // Register the MCCF feature
-      const featureClient = new FeatureClient(new DefaultAzureCredential(), subscriptionId);
+      const featureClient = new FeatureClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
+      );
       let result = await featureClient.features.register(
         namespaceName,
-        featureName
+        featureName,
       );
       console.log(result);
+
       // Register the Microsoft.ConfidentialLedger provider
-      const providersClient = new ResourceManagementClient(new DefaultAzureCredential(), subscriptionId);
+      const providersClient = new ResourceManagementClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
+      );
       result = await providersClient.providers.register(namespaceName);
       console.log(result);
     });

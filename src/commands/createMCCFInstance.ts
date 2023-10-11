@@ -20,7 +20,7 @@ const languageCPP = {
   label: "CPP",
   description: "C++ CCF application",
   value: "CPP",
-}
+};
 
 const customAppOption = {
   label: "Custom app",
