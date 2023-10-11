@@ -3,11 +3,36 @@ import { showOutputInChannel, withProgressBar } from "./extensionUtils";
 import { logAndThrowError } from "./errorUtils";
 import { SubscriptionClient } from "@azure/arm-subscriptions";
 import { DefaultAzureCredential } from "@azure/identity";
+import { FeatureClient } from "@azure/arm-features";
 import { ResourceManagementClient } from "@azure/arm-resources";
 import {
   ConfidentialLedgerClient,
   ManagedCCF,
 } from "@azure/arm-confidentialledger";
+
+const namespaceName = "Microsoft.ConfidentialLedger";
+const featureName = "ManagedCCF";
+
+// Setup Azure Managed CCF
+export async function azureMCCFSetup(subscriptionId: string) {
+  try {
+    await withProgressBar("Registering MCCF provider", false, async () => {
+      // Register the MCCF feature
+      const featureClient = new FeatureClient(new DefaultAzureCredential(), subscriptionId);
+      let result = await featureClient.features.register(
+        namespaceName,
+        featureName
+      );
+      console.log(result);
+      // Register the Microsoft.ConfidentialLedger provider
+      const providersClient = new ResourceManagementClient(new DefaultAzureCredential(), subscriptionId);
+      result = await providersClient.providers.register(namespaceName);
+      console.log(result);
+    });
+  } catch (error: any) {
+    logAndThrowError("Failed to setup Azure Managed CCF", error);
+  }
+}
 
 // Create a MCCF instance
 export async function createInstance(
@@ -46,6 +71,7 @@ export async function createInstance(
       appName,
       mccf,
     );
+    console.log(result);
   } catch (error: any) {
     const errorDetails = JSON.stringify(error, null, 2); // Indent with 2 spaces for readability
     console.error("Error details:", errorDetails);
@@ -163,6 +189,6 @@ export async function showMCCFInstanceDetails(
       mccfInstanceDetailsJson,
     );
   } catch (error: any) {
-    logAndThrowError("Failed to list resource groups", error);
+    logAndThrowError("Failed to get MCCF instance details", error);
   }
 }

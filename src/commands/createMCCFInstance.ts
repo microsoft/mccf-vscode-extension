@@ -10,6 +10,18 @@ import { withProgressBar } from "../Utilities/extensionUtils";
 import { executeCommandAsync } from "../Utilities/asyncUtils";
 import { logAndDisplayError } from "../Utilities/errorUtils";
 
+const languageJS = {
+  label: "JavaScript",
+  description: "Javascript CCF application",
+  value: "JS",
+};
+
+const languageCPP = {
+  label: "CPP",
+  description: "C++ CCF application",
+  value: "CPP",
+}
+
 const customAppOption = {
   label: "Custom app",
   description: "Custom CCF application",
@@ -66,6 +78,19 @@ export async function createMCCFInstance() {
 
     if (!region) {
       vscode.window.showInformationMessage("No region was selected");
+      return;
+    }
+
+    const languageRuntime = await vscode.window.showQuickPick(
+      [languageJS, languageCPP],
+      {
+        title: "Select the language runtime",
+        ignoreFocusOut: true,
+      },
+    );
+
+    if (!languageRuntime) {
+      vscode.window.showInformationMessage("No language runtime was selected");
       return;
     }
 
@@ -136,7 +161,7 @@ export async function createMCCFInstance() {
         await createInstance(
           region.value,
           applicationType.value,
-          "JS",
+          languageRuntime.value,
           certificateString,
           subscriptionId,
           resourceGroup,
