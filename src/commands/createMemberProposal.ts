@@ -48,6 +48,7 @@ export async function createMemberProposal(
     canSelectFolders: true,
     canSelectMany: false,
     openLabel: "Select Folder to Store Proposal",
+    title: "Select Folder to Store Proposal",
   });
 
   // Check if destFolder is undefined
