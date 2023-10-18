@@ -1,13 +1,26 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
 import {
-  azureLogin,
   listResourceGroups,
   listSubscriptions,
   showMCCFInstanceDetails,
+  createInstance,
+  azureMCCFSetup,
 } from "../Utilities/azureUtilities";
 import { withProgressBar } from "../Utilities/extensionUtils";
-import { executeCommandAsync } from "../Utilities/asyncUtils";
 import { logAndDisplayError } from "../Utilities/errorUtils";
+
+const languageJS = {
+  label: "JavaScript",
+  description: "Javascript CCF application",
+  value: "JS",
+};
+
+const languageCPP = {
+  label: "CPP",
+  description: "C++ CCF application",
+  value: "CPP",
+};
 
 const customAppOption = {
   label: "Custom app",
@@ -33,11 +46,11 @@ const weuRegionOption = {
 
 export async function createMCCFInstance() {
   try {
-    // Login to Azure CLI
-    await azureLogin();
-
     // Get the subscription ID
     const subscriptionId = await listSubscriptions();
+
+    // Check if the subscription has been setup for MCCF
+    azureMCCFSetup(subscriptionId);
 
     // Get the resource group
     const resourceGroup = (
@@ -68,6 +81,19 @@ export async function createMCCFInstance() {
 
     if (!region) {
       vscode.window.showInformationMessage("No region was selected");
+      return;
+    }
+
+    const languageRuntime = await vscode.window.showQuickPick(
+      [languageJS, languageCPP],
+      {
+        title: "Select the language runtime",
+        ignoreFocusOut: true,
+      },
+    );
+
+    if (!languageRuntime) {
+      vscode.window.showInformationMessage("No language runtime was selected");
       return;
     }
 
@@ -104,6 +130,7 @@ export async function createMCCFInstance() {
     }
 
     const memberCertificateString = memberCertificate[0].fsPath;
+    const certificateString = fs.readFileSync(memberCertificateString, "utf8");
 
     // Get the name of the member
     const memberIdentifier = await vscode.window.showInputBox({
@@ -131,32 +158,24 @@ export async function createMCCFInstance() {
 
     // Create the MCCF resource
     await withProgressBar(
-      "Creating Azure Managed CCF resource",
+      "Creating Azure Managed CCF resource, this may take a while.",
       false,
       async () => {
-        await executeCommandAsync(
-          `az confidentialledger managedccfs create --members "[{certificate:'${memberCertificateString}',identifier:'${memberIdentifier}}',group:'group1'}]" --location ${region.value} --app-type ${applicationType.value} --node-count ${numNodes} --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --no-wait false`,
+        await createInstance(
+          region.value,
+          applicationType.value,
+          languageRuntime.value,
+          certificateString,
+          subscriptionId,
+          resourceGroup,
+          instanceName,
+          Number(numNodes),
         );
       },
     );
 
     vscode.window.showInformationMessage(
       "Azure Managed CCF resource was created successfully",
-    );
-
-    // Wait for MCCF instance to be initialized
-    await withProgressBar(
-      "Waiting for the MCCF instance to be initialized. This may take a while.",
-      false,
-      async () => {
-        await executeCommandAsync(
-          `az confidentialledger managedccfs wait --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --created --timeout 600`,
-        );
-      },
-    );
-
-    vscode.window.showInformationMessage(
-      "The MCCF instance is up and running!",
     );
 
     // Show the details of the MCCF instance in the output channel

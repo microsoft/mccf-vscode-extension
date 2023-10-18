@@ -1,81 +1,137 @@
 import * as vscode from "vscode";
-import { executeCommandAsync } from "./asyncUtils";
 import { showOutputInChannel, withProgressBar } from "./extensionUtils";
 import { logAndThrowError } from "./errorUtils";
+import { SubscriptionClient } from "@azure/arm-subscriptions";
+import { DefaultAzureCredential } from "@azure/identity";
+import { FeatureClient } from "@azure/arm-features";
+import { ResourceManagementClient } from "@azure/arm-resources";
+import {
+  ConfidentialLedgerClient,
+  ManagedCCF,
+} from "@azure/arm-confidentialledger";
 
-// Check if Azure CLI is installed by running the command "az --version"
-export async function checkAzureCli() {
-  try {
-    await executeCommandAsync("az --version");
-  } catch (error: any) {
-    logAndThrowError("Failed to check Azure CLI", error);
-  }
-}
-
-// Login to Azure CLI by running the command "az login"
-export async function azureLogin() {
-  try {
-    await withProgressBar("Logging into Azure", false, async () => {
-      await checkAzureCli();
-      const accountOutput = await executeCommandAsync("az account show");
-      const account = JSON.parse(accountOutput.toString());
-      if (!account.id) {
-        await executeCommandAsync("az login");
-      }
-    });
-  } catch (error: any) {
-    logAndThrowError("Failed to login to Azure", error);
-  }
-}
+const namespaceName = "Microsoft.ConfidentialLedger";
+const featureName = "ManagedCCF";
 
 // Setup Azure Managed CCF
-export async function azureMCCFSetup() {
+export async function azureMCCFSetup(subscriptionId: string) {
   try {
+    const featureClient = new FeatureClient(
+      new DefaultAzureCredential(),
+      subscriptionId,
+    );
+
+    let isRegistered: boolean = false;
+
+    await withProgressBar(
+      "Checking if the MCCF feature is registered",
+      false,
+      async () => {
+        const status = await featureClient.features.get(
+          namespaceName,
+          featureName,
+        );
+        if (status != null && status.properties?.state == "Registered") {
+          vscode.window.showInformationMessage(
+            "The MCCF feature is already registered",
+          );
+          isRegistered = true;
+        }
+      },
+    );
+
+    if (isRegistered) {
+      return;
+    }
+
     await withProgressBar("Registering MCCF provider", false, async () => {
       // Register the MCCF feature
-      await executeCommandAsync(
-        "az feature registration create --namespace Microsoft.ConfidentialLedger --name ManagedCCF",
+      let result = await featureClient.features.register(
+        namespaceName,
+        featureName,
       );
+      console.log(result);
 
       // Register the Microsoft.ConfidentialLedger provider
-      await executeCommandAsync(
-        "az provider register --namespace Microsoft.ConfidentialLedger",
+      const providersClient = new ResourceManagementClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
       );
+      result = await providersClient.providers.register(namespaceName);
+      console.log(result);
     });
   } catch (error: any) {
     logAndThrowError("Failed to setup Azure Managed CCF", error);
   }
 }
 
-// Subscription interface
-interface Subscription {
-  name: string;
-  id: string;
+// Create a MCCF instance
+export async function createInstance(
+  location: string,
+  appSource: string,
+  language: string,
+  cert: string,
+  subscriptionId: string,
+  resourceGroup: string,
+  appName: string,
+  nodecount: number,
+) {
+  try {
+    const mccf: ManagedCCF = {
+      location: location,
+      properties: {
+        deploymentType: {
+          appSourceUri: appSource,
+          languageRuntime: language,
+        },
+        memberIdentityCertificates: [
+          {
+            certificate: cert,
+          },
+        ],
+        nodeCount: nodecount,
+      },
+    };
+
+    const mccfClient = new ConfidentialLedgerClient(
+      new DefaultAzureCredential(),
+      subscriptionId,
+    );
+    const result = await mccfClient.managedCCFOperations.beginCreateAndWait(
+      resourceGroup,
+      appName,
+      mccf,
+    );
+    console.log(result);
+  } catch (error: any) {
+    const errorDetails = JSON.stringify(error, null, 2); // Indent with 2 spaces for readability
+    console.error("Error details:", errorDetails);
+    logAndThrowError("Failed to create MCCF instance", error);
+  }
 }
 
 // Show a list of subscriptions and let the user choose one
 export async function listSubscriptions() {
   try {
-    let subscriptions: Subscription[] = [];
+    let subscriptionArray = new Array();
 
     // Retrieve a list of subscriptions
     await withProgressBar("Getting subscriptions", false, async () => {
-      const subscriptionsOutput = await executeCommandAsync(
-        "az account list --output json",
+      const subscriptionClient = new SubscriptionClient(
+        new DefaultAzureCredential(),
       );
-
-      subscriptions = JSON.parse(subscriptionsOutput);
+      const subscriptions = await subscriptionClient.subscriptions.list();
+      for await (let item of subscriptions) {
+        subscriptionArray.push({
+          label: item.displayName,
+          description: item.subscriptionId,
+        });
+      }
     });
-
-    // Convert the subscriptions to QuickPick items
-    const subscriptionItems = subscriptions.map((subscription) => ({
-      label: subscription.name,
-      description: subscription.id,
-    }));
 
     // Let the user choose a subscription using QuickPick
     const selectedSubscription = await vscode.window.showQuickPick(
-      subscriptionItems,
+      subscriptionArray,
       {
         title: "Select a subscription",
         ignoreFocusOut: true,
@@ -96,19 +152,22 @@ export async function listSubscriptions() {
 // List the resource groups in the selected subscription
 export async function listResourceGroups(subscriptionId: string) {
   try {
-    let resourceGroups: string[] = [];
+    let resourceGroupArray = new Array();
 
     // Retrieve a list of Resource Groups
     await withProgressBar("Getting resource groups", false, async () => {
-      const rgOutput = await executeCommandAsync(
-        `az group list --subscription ${subscriptionId} --query "[].name" --output json`,
+      const resourceClient = new ResourceManagementClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
       );
-
-      resourceGroups = JSON.parse(rgOutput.toString());
+      const resourceGroups = await resourceClient.resourceGroups.list();
+      for await (let item of resourceGroups) {
+        resourceGroupArray.push(item.name);
+      }
     });
 
     // Let the user choose a resource group using QuickPick
-    const selectedRG = await vscode.window.showQuickPick(resourceGroups, {
+    const selectedRG = await vscode.window.showQuickPick(resourceGroupArray, {
       title: "Select a resource group",
       ignoreFocusOut: true,
     });
@@ -130,27 +189,37 @@ export async function showMCCFInstanceDetails(
   resourceGroup: string,
   subscriptionId: string,
 ) {
-  let mccfInstanceDetails: string = "{}";
+  try {
+    let mccfInstanceDetails: ManagedCCF | null = null;
 
-  await withProgressBar(
-    "Getting details for the MCCF instance",
-    false,
-    async () => {
-      mccfInstanceDetails = await executeCommandAsync(
-        `az confidentialledger managedccfs show --name ${instanceName} --resource-group ${resourceGroup} --subscription ${subscriptionId} --output json`,
-      );
-    },
-  );
+    await withProgressBar(
+      "Getting details for the MCCF instance",
+      false,
+      async () => {
+        const mccfClient = new ConfidentialLedgerClient(
+          new DefaultAzureCredential(),
+          subscriptionId,
+        );
 
-  const mccfInstanceDetailsJson = JSON.stringify(
-    JSON.parse(mccfInstanceDetails.toString()),
-    null,
-    2,
-  );
+        mccfInstanceDetails = await mccfClient.managedCCFOperations.get(
+          resourceGroup,
+          instanceName,
+        );
+      },
+    );
 
-  // Show the details of the MCCF instance in the output channel
-  showOutputInChannel(
-    `MCCF instance view - ${instanceName}`,
-    mccfInstanceDetailsJson,
-  );
+    const mccfInstanceDetailsJson = JSON.stringify(
+      mccfInstanceDetails,
+      null,
+      2,
+    );
+
+    // Show the details of the MCCF instance in the output channel
+    showOutputInChannel(
+      `MCCF instance view - ${instanceName}`,
+      mccfInstanceDetailsJson,
+    );
+  } catch (error: any) {
+    logAndThrowError("Failed to get MCCF instance details", error);
+  }
 }
