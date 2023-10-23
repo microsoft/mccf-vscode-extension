@@ -4,6 +4,7 @@ import { runCommandInTerminal } from "../Utilities/extensionUtils";
 import { execSync } from "child_process";
 import { logAndDisplayError, logAndThrowError } from "../Utilities/errorUtils";
 import path = require("path");
+import { coseSign } from "../Utilities/coseUtils"
 
 const voteQuickPickItems: vscode.QuickPickItem[] = [
   {
