@@ -50,7 +50,6 @@ export async function azureMCCFSetup(subscriptionId: string) {
         namespaceName,
         featureName,
       );
-      console.log(result);
 
       // Register the Microsoft.ConfidentialLedger provider
       const providersClient = new ResourceManagementClient(
@@ -58,7 +57,6 @@ export async function azureMCCFSetup(subscriptionId: string) {
         subscriptionId,
       );
       result = await providersClient.providers.register(namespaceName);
-      console.log(result);
     });
   } catch (error: any) {
     logAndThrowError("Failed to setup Azure Managed CCF", error);
@@ -102,10 +100,7 @@ export async function createInstance(
       appName,
       mccf,
     );
-    console.log(result);
   } catch (error: any) {
-    const errorDetails = JSON.stringify(error, null, 2); // Indent with 2 spaces for readability
-    console.error("Error details:", errorDetails);
     logAndThrowError("Failed to create MCCF instance", error);
   }
 }
@@ -128,6 +123,10 @@ export async function listSubscriptions() {
         });
       }
     });
+
+    if (subscriptionArray.length === 0) {
+      throw new Error("No subscription found");
+    }
 
     // Let the user choose a subscription using QuickPick
     const selectedSubscription = await vscode.window.showQuickPick(
@@ -165,6 +164,10 @@ export async function listResourceGroups(subscriptionId: string) {
         resourceGroupArray.push(item.name);
       }
     });
+
+    if (resourceGroupArray.length === 0) {
+      throw new Error("No resource group found");
+    }
 
     // Let the user choose a resource group using QuickPick
     const selectedRG = await vscode.window.showQuickPick(resourceGroupArray, {
