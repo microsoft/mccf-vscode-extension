@@ -3,8 +3,8 @@
       {
         "name": "set_node_certificate_validity",
         "args": {
-          "node_id": "dba62ce6b57285b8e7b92e386d94e7b2ac6c7b8fc97bef584b6772dbb5691458",
-          "valid_from": "20231030233145Z",
+          "node_id": "__NODEID__",
+          "valid_from": "__VALIDFROM__",
           "validity_period_days": 90
         }
       }

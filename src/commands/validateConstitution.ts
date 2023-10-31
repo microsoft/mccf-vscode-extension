@@ -111,7 +111,7 @@ export async function validateCCFConstitution(
     const signingKeyPath = utilities.getPathOSAgnostic(signingKey[0].fsPath);
     const extensionPath = specialContext.extensionPath;
 
-    const testCommand = `cd ${extensionPath}/dist/scripts; ${utilities.getBashCommand()} ./test_constitution.sh --network-url ${networkUrl} --signing-cert ${signingCertPath} --signing-key ${signingKeyPath}`;
+    const testCommand = `cd ${extensionPath}/src/scripts; ${utilities.getBashCommand()} ./test_constitution.sh --network-url ${networkUrl} --signing-cert ${signingCertPath} --signing-key ${signingKeyPath}`;
     runCommandInTerminal("Test custom constitution", testCommand);
   } catch (error: any) {
     logAndDisplayError("Failed to validate constitution", error);

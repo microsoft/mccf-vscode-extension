@@ -3,7 +3,7 @@
         {
             "name": "set_service_certificate_validity",
             "args": {
-                "valid_from": "20231030233145Z",
+                "valid_from": "__VALIDFROM__",
                 "validity_period_days": 90
             }
         }
