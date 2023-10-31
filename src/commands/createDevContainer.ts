@@ -164,7 +164,7 @@ function initializeProjectFolder(
   // Opens the folder in a new window. It does not automatically open a devcontainer
   // as this is currently not supported by the remote containers API (see https://github.com/microsoft/vscode-remote-release/issues/8422).
   // Still, the user will be prompted with a dialog to open the folder in a devcontainer after the new window is opened.
-  vscode.commands.getResult(
+  vscode.commands.executeCommand(
     constants.openFolderInDevContainerCommand,
     vscode.Uri.file(destPath),
   );
