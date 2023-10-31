@@ -1,0 +1,12 @@
+{
+    "actions": [
+      {
+        "name": "set_member",
+        "args": {
+          "cert":"-----BEGIN CERTIFICATE-----\nMIIBtjCCATygAwIBAgIUZl7cRJUkFXX48JXFMGnONL/bF0owCgYIKoZIzj0EAwMw\nEjEQMA4GA1UEAwwHbWVtYmVyMDAeFw0yMzA4MjEyMTE0MjNaFw0yNDA4MjAyMTE0\nMjNaMBIxEDAOBgNVBAMMB21lbWJlcjAwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAAQ/\nvyFFiFgy0PAj8pZ+/H3QhazCaZxJVnu76yNDAuIxeEjhigd/gE+vadIgld8uYYLU\nwWw+taojfbQIBPss1mX+6d8pJKWe0mAGxhJVphr8YJXH6x+VLAkcAs/Jmm1t/iCj\nUzBRMB0GA1UdDgQWBBRnLuYb9RZ54kQUgQf0kJWtkUKdljAfBgNVHSMEGDAWgBRn\nLuYb9RZ54kQUgQf0kJWtkUKdljAPBgNVHRMBAf8EBTADAQH/MAoGCCqGSM49BAMD\nA2gAMGUCMQDSOsxyCrKsfFeGfeHMveAzov1MSviTQ3WOPHi2Js95By8RyPgdVJeG\njzheJW0k1IICMG8BjhMtHIOnl2ZrwCV31GoOUqzPr3dsAWmuG/SCShAqBTrU+64K\nVAb1sqyvksJigg==\n-----END CERTIFICATE-----",
+          "encyption_pub_key": "",
+          "data": {"identifier":"member0", "dept":"HR"}
+        }
+      }
+    ]
+  }

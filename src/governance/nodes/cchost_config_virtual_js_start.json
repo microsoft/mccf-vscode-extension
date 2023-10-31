@@ -1,0 +1,42 @@
+{
+  "enclave": {
+    "file": "/usr/lib/ccf/libjs_generic.virtual.so",
+    "type": "Virtual",
+    "platform": "Virtual"
+  },
+  "network": {
+    "node_to_node_interface": {
+      "bind_address": "__NODE_ADDRESS__:16384"
+    },
+    "rpc_interfaces": {
+      "main_interface": {
+        "bind_address": "__NODE_ADDRESS__:16385"
+      }
+    }
+  },
+  "node_certificate": {
+    "subject_name": "CN=CCF Node",
+    "subject_alt_names": ["iPAddress:__NODE_ADDRESS__","iPAddress:__NETWORK_ADDRESS__"],
+    "curve_id": "Secp384R1",
+    "initial_validity_days": 30
+  },
+  "command": {
+    "type": "Start",
+    "service_certificate_file": "/app/ccfdata/service_cert.pem",
+    "start": {
+      "constitution_files": [
+        "/app/validate.js",
+        "/app/apply.js",
+        "/app/resolve.js",
+        "/app/actions.js"
+      ],
+      "members": [
+        {
+          "certificate_file": "/app/operator_cert.pem",
+          "encryption_public_key_file": "/app/operator_enc_pubk.pem",
+          "data_json_file": "/app/operator_data.json"
+        }
+      ]
+    }
+  }
+}

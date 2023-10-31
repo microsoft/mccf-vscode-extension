@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
+import { validateCCFConstitution } from "./commands/validateConstitution";
 import { createMCCFInstance } from "./commands/createMCCFInstance";
 import { getMCCFInstanceDetails } from "./commands/getMCCFInstanceDetails";
 import { submitProposal } from "./commands/submitProposal";
@@ -36,6 +37,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.startCCFNetworkDocker",
       startCCFNetworkDocker,
+    ),
+  );
+
+  // COMMAND: Start CCF network in devcontainer and test custom constitution
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-azure-managed-ccf.validateCCFConstitution",
+      () => validateCCFConstitution(context),
     ),
   );
 

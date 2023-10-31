@@ -1,0 +1,8 @@
+{
+    "actions": [
+      {
+        "name": "trigger_snapshot",
+        "args": {}
+      }
+    ]
+  }

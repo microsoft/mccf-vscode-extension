@@ -30,6 +30,10 @@
         "title": "MCCF: Start CCF Network in Docker container"
       },
       {
+        "command": "vscode-azure-managed-ccf.validateCCFConstitution",
+        "title": "MCCF: Validate Custom Constitution"
+      },
+      {
         "command": "vscode-azure-managed-ccf.createMCCFInstance",
         "title": "MCCF: Create MCCF Instance"
       },

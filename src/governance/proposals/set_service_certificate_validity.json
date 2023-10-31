@@ -1,0 +1,11 @@
+{
+    "actions": [
+        {
+            "name": "set_service_certificate_validity",
+            "args": {
+                "valid_from": "20231030233145Z",
+                "validity_period_days": 90
+            }
+        }
+    ]
+}

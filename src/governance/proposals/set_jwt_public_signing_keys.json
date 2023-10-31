@@ -1,0 +1,21 @@
+{
+    "actions": [
+      {
+        "name": "set_jwt_public_signing_keys",
+        "args": {
+          "issuer": "https://login.microsoftonline.com/common/v2.0",
+          "jwks": {
+            "keys": [
+              {
+                "kty": "RSA",
+                "kid": "my_kid",
+                "x5c": [
+                  "MIICrDCCAZSgAwIBAgIUcj2cyqhj1U8XzZ0gvV1sF4e4vtowDQYJKoZIhvcNAQELBQAwEDEOMAwGA1UEAwwFZHVtbXkwHhcNMjIwMTEyMTM0MzMzWhcNMjIwMTIyMTM0MzMzWjAQMQ4wDAYDVQQDDAVkdW1teTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK/RrDSau3y4uI0AMKRfeC/aflZ7LfqFeaWOrj3WrDd1lWIJNJfXw4yrjyLq/NxDPF/3Rk4JBA4FPxUuQ2gwiLaZr9/OJjG2e+1sT9Sj243IC4tKvm8ilUtbgx9f9GvyoP5UhnZHa3GQ2MnRpTtzOq2u+XhjrQBfadGEVjUCpbwRaV7vTUr2WZQ/e1HbLFg0vdApP/U2Z/p5LUyRooLIu12mgMFZAd8zYWXsHGx+D4F8DeRpuPDrF5CKOeA2HvhIeYy+kKMhSuE2wBn3lHtTstZfoJoJJuDPwr5F58jlBHBdRL7BtfB2O8jK5iPNb3bZnyAgQ4xJVr/4wUcbeI7SA28CAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAXlso7E6vqH0W9w3jMrtIWJiZWZi1O+JQ3TkcVX0qTHHQRSjFyY+wjjL11ERZqz2XnrfQZDQdlpB4g7EXh24lN7QE5XuxN6gfRVDPVrY8+mg5qXBW6yz70Kgt7iuy5QjTOMU3GjqYBjObcXBqp+/p6mU0cTFHSt7xQjK2XI1AdOuxeAtUsko6+pvMwZus2RARzJurSAuWh4mU2ozALmUlAD+looOsvqui4s6CNUUakfSUlDj5drnYOHqqrRXDVonzDCDJgN/ZJubwFkTmZ1Urr5OTR5/WdC9G69RU27eqyRFuWlCafy8+hwyo6sZykDJpa6FBbeXWfm7s8Sj77y0Gdg=="
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }

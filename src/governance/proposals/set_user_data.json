@@ -1,0 +1,11 @@
+{
+    "actions": [
+      {
+        "name": "set_user_data",
+        "args": {
+          "user_id":"d02b181fa665a8051eff1d51e42a5f05600f3c6f72c53677c02d6541cd5e74aa",
+          "user_data": {"roleName":"Contributor","dept":"Finance"}
+        }
+      }
+    ]
+  }

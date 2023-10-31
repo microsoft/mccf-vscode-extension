@@ -1,0 +1,11 @@
+{
+    "actions": [
+      {
+        "name": "set_service_principal",
+        "args": {
+          "id":"jmack",
+          "data": {"deptCode": "PC612987"}
+        }
+      }
+    ]
+  }

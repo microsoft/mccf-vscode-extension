@@ -1,0 +1,10 @@
+{
+    "actions": [
+      {
+        "name": "remove_user_by_cert",
+        "args": {
+          "cert":"-----BEGIN CERTIFICATE-----\nMIIBsjCCATigAwIBAgIUeEX3eBZaXiKqDZEGKsbE1jyXBzwwCgYIKoZIzj0EAwMw\nEDEOMAwGA1UEAwwFdXNlcjAwHhcNMjMwODExMjAxOTUxWhcNMjQwODEwMjAxOTUx\nWjAQMQ4wDAYDVQQDDAV1c2VyMDB2MBAGByqGSM49AgEGBSuBBAAiA2IABKuj76lL\nF9c2bNnghml9lJp8tQrrNXV3Q0+5KkNRpT1yrakUVzCsRw7y1u7PjeHiYj4bwJNj\nthMq4vdKR5sl1x6o8B0GX0d/Bc2AqvLnPLHTpngCBZyQ0ONXNUEf2HMZd6NTMFEw\nHQYDVR0OBBYEFNR7ogHyfPTmNCae97EcC+2BCqyYMB8GA1UdIwQYMBaAFNR7ogHy\nfPTmNCae97EcC+2BCqyYMA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwMDaAAw\nZQIxAJ5Uguk7HmcHxwzeGdblmLQec1Ckdhv1g+lAPFWgzbnLyb2fI6FrAaIWgV8B\nCJoVmgIwFeklc8kjHrEG/mLa6JmBWCMJpUR7awjSvg/8EvXC8qrZsxSErztDCF2G\nUPeYo94P\n-----END CERTIFICATE-----"          
+        }
+      }
+    ]
+  }

@@ -1,0 +1,10 @@
+{
+    "actions": [
+      {
+        "name": "remove_service_principal",
+        "args": {
+          "id":"jmack"
+        }
+      }
+    ]
+  }
