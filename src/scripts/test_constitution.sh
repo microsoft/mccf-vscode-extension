@@ -3,6 +3,7 @@
 set -euo pipefail
 
 source common_utils.sh
+trap cleanup EXIT
 
 init_env
 
@@ -22,11 +23,9 @@ function usage {
 PASS=0
 FAIL=0
 TEST=0
-sc=0
-rc=0
-el=0
 
 # Path variables
+root_dir=$(dirname "$(realpath -s "$0")")
 governance_dir="../governance"
 workspace_dir="$governance_dir/workspace"
 proposals_dir="$governance_dir/proposals"
@@ -34,10 +33,28 @@ proposals_dir="$governance_dir/proposals"
 mkdir -p $workspace_dir
 cp -r $proposals_dir/* $workspace_dir
 
+function cleanup { 
+    # delete workspace directory
+    rm -r $workspace_dir
+
+    # Deactivate virtual environment
+    deactivate_env
+
+    # delete network for the joint node
+    local process_id
+    if lsof -i :"$(($port+1000))" > /dev/null 2>&1; then
+        process_id=$(lsof -t -i :"$(($port+1000))")
+        kill $process_id
+    fi
+    if lsof -i :"$(($port+1001))" > /dev/null 2>&1; then
+        process_id=$(lsof -t -i :"$(($port+1001))")
+        kill $process_id
+    fi
+}
+
 function initTest {
     TEST=$((TEST+1))
-    sc=$(tput sc) rc=$(tput rc) el=$(tput el)
-    echo && printf "[Test $TEST]: $1...%s" "$sc"
+    echo && printf "[Test $TEST]: $1..." 
 }
 
 function getResult {
@@ -56,16 +73,10 @@ function getResult {
 }
 
 # parse parameters
-if [ $# -eq 0 ]; then
+if [ $# -ne 6 ]; then
     usage
     exit 1
 fi
-
-# parse parameters
-#if [ $# -gt 3 ]; then
-#    usage
-#    exit 1
-#fi
 
 while [ $# -gt 0 ]
 do
@@ -119,8 +130,59 @@ getResult "$resp" "transition service to open"
 ##############################################
 # transition_node_to_trusted
 ##############################################
-initTest "Transition node to trusted"
+initTest "Transition node to be trusted"
 
+# current node count
+count=$(curl --cacert <(echo "$service_cert") --silent  $network_url/node/network/nodes | jq -c '.nodes[]'| wc -l)
+# remove http or https for network_url
+url_without_scheme="${network_url#*://}"
+host="${url_without_scheme%%:*}"
+port="${url_without_scheme#*:}"
+# if $network_url is https://127.0.0.1:8000, the node and rpc address would be 127.0.0.1:9000/9001
+node_address="$host:$(($port+1000))"
+rpc_address="$host:$(($port+1001))"
+
+sed -i -e "s#__NETWORK_URL__#$url_without_scheme#" $workspace_dir/join_config.json
+sed -i -e "s#__NODE_ADDRESS__#$node_address#" $workspace_dir/join_config.json
+sed -i -e "s#__RPC_ADDRESS__#$rpc_address#" $workspace_dir/join_config.json
+echo "$service_cert" > $workspace_dir/service_cert.pem
+
+cd $workspace_dir
+
+# use cchost binary to add a node to current network
+(/opt/ccf_virtual/bin/cchost --config join_config.json) > /dev/null &
+pid_command=$!
+
+start_time=$(date +%s)
+while [ $(($count+1)) -ne "$(curl --cacert <(echo "$service_cert") --silent  $network_url/node/network/nodes | jq -c '.nodes[]'| wc -l)" ];
+do
+    current_time=$(date +%s)
+    elapsed_time=$((current_time - start_time))
+    
+    # set time limit to 30 seconds
+    if [ $elapsed_time -ge 30 ]; then
+        echo "command cchost create new node in test \"Transition node to be trusted\" did not succeed within the time limit"
+        exit 1
+    fi
+    sleep 1
+done
+
+node_id=$(curl --cacert <(echo "$service_cert") --silent $network_url/node/network/nodes | jq -r '.nodes[] | select(.status=="Pending") | .node_id')
+if [[ ! -z $node_id ]];
+then
+    valid_from=$(date +%Y%m%d%H%M%SZ)
+    sed -i -e "s/__VALIDFROM__/$valid_from/" transition_node_to_trusted.json
+    sed -i -e "s/__NODEID__/$node_id/" transition_node_to_trusted.json
+    resp=$(ccf_cose_sign1 --content transition_node_to_trusted.json --signing-cert "$signing_cert" --signing-key "$signing_key" --ccf-gov-msg-type proposal --ccf-gov-msg-created_at `date -Is` | curl --silent --cacert <(echo "$service_cert") $network_url/gov/proposals -H 'Content-Type: application/cose' --data-binary @-)
+    getResult "$resp" "transition node to be trusted"
+else
+    resp="Failed"
+    getResult "$resp" "transition node to be trusted"
+fi
+
+
+(kill -9 $pid_command) 2>/dev/null
+cd $root_dir
 
 ##############################################
 # set_js_app
@@ -248,9 +310,3 @@ resp=$(ccf_cose_sign1 --content $workspace_dir/set_member.json --signing-cert "$
 getResult "$resp" "set member"
 
 echo && printf "Total tests:$TEST, Passed:$PASS, Failed:$FAIL, Test coverage:%.2f%%\n" "$(bc -l <<< "(($PASS/$TEST)*100)")"
-
-# delete workspace directory
-rm -r $workspace_dir
-
-# Deactivate virtual environment
-deactivate_env
