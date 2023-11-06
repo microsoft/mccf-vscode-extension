@@ -34,6 +34,10 @@
         "title": "MCCF: Create MCCF Instance"
       },
       {
+        "command": "vscode-azure-managed-ccf.deleteMCCFInstance",
+        "title": "MCCF: Delete MCCF Instance"
+      },
+      {
         "command": "vscode-azure-managed-ccf.getMCCFInstanceDetails",
         "title": "MCCF: Get MCCF Instance Details"
       },

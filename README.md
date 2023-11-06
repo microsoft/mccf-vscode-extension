@@ -126,8 +126,8 @@ This feature allows the developer to easily vote on a proposal to add a user to 
 
 > The custom option allows users to choose their specific ballot from their files.
 
-
-## Create an MCCF Instance
+## MCCF Instance
+- ### Create an MCCF Instance
 Users can create instances based on their specific preferences which require their specific subscription key. In addition, users can review all of their current instances that are currently running on their Azure account.
 
 1. Activate the specific command and select the signing certificate of your choice which could be pre-generated or created using the key-generator script located in the extension command.
@@ -137,14 +137,24 @@ Users can create instances based on their specific preferences which require the
 3. After this information has been entered, your output will show the progress of creating the instance displaying its status. Your output should look similar to the following output:
 ![Alt text](images/image3.png)
 
-
-- ### LIST AN MCCF INSTANCE
+- ### LIST AN MCCF Instance
 1. Select the specific subscription ID connected to your account.
 
 2. Select the specific resource group which allows the extension to display various instances in that resource group and their specified details.
 ![Alt text](images/image4.png)
 
-**3. Select any instance of your choosing
+3. Select any instance of your choosing
+
+
+- ### Delete an MCCF Instance
+Users can delete an instance with the given subscription id and resource group on their Azure account.
+1. Select the specific subscription ID connected to your account.
+
+2. Select the specific resource group.
+
+3. After the required fields have been provided, your output will show the progress of deleting the instance displaying its status. Your output should look similar to the following output:
+![Alt text](images/image5.png)
+
 
 ## Creating an Application Bundle
 

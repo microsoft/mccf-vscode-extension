@@ -95,13 +95,33 @@ export async function createInstance(
       new DefaultAzureCredential(),
       subscriptionId,
     );
-    const result = await mccfClient.managedCCFOperations.beginCreateAndWait(
+    await mccfClient.managedCCFOperations.beginCreateAndWait(
       resourceGroup,
       appName,
       mccf,
     );
   } catch (error: any) {
     logAndThrowError("Failed to create MCCF instance", error);
+  }
+}
+
+// Delete a MCCF instance
+export async function deleteInstance(
+  subscriptionId: string,
+  resourceGroup: string,
+  appName: string,
+) {
+  try {
+    const mccfClient = new ConfidentialLedgerClient(
+      new DefaultAzureCredential(),
+      subscriptionId,
+    );
+    await mccfClient.managedCCFOperations.beginDeleteAndWait(
+      resourceGroup,
+      appName,
+    );
+  } catch (error: any) {
+    logAndThrowError("Failed to delete MCCF instance", error);
   }
 }
 
@@ -183,6 +203,73 @@ export async function listResourceGroups(subscriptionId: string) {
   } catch (error: any) {
     logAndThrowError("Failed to list resource groups", error);
     return "";
+  }
+}
+
+// Get mccf instances from a given subscription and resource group
+export async function getMCCFInstances(): Promise<{
+  subscription: string;
+  resourceGroup: string;
+  instance: string;
+}> {
+  try {
+    // Get the subscription ID
+    const subscriptionId = await exports.listSubscriptions();
+
+    // Check if the subscription has been setup for MCCF
+    azureMCCFSetup(subscriptionId);
+
+    // Get the resource group
+    const resourceGroup = (
+      await exports.listResourceGroups(subscriptionId)
+    )?.toLowerCase();
+
+    const mccfInstances = new Array();
+
+    // Run command to list MCCF instances
+    await withProgressBar("Getting MCCF instances", false, async () => {
+      const mccfClient = new ConfidentialLedgerClient(
+        new DefaultAzureCredential(),
+        subscriptionId,
+      );
+      const mccfApps =
+        await mccfClient.managedCCFOperations.listByResourceGroup(
+          resourceGroup,
+        );
+
+      for await (let item of mccfApps) {
+        mccfInstances.push(item.name);
+      }
+
+      if (mccfInstances.length === 0) {
+        vscode.window.showInformationMessage(
+          "No MCCF instances found in the selected subscription and resource group",
+        );
+        throw new Error(
+          "No MCCF instances found in the selected subscription and resource group",
+        );
+      }
+    });
+
+    // Get the selected instance from the user
+    const selectedInstance = await vscode.window.showQuickPick(mccfInstances, {
+      title: "Select a MCCF instance",
+      ignoreFocusOut: true,
+    });
+
+    if (!selectedInstance) {
+      vscode.window.showErrorMessage("No MCCF instance selected");
+      throw new Error("No MCCF instance selected");
+    }
+
+    return {
+      subscription: subscriptionId,
+      resourceGroup: resourceGroup,
+      instance: selectedInstance,
+    };
+  } catch (error: any) {
+    logAndThrowError("Failed to get MCCF instance name", error);
+    return { subscription: "", resourceGroup: "", instance: "" };
   }
 }
 

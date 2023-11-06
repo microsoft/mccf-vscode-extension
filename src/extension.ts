@@ -3,6 +3,7 @@ import { createDevContainerCommand } from "./commands/createDevContainer";
 import { startCCFNetworkDevContainer } from "./commands/startCCFNetworkInDevContainer";
 import { startCCFNetworkDocker } from "./commands/startCCFNetworkInDocker";
 import { createMCCFInstance } from "./commands/createMCCFInstance";
+import { deleteMCCFInstance } from "./commands/deleteMCCFInstance";
 import { getMCCFInstanceDetails } from "./commands/getMCCFInstanceDetails";
 import { submitProposal } from "./commands/submitProposal";
 import { createMemberProposal } from "./commands/createMemberProposal";
@@ -44,6 +45,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.createMCCFInstance",
       createMCCFInstance,
+    ),
+  );
+
+  // COMMAND: Delete MCCF instance
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-azure-managed-ccf.deleteMCCFInstance",
+      deleteMCCFInstance,
     ),
   );
 

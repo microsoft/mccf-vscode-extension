@@ -8,12 +8,7 @@ import * as subscriptionClient from "@azure/arm-subscriptions";
 import * as resourceClient from "@azure/arm-resources";
 import * as ledgerClient from "@azure/arm-confidentialledger";
 import * as extensionUtils from "../../Utilities/extensionUtils";
-import {
-  listResourceGroups,
-  listSubscriptions,
-  showMCCFInstanceDetails,
-  createInstance,
-} from "../../Utilities/azureUtilities";
+import * as utilities from "../../Utilities/azureUtilities";
 
 const ccfResource = {
   properties: {
@@ -68,7 +63,7 @@ suite("Azure list subscription tests", () => {
       description: subscriptionList[0],
     });
 
-    const result = await listSubscriptions();
+    const result = await utilities.listSubscriptions();
     assert.equal(
       result,
       subscriptionList[0],
@@ -104,7 +99,7 @@ suite("Azure list subscription tests", () => {
 
     let error;
     try {
-      await listSubscriptions();
+      await utilities.listSubscriptions();
     } catch (err: any) {
       error = err;
     }
@@ -150,7 +145,7 @@ suite("Azure list subscription tests", () => {
 
     let error;
     try {
-      await listSubscriptions();
+      await utilities.listSubscriptions();
     } catch (err: any) {
       error = err;
     }
@@ -201,7 +196,7 @@ suite("Azure list resource groups tests", () => {
       label: resourceList[0],
     });
 
-    const result = await listResourceGroups("testSubscription");
+    const result = await utilities.listResourceGroups("testSubscription");
     assert.equal(
       result.label,
       resourceList[0],
@@ -231,7 +226,7 @@ suite("Azure list resource groups tests", () => {
 
     let error;
     try {
-      await listResourceGroups("testSubscription");
+      await utilities.listResourceGroups("testSubscription");
     } catch (err: any) {
       error = err;
     }
@@ -270,7 +265,7 @@ suite("Azure list resource groups tests", () => {
 
     let error;
     try {
-      await listResourceGroups("testSubscription");
+      await utilities.listResourceGroups("testSubscription");
     } catch (err: any) {
       error = err;
     }
@@ -316,7 +311,7 @@ suite("Azure show MCCF Instance tests", () => {
       "MCCF instance view - testApp" + "\n" + mccfInstanceDetailsJson,
     );
 
-    await showMCCFInstanceDetails(
+    await utilities.showMCCFInstanceDetails(
       "testApp",
       "testResourceGroup",
       "testSubscription",
@@ -344,7 +339,7 @@ suite("Azure show MCCF Instance tests", () => {
 
     let error;
     try {
-      await showMCCFInstanceDetails(
+      await utilities.showMCCFInstanceDetails(
         "testApp",
         "testResourceGroup",
         "testSubscription",
@@ -385,7 +380,7 @@ suite("Azure create MCCF Instance tests", () => {
       },
     });
 
-    await createInstance(
+    await utilities.createInstance(
       "eastUS",
       "custom",
       "JS",
@@ -414,7 +409,7 @@ suite("Azure create MCCF Instance tests", () => {
 
     let error;
     try {
-      await createInstance(
+      await utilities.createInstance(
         "eastUS",
         "custom",
         "JS",
@@ -434,6 +429,265 @@ suite("Azure create MCCF Instance tests", () => {
       error.message,
       "Failed to create MCCF instance: test error",
       "error message is not equal to expected error message",
+    );
+  });
+});
+
+suite("Azure delete MCCF Instance tests", () => {
+  let ledgerClientStub: sinon.SinonStub;
+
+  teardown(() => {
+    // Restore the original behavior after each test
+    ledgerClientStub.restore();
+  });
+
+  test("success behaviour", async () => {
+    // Define the behavior of the stubbed method
+    ledgerClientStub = sinon.stub(ledgerClient, "ConfidentialLedgerClient");
+    const deleteStub = sinon.stub();
+
+    deleteStub.resolves();
+
+    ledgerClientStub.returns({
+      managedCCFOperations: {
+        beginDeleteAndWait: deleteStub,
+      },
+    });
+
+    await utilities.deleteInstance(
+      "testSubscription",
+      "testResourceGroup",
+      "testApp",
+    );
+    sinon.assert.calledOnce(ledgerClientStub);
+    sinon.assert.calledOnce(deleteStub);
+  });
+
+  test("should fail when the beginDeleteAndWait is not successful", async () => {
+    // Define the behavior of the stubbed method
+    ledgerClientStub = sinon.stub(ledgerClient, "ConfidentialLedgerClient");
+    const deleteStub = sinon.stub();
+
+    deleteStub.rejects(new Error("test error"));
+
+    ledgerClientStub.returns({
+      managedCCFOperations: {
+        beginDeleteAndWait: deleteStub,
+      },
+    });
+
+    let error;
+    try {
+      await utilities.deleteInstance(
+        "testSubscription",
+        "testResourceGroup",
+        "testApp",
+      );
+    } catch (err: any) {
+      error = err;
+    }
+
+    sinon.assert.calledOnce(ledgerClientStub);
+    sinon.assert.calledOnce(deleteStub);
+    assert.equal(
+      error.message,
+      "Failed to delete MCCF instance: test error",
+      "error message is not equal to expected error message",
+    );
+  });
+});
+
+suite("Azure get MCCF instances tests", () => {
+  let showQuickPickStub: sinon.SinonStub;
+  let ledgerClientStub: sinon.SinonStub;
+  let subscriptionStub: sinon.SinonStub;
+  let listResourceGroupsStub: sinon.SinonStub;
+  const resourceList = ["resourceGroup1", "resourceGroup2"];
+
+  teardown(() => {
+    // Restore the original behavior after each test
+    showQuickPickStub.restore();
+    ledgerClientStub.restore();
+    subscriptionStub.restore();
+    listResourceGroupsStub.restore();
+  });
+
+  test("success behaviour", async () => {
+    // Define the behavior of the stubbed method
+    subscriptionStub = sinon.stub(utilities, "listSubscriptions");
+    subscriptionStub.resolves("testSubscription");
+    listResourceGroupsStub = sinon.stub(utilities, "listResourceGroups");
+    listResourceGroupsStub.resolves("testResourceGroup");
+
+    ledgerClientStub = sinon.stub(ledgerClient, "ConfidentialLedgerClient");
+    const listStub = sinon.stub();
+    listStub.resolves([
+      {
+        name: resourceList[0],
+      },
+      {
+        name: resourceList[1],
+      },
+    ]);
+
+    ledgerClientStub.returns({
+      managedCCFOperations: {
+        listByResourceGroup: listStub,
+      },
+    });
+
+    showQuickPickStub = sinon.stub(vscode.window, "showQuickPick");
+    showQuickPickStub.resolves(resourceList[0]);
+
+    const result = await utilities.getMCCFInstances();
+    assert.equal(
+      result.subscription,
+      "testSubscription",
+      `selected subscription \"${result.subscription}\" is not equal to expected subscription \"testSubscription\"`,
+    );
+    assert.equal(
+      result.resourceGroup,
+      "testresourcegroup",
+      `selected resource group \"${result.resourceGroup}\" is not equal to expected resource group \"testresourcegroup\"`,
+    );
+    assert.equal(
+      result.instance,
+      "resourceGroup1",
+      `selected instance name \"${result.instance}\" is not equal to expected instance name \"resourceGroup1\"`,
+    );
+
+    sinon.assert.calledOnce(subscriptionStub);
+    sinon.assert.calledOnce(listResourceGroupsStub);
+    sinon.assert.calledOnce(ledgerClientStub);
+    sinon.assert.calledOnce(listStub);
+    sinon.assert.calledOnce(showQuickPickStub);
+  });
+
+  test("should fail when list subscriptions failed", async () => {
+    // Define the behavior of the stubbed method
+    let subscriptionStub = sinon.stub(utilities, "listSubscriptions");
+    subscriptionStub.rejects(new Error("test listSubscriptions error message"));
+
+    let error;
+    try {
+      await utilities.getMCCFInstances();
+    } catch (err: any) {
+      error = err;
+    }
+
+    assert.ok(
+      error.message.includes("test listSubscriptions error message"),
+      `error message \"${error.message}\" does not contain expected error message \"test listSubscriptions error message\"`,
+    );
+  });
+
+  test("should fail when list resource groups failed", async () => {
+    // Define the behavior of the stubbed method
+    subscriptionStub = sinon.stub(utilities, "listSubscriptions");
+    subscriptionStub.resolves("testSubscription");
+    listResourceGroupsStub = sinon.stub(utilities, "listResourceGroups");
+    listResourceGroupsStub.rejects(
+      new Error("test listResourceGroups error message"),
+    );
+
+    let error;
+    try {
+      await utilities.getMCCFInstances();
+    } catch (err: any) {
+      error = err;
+    }
+
+    assert.ok(
+      error.message.includes("test listResourceGroups error message"),
+      `error message \"${error.message}\" does not contain expected error message \"test listResourceGroups error message\"`,
+    );
+  });
+
+  test("should fail when no instance found in the current subscription/resource group", async () => {
+    // Define the behavior of the stubbed method
+    subscriptionStub = sinon.stub(utilities, "listSubscriptions");
+    subscriptionStub.resolves("testSubscription");
+    listResourceGroupsStub = sinon.stub(utilities, "listResourceGroups");
+    listResourceGroupsStub.resolves("testResourceGroup");
+
+    ledgerClientStub = sinon.stub(ledgerClient, "ConfidentialLedgerClient");
+    const listStub = sinon.stub();
+    listStub.resolves([]);
+
+    ledgerClientStub.returns({
+      managedCCFOperations: {
+        listByResourceGroup: listStub,
+      },
+    });
+
+    showQuickPickStub = sinon.stub(vscode.window, "showQuickPick");
+    showQuickPickStub.resolves();
+
+    let error;
+    try {
+      await utilities.getMCCFInstances();
+    } catch (err: any) {
+      error = err;
+    }
+
+    sinon.assert.calledOnce(subscriptionStub);
+    sinon.assert.calledOnce(listResourceGroupsStub);
+    sinon.assert.calledOnce(ledgerClientStub);
+    sinon.assert.calledOnce(listStub);
+    sinon.assert.notCalled(showQuickPickStub);
+
+    assert.ok(
+      error.message.includes(
+        "No MCCF instances found in the selected subscription and resource group",
+      ),
+      `error message \"${error.message}\" does not contain expected error message \"No MCCF instances found in the selected subscription and resource group\"`,
+    );
+  });
+
+  test("should fail when the instance is not selected", async () => {
+    // Define the behavior of the stubbed method
+    subscriptionStub = sinon.stub(utilities, "listSubscriptions");
+    subscriptionStub.resolves("testSubscription");
+    listResourceGroupsStub = sinon.stub(utilities, "listResourceGroups");
+    listResourceGroupsStub.resolves("testResourceGroup");
+
+    ledgerClientStub = sinon.stub(ledgerClient, "ConfidentialLedgerClient");
+    const listStub = sinon.stub();
+    listStub.resolves([
+      {
+        name: resourceList[0],
+      },
+      {
+        name: resourceList[1],
+      },
+    ]);
+
+    ledgerClientStub.returns({
+      managedCCFOperations: {
+        listByResourceGroup: listStub,
+      },
+    });
+
+    showQuickPickStub = sinon.stub(vscode.window, "showQuickPick");
+    showQuickPickStub.resolves();
+
+    let error;
+    try {
+      await utilities.getMCCFInstances();
+    } catch (err: any) {
+      error = err;
+    }
+
+    sinon.assert.calledOnce(subscriptionStub);
+    sinon.assert.calledOnce(listResourceGroupsStub);
+    sinon.assert.calledOnce(ledgerClientStub);
+    sinon.assert.calledOnce(listStub);
+    sinon.assert.calledOnce(showQuickPickStub);
+
+    assert.equal(
+      error.message,
+      "Failed to get MCCF instance name: No MCCF instance selected",
+      `error message \"${error.message}\" is not equal to expected error message \"Failed to get MCCF instance name: No MCCF instance selected\"`,
     );
   });
 });
