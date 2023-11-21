@@ -57,7 +57,7 @@ export async function createDevContainerCommand(
     });
 
     if (!template) {
-      vscode.window.showInformationMessage("No template was selected");
+      vscode.window.showErrorMessage("No template was selected");
       return;
     }
 
@@ -72,23 +72,24 @@ export async function createDevContainerCommand(
 
     // If no folder is selected, report it to the user
     if (!appFolderUri || appFolderUri.length === 0) {
-      vscode.window.showInformationMessage("No folder selected");
+      vscode.window.showErrorMessage("No destination folder selected");
       return;
     }
 
     // Get the path of the folder
+    const abc = appFolderUri[0];
     const folderPath = appFolderUri[0].fsPath;
 
     // Get the name of the folder where to store the template
     const folderName = await vscode.window.showInputBox({
-      prompt: "Enter the new folder name",
+      prompt: "Enter the new project name",
       placeHolder: "mccf-project",
       ignoreFocusOut: true,
     });
 
     // If no name is given, report it to the user
     if (!folderName || folderName.length === 0) {
-      vscode.window.showInformationMessage("No folder name entered");
+      vscode.window.showErrorMessage("No project name entered");
       return;
     }
 

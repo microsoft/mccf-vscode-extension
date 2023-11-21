@@ -85,6 +85,7 @@
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "20.2.5",
+    "@types/rewire": "^2.5.30",
     "@types/sinon": "^10.0.20",
     "@types/vscode": "^1.79.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
@@ -110,6 +111,7 @@
     "@azure/arm-subscriptions": "^5.1.0",
     "@azure/identity": "^3.3.0",
     "@vscode/vsce": "^2.20.0",
+    "rewire": "^7.0.0",
     "sinon": "^16.1.1"
   }
 }

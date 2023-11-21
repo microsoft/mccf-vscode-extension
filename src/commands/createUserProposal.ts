@@ -21,7 +21,7 @@ export async function createUserProposal(
 
   // Check if certFile is undefined
   if (!certFile) {
-    vscode.window.showInformationMessage("No file selected");
+    vscode.window.showErrorMessage("No certificate file selected");
     return;
   }
 
@@ -36,7 +36,7 @@ export async function createUserProposal(
 
   // Check if destFolder is undefined
   if (!destFolder) {
-    vscode.window.showInformationMessage("No folder selected");
+    vscode.window.showErrorMessage("No destination folder selected");
     return;
   }
 
@@ -49,13 +49,13 @@ export async function createUserProposal(
 
   // If no id is entered, report it to the user
   if (!idName || idName.length === 0) {
-    vscode.window.showInformationMessage("No valid name entered");
+    vscode.window.showErrorMessage("No valid name entered");
     return;
   }
 
   // Check if proposal file with that name already exists in destination folder
   if (fs.existsSync(path.join(destFolder[0].fsPath, idName + ".json"))) {
-    vscode.window.showInformationMessage(
+    vscode.window.showErrorMessage(
       "Proposal file with that name already exists in destination folder",
     );
     return;

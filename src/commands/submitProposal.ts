@@ -34,7 +34,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // If no file is selected, report it to the user
     if (!signingCert || signingCert.length === 0) {
-      vscode.window.showInformationMessage("No file selected");
+      vscode.window.showErrorMessage("No certificate file selected");
       return;
     }
 
@@ -52,7 +52,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // If no file is selected, report it to the user
     if (!signingKey || signingKey.length === 0) {
-      vscode.window.showInformationMessage("No file selected");
+      vscode.window.showErrorMessage("No key file selected");
       return;
     }
 
@@ -70,7 +70,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
 
     // If no file is selected, report it to the user
     if (!proposalFile || proposalFile.length === 0) {
-      vscode.window.showInformationMessage("No file selected");
+      vscode.window.showErrorMessage("No proposal file selected");
       return;
     }
 

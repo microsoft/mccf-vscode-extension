@@ -16,7 +16,7 @@ export async function startCCFNetworkDevContainer() {
 
     // If no folder is selected, report it to the user
     if (!appFolderUri || appFolderUri.length === 0) {
-      vscode.window.showInformationMessage("No folder selected");
+      vscode.window.showErrorMessage("No application folder selected");
       return;
     }
 

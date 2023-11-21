@@ -20,7 +20,7 @@ export async function applicationBundle() {
 
     // If no file is selected, report it to the user
     if (!appJsonUri || !appJsonUri[0]) {
-      vscode.window.showInformationMessage("No file selected");
+      vscode.window.showErrorMessage("No application file selected");
       return;
     }
 
@@ -37,7 +37,7 @@ export async function applicationBundle() {
 
     // If no folder is selected, report it to the user
     if (!srcUri || !srcUri[0]) {
-      vscode.window.showInformationMessage("No folder selected");
+      vscode.window.showErrorMessage("No source folder selected");
       return;
     }
 
@@ -54,7 +54,7 @@ export async function applicationBundle() {
 
     // If no folder is selected, report it to the user
     if (!destUri || !destUri[0]) {
-      vscode.window.showInformationMessage("No folder selected");
+      vscode.window.showErrorMessage("No detination folder selected");
       return;
     }
 
@@ -69,7 +69,7 @@ export async function applicationBundle() {
 
     // If no id is entered, report it to the user
     if (!bundleFileName || bundleFileName.length === 0) {
-      vscode.window.showInformationMessage("No file name entered");
+      vscode.window.showErrorMessage("No file name entered");
       return;
     }
 
@@ -82,7 +82,7 @@ export async function applicationBundle() {
 
     // If no id is entered, report it to the user
     if (!proposalFileName || proposalFileName.length === 0) {
-      vscode.window.showInformationMessage("No file name entered");
+      vscode.window.showErrorMessage("No file name entered");
       return;
     }
 

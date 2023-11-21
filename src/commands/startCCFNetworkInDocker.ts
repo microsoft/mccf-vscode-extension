@@ -16,7 +16,7 @@ export async function startCCFNetworkDocker() {
 
     // If no file is selected, report it to the user
     if (!dockerfileUri || dockerfileUri.length === 0) {
-      vscode.window.showInformationMessage("No file selected");
+      vscode.window.showErrorMessage("No docker file selected");
       return;
     }
 
@@ -34,7 +34,7 @@ export async function startCCFNetworkDocker() {
 
     // If no folder is selected, report it to the user
     if (!appFolderUri || appFolderUri.length === 0) {
-      vscode.window.showInformationMessage("No folder selected");
+      vscode.window.showErrorMessage("No application folder selected");
       return;
     }
 

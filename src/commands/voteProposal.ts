@@ -28,7 +28,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 
     // If no network url is entered, report it to the user
     if (!networkUrl || networkUrl.length === 0) {
-      vscode.window.showInformationMessage("No network url entered");
+      vscode.window.showErrorMessage("No network url entered");
       return;
     }
 
@@ -37,6 +37,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 
     // If no proposal id is selected, report it to the user
     if (!proposalId || proposalId.length === 0) {
+      vscode.window.showErrorMessage("No proposal selected");
       return;
     }
 
@@ -45,7 +46,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 
     // If no vote is selected, report it to the user
     if (!vote || vote.length === 0) {
-      vscode.window.showInformationMessage("No vote selected");
+      vscode.window.showErrorMessage("No vote selected");
       return;
     }
 
@@ -61,7 +62,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 
     // Check if signing cert is undefined
     if (!signingCert) {
-      vscode.window.showInformationMessage("No signing cert selected");
+      vscode.window.showErrorMessage("No signing cert selected");
       return;
     }
 
@@ -77,7 +78,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 
     // Check if signing key is undefined
     if (!signingKey) {
-      vscode.window.showInformationMessage("No signing key selected");
+      vscode.window.showErrorMessage("No signing key selected");
       return;
     }
 
@@ -104,7 +105,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
 }
 
 // Function that runs the vote_proposal.sh script to vote on a proposal
-async function voteForProposal(
+function voteForProposal(
   networkUrl: string,
   signingCert: string,
   signingKey: string,
