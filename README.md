@@ -67,6 +67,18 @@ After starting the network in a Docker Container, your output should look simila
 
 > TIP: Always double-check your current directory selection. If you're not in the right place, these commands may not execute as expected.
 
+## Test operator actions
+
+An operator is a member in a Managed CCF resource that is allowed to perform a limited set of actions. The operator is responsible for performing regular maintenance activities like renewing the service and node certificates periodically, submitting the recovery share during a DR and adding and removing nodes in the network. The operator is essential for the successful operation of a network. The constitution lists the set of actions that an operator is allowed to do in a network. 
+
+A custom constitution might prevent the operator from running one or more operations in a Managed CCF network. To prevent it, a few tests are run on a local CCF network created with the custom constitution. If the tests pass, it confirms that the custom constitution supports operator actions. 
+
+1. Start a 1 node CCF network in a dev container by selecting the 'MCCF: Start CCF Network in Devcontainer' command. 
+
+2. Run the command 'MCCF: Test operator actions on custom constitution' to start the tests. The command requires the member certificate and key to sign the proposals. The member certificate and key is generated in step # 1 and located in the /workspace/sandbox_command directory.
+
+The result of the tests indicates if the operator actions are allowed in the custom constitution. A failure indicates that the custom constitution in incompatible with the operator actions and must be investigated. 
+
 ## Adding New  Members or Users
 
 - ### GENERATE MEMBER IDENTITY 

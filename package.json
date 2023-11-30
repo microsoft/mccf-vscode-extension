@@ -64,6 +64,10 @@
       {
         "command": "vscode-azure-managed-ccf.createApplicationBundle",
         "title": "MCCF: Create Application Bundle"
+      },
+      {
+        "command": "vscode-azure-managed-ccf.testOperatorActions",
+        "title": "MCCF: Test operator actions on the custom constitution"
       }
     ]
   },
@@ -109,7 +113,7 @@
     "@azure/arm-features": "^3.1.0",
     "@azure/arm-resources": "^5.2.0",
     "@azure/arm-subscriptions": "^5.1.0",
-    "@azure/identity": "^3.3.0",
+    "@azure/identity": "^3.3.2",
     "@vscode/vsce": "^2.20.0",
     "rewire": "^7.0.0",
     "sinon": "^16.1.1"

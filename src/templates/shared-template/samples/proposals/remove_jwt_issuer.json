@@ -1,0 +1,10 @@
+{
+    "actions": [
+      {
+        "name": "remove_jwt_issuer",
+        "args": {
+          "issuer": "https://login.microsoftonline.com/common/v2.0"
+        }
+      }
+    ]
+  }

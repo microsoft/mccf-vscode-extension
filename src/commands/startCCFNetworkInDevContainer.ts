@@ -27,9 +27,14 @@ export async function startCCFNetworkDevContainer() {
     const installCommand = "npm --prefix " + folderPath + " install";
     const buildCommand = "npm --prefix " + folderPath + " run build";
     const startCommand =
-      "/opt/ccf_virtual/bin/sandbox.sh --js-app-bundle " +
+      "/opt/ccf_virtual/bin/sandbox.sh " +
+      " --js-app-bundle " +
       folderPath +
-      "/dist/";
+      "/dist/" +
+      " --constitution-dir " +
+      folderPath +
+      "/configs/constitution" +
+      " --initial-operator-count 1";
 
     // Create a sequence of commands to run in the terminal
     // such that we will execute the subsequent commands only if the previous ones succeed

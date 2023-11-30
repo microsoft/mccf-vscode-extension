@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "name": "set_jwt_issuer",
+      "args": {
+        "issuer": "https://login.microsoftonline.com/common/v2.0",
+        "key_filter": "all",
+        "ca_cert_bundle_name": "jwt_ms",
+        "auto_refresh": true
+      }
+    }
+  ]
+}

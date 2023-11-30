@@ -11,6 +11,7 @@ import { createUserProposal } from "./commands/createUserProposal";
 import { generateIdentity } from "./commands/generateIdentity";
 import { voteProposal } from "./commands/voteProposal";
 import { applicationBundle } from "./commands/applicationBundle";
+import { testOperatorActions } from "./commands/testOperatorActions";
 
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -109,6 +110,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "vscode-azure-managed-ccf.createApplicationBundle",
       applicationBundle,
+    ),
+  );
+
+  // COMMAND: Test operator actions on a custom constitution
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "vscode-azure-managed-ccf.testOperatorActions",
+      () => testOperatorActions(context),
     ),
   );
 }

@@ -1,0 +1,12 @@
+{
+    "actions": [
+      {
+        "name": "transition_node_to_trusted",
+        "args": {
+          "node_id": "__NODEID__",
+          "valid_from":"__VALIDFROM__",
+          "validity_period_days": 5
+        }
+      }
+    ]
+  }
