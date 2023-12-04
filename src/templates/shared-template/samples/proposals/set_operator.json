@@ -1,0 +1,12 @@
+{
+    "actions": [
+      {
+        "name": "set_member",
+        "args": {
+          "cert":"__OPERATOR_CERT__",
+          "encyption_pub_key": "__OPERATOR_ENC_PUBLIC_KEY__",
+          "data": {"is_operator":true, "owner":"Microsoft Azure"}
+        }
+      }
+    ]
+  }

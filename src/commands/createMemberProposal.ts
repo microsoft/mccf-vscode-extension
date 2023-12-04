@@ -3,6 +3,7 @@ import path = require("path");
 import fs = require("fs");
 import * as utilities from "../Utilities/osUtilities";
 import { runCommandInTerminal } from "../Utilities/extensionUtils";
+
 export async function createMemberProposal(
   specialContext: vscode.ExtensionContext,
 ) {
@@ -20,7 +21,7 @@ export async function createMemberProposal(
 
   // Check if certFile is undefined
   if (!certFile) {
-    vscode.window.showInformationMessage("No file selected");
+    vscode.window.showErrorMessage("No certificate file selected");
     return;
   }
 
@@ -38,7 +39,7 @@ export async function createMemberProposal(
 
   // Check if pubkFile is undefined
   if (!pubkFile) {
-    vscode.window.showInformationMessage("No file selected");
+    vscode.window.showErrorMessage("No key file selected");
     return;
   }
 
@@ -53,7 +54,7 @@ export async function createMemberProposal(
 
   // Check if destFolder is undefined
   if (!destFolder) {
-    vscode.window.showInformationMessage("No folder selected");
+    vscode.window.showErrorMessage("No destination folder selected");
     return;
   }
 
@@ -65,13 +66,13 @@ export async function createMemberProposal(
 
   // If no id is entered, report it to the user
   if (!idName || idName.length === 0) {
-    vscode.window.showInformationMessage("No valid name entered");
+    vscode.window.showErrorMessage("No valid id name entered");
     return;
   }
 
   // Check if idName already exists in the destination folder
   if (fs.existsSync(path.join(destFolder[0].fsPath, idName + ".json"))) {
-    vscode.window.showInformationMessage(
+    vscode.window.showErrorMessage(
       "Proposal file with that name already exists in destination folder.",
     );
     return;

@@ -1,0 +1,10 @@
+{
+   "actions": [
+    {
+        "name": "transition_service_to_open",
+        "args": {
+          "next_service_identity":"-----BEGIN CERTIFICATE-----\nMIIBvzCCAUSgAwIBAgIRAOCBv/DlCyLCMDYrUwBHYVIwCgYIKoZIzj0EAwMwFjEU\nMBIGA1UEAwwLQ0NGIE5ldHdvcmswHhcNMjMwOTIwMTgzMDQ3WhcNMjMxMjE5MTgz\nMDQ2WjAWMRQwEgYDVQQDDAtDQ0YgTmV0d29yazB2MBAGByqGSM49AgEGBSuBBAAi\nA2IABJ03GWDEoeLo1hv01RePzAKRjn4DLrj3Nqm8IJng8V7NrQW2iuvNGvvmbzjp\nwLOTsDwN+ixo6hlZYsWJzohdr2bs1nOD8gupTMdYy9zfnBHHYoUjXqBdu4j4W2jn\nx46lMaNWMFQwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQU7X0S94/VJNzC\n8obCLNmIfLWSz8cwHwYDVR0jBBgwFoAU7X0S94/VJNzC8obCLNmIfLWSz8cwCgYI\nKoZIzj0EAwMDaQAwZgIxAKYe1sk0QJXFN7bKZD7Pll0GOUzYdVIgOXwbzeaLcrst\nAjYFYE4BNNAyeMNIA2SdKgIxAIwrGbhrL2bRr89n4bDjkC57ep/I98sZt5Lx+qBo\n+esECw4J+3Wl7FuWf73sPp7MKw==\n-----END CERTIFICATE-----\n"
+        }
+      }
+    ]
+}

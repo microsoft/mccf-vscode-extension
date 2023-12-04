@@ -124,15 +124,15 @@ function checkJwks(value, field) {
         "-----BEGIN CERTIFICATE-----\n" +
         b64der +
         "\n-----END CERTIFICATE-----";
-      checkX509CertBundle(pem, `${field}.keys[${i}].x5c[${j}]`);
+      checkX509CertChain(pem, `${field}.keys[${i}].x5c[${j}]`);
     }
   }
 }
 
-function checkX509CertBundle(value, field) {
-  if (!ccf.isValidX509CertBundle(value)) {
+function checkX509CertChain(value, field) {
+  if (!ccf.crypto.isValidX509CertBundle(value)) {
     throw new Error(
-      `${field} must be a valid X509 certificate (bundle) in PEM format`
+      `${field} must be a valid X509 certificate (chain) in PEM format`
     );
   }
 }
@@ -340,7 +340,7 @@ const actions = new Map([
     "set_member",
     new Action(
       function (args) {
-        checkX509CertBundle(args.cert, "cert");
+        checkX509CertChain(args.cert, "cert");
         checkType(args.member_data, "object?", "member_data");
         // Also check that public encryption key is well formed, if it exists
       },
@@ -394,12 +394,14 @@ const actions = new Map([
     "remove_member",
     new Action(
       function (args) {
-        checkEntityId(args.member_id, "member_id");
+        checkX509CertChain(args.cert, "cert");
       },
       function (args) {
-        const rawMemberId = ccf.strToBuf(args.member_id);
-        const rawMemberInfo =
-          ccf.kv["public:ccf.gov.members.info"].get(rawMemberId);
+        const memberId = ccf.pemToId(args.cert);
+        const rawMemberId = ccf.strToBuf(memberId);
+        const rawMemberInfo = ccf.kv["public:ccf.gov.members.info"].get(
+          rawMemberId
+        );
         if (rawMemberInfo === undefined) {
           return; // Idempotent
         }
@@ -455,7 +457,7 @@ const actions = new Map([
     "set_member_data",
     new Action(
       function (args) {
-        checkEntityId(args.member_id, "member_id");
+        checkType(args.member_id, "string", "member_id");
         checkType(args.member_data, "object", "member_data");
       },
 
@@ -476,7 +478,7 @@ const actions = new Map([
     "set_user",
     new Action(
       function (args) {
-        checkX509CertBundle(args.cert, "cert");
+        checkX509CertChain(args.cert, "cert");
         checkType(args.user_data, "object?", "user_data");
       },
       function (args) {
@@ -489,9 +491,11 @@ const actions = new Map([
         );
 
         if (args.user_data !== null && args.user_data !== undefined) {
+          let userInfo = {};
+          userInfo.user_data = args.user_data;
           ccf.kv["public:ccf.gov.users.info"].set(
             rawUserId,
-            ccf.jsonCompatibleToBuf(args.user_data)
+            ccf.jsonCompatibleToBuf(userInfo)
           );
         } else {
           ccf.kv["public:ccf.gov.users.info"].delete(rawUserId);
@@ -503,7 +507,7 @@ const actions = new Map([
     "remove_user",
     new Action(
       function (args) {
-        checkEntityId(args.user_id, "user_id");
+        checkType(args.user_id, "string", "user_id");
       },
       function (args) {
         const user_id = ccf.strToBuf(args.user_id);
@@ -513,10 +517,27 @@ const actions = new Map([
     ),
   ],
   [
+    "remove_user_by_cert",
+    new Action(
+      function (args) {
+        checkX509CertChain(args.cert, "cert");
+      },
+      function (args) {
+        let userId = ccf.pemToId(args.cert);
+        let rawUserId = ccf.strToBuf(userId);
+
+        ccf.kv["public:ccf.gov.users.certs"].delete(
+          rawUserId
+        );
+        ccf.kv["public:ccf.gov.users.info"].delete(rawUserId);
+      }
+    ),
+  ],
+  [
     "set_user_data",
     new Action(
       function (args) {
-        checkEntityId(args.user_id, "user_id");
+        checkType(args.user_id, "string", "user_id");
         checkType(args.user_data, "object?", "user_data");
       },
       function (args) {
@@ -579,7 +600,7 @@ const actions = new Map([
           "string",
           "next service identity (PEM certificate)"
         );
-        checkX509CertBundle(
+        checkX509CertChain(
           args.next_service_identity,
           "next_service_identity"
         );
@@ -590,7 +611,7 @@ const actions = new Map([
           "previous service identity (PEM certificate)"
         );
         if (args.previous_service_identity !== undefined) {
-          checkX509CertBundle(
+          checkX509CertChain(
             args.previous_service_identity,
             "previous_service_identity"
           );
@@ -681,7 +702,7 @@ const actions = new Map([
             }
           }
         }
-
+        
         checkType(
           args.disable_bytecode_cache,
           "boolean?",
@@ -760,7 +781,7 @@ const actions = new Map([
     new Action(
       function (args) {
         checkType(args.name, "string", "name");
-        checkX509CertBundle(args.cert_bundle, "cert_bundle");
+        checkX509CertChain(args.cert_bundle, "cert_bundle");
       },
       function (args) {
         const name = args.name;
@@ -898,15 +919,24 @@ const actions = new Map([
     ),
   ],
   [
+     // custom logic specific to ACL
     "add_node_code",
     new Action(
       function (args) {
-        checkType(args.code_id, "string", "code_id");
+        checkType(args.new_code_id, "string", "new_code_id");
+        checkType(args.existing_code_id, "string", "existing_code_id");
       },
       function (args, proposalId) {
-        const codeId = ccf.strToBuf(args.code_id);
+        const existingCode = ccf.kv["public:ccf.gov.nodes.code_ids"].get(
+          ccf.strToBuf(args.existing_code_id)
+        );
+        if (existingCode === undefined) {
+          throw new Error(`Code required to exist is not present: ${args.existing_code_id}`);
+        }
+
+        const newCodeId = ccf.strToBuf(args.new_code_id);
         const ALLOWED = ccf.jsonCompatibleToBuf("AllowedToJoin");
-        ccf.kv["public:ccf.gov.nodes.code_ids"].set(codeId, ALLOWED);
+        ccf.kv["public:ccf.gov.nodes.code_ids"].set(newCodeId, ALLOWED);
 
         // Adding a new allowed code ID changes the semantics of any other open proposals, so invalidate them to avoid confusion or malicious vote modification
         invalidateOtherOpenProposals(proposalId);
@@ -1013,14 +1043,23 @@ const actions = new Map([
     ),
   ],
   [
+    // custom logic for ACL
     "remove_node_code",
     new Action(
       function (args) {
-        checkType(args.code_id, "string", "code_id");
+        checkType(args.code_id_to_remove, "string", "code_id_to_remove");
+        checkType(args.remaining_code_id, "string", "remaining_code_id");
       },
       function (args) {
-        const codeId = ccf.strToBuf(args.code_id);
-        ccf.kv["public:ccf.gov.nodes.code_ids"].delete(codeId);
+        const remainingCode = ccf.kv["public:ccf.gov.nodes.code_ids"].get(
+          ccf.strToBuf(args.remaining_code_id)
+        );
+        if (remainingCode === undefined) {
+          throw new Error(`Code required to remain is not present: ${args.remaining_code_id}`);
+        }
+
+        const codeIdToRemove = ccf.strToBuf(args.code_id_to_remove);
+        ccf.kv["public:ccf.gov.nodes.code_ids"].delete(codeIdToRemove);
       }
     ),
   ],
@@ -1200,6 +1239,34 @@ const actions = new Map([
       function (args) {},
       function (args, proposalId) {
         ccf.node.triggerSnapshot();
+      }
+    ),
+  ],
+  [
+    "set_service_principal",
+    new Action(
+      function (args) {
+        checkType(args.id, "string", "id");
+        checkType(args.data, "object", "data");
+      },
+      function (args) {
+        ccf.kv["public:ccf.gov.service_principals"].set(
+          ccf.strToBuf(args.id),
+          ccf.jsonCompatibleToBuf(args.data)
+        );
+      }
+    ),
+  ],
+  [
+    "remove_service_principal",
+    new Action(
+      function (args) {
+        checkType(args.id, "string", "id");
+      },
+      function (args) {
+        ccf.kv["public:ccf.gov.service_principals"].delete(
+          ccf.strToBuf(args.id)
+        );
       }
     ),
   ],

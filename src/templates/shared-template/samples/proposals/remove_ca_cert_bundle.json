@@ -1,0 +1,10 @@
+{
+    "actions": [
+      {
+        "name": "remove_ca_cert_bundle",
+        "args": {
+          "name": "jwt_ms"
+        }
+      }
+    ]
+  }

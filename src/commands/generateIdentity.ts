@@ -16,7 +16,7 @@ export async function generateIdentity(
 
   // If no id is entered, report it to the user
   if (!idName || idName.length === 0) {
-    vscode.window.showInformationMessage("No ID entered");
+    vscode.window.showErrorMessage("No ID entered");
     return;
   }
 
@@ -30,7 +30,7 @@ export async function generateIdentity(
 
   // Check if certificateFolderUri is undefined
   if (!certificateFolderUri) {
-    vscode.window.showInformationMessage("No folder selected");
+    vscode.window.showErrorMessage("No certificate folder selected");
     return;
   }
 

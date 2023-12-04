@@ -80,7 +80,7 @@ export async function createMCCFInstance() {
     );
 
     if (!region) {
-      vscode.window.showInformationMessage("No region was selected");
+      vscode.window.showErrorMessage("No region was selected");
       return;
     }
 
@@ -93,7 +93,7 @@ export async function createMCCFInstance() {
     );
 
     if (!languageRuntime) {
-      vscode.window.showInformationMessage("No language runtime was selected");
+      vscode.window.showErrorMessage("No language runtime was selected");
       return;
     }
 
@@ -106,7 +106,7 @@ export async function createMCCFInstance() {
     );
 
     if (!applicationType) {
-      vscode.window.showInformationMessage("No application type was selected");
+      vscode.window.showErrorMessage("No application type was selected");
       return;
     }
 
@@ -124,7 +124,7 @@ export async function createMCCFInstance() {
 
     if (!memberCertificate) {
       vscode.window.showErrorMessage(
-        "Please enter a valid member certificate file",
+        "Please select a valid member certificate file",
       );
       return;
     }
@@ -154,6 +154,7 @@ export async function createMCCFInstance() {
       vscode.window.showErrorMessage(
         "Please enter a valid positive integer for the number of nodes",
       );
+      return;
     }
 
     // Create the MCCF resource
