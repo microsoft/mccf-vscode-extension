@@ -4,6 +4,7 @@ set -euo pipefail
 
 source common_utils.sh
 
+trap 'handle_error' EXIT
 init_env
 
 function usage {

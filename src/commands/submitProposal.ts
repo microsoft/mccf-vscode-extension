@@ -11,6 +11,7 @@ export async function submitProposal(context: vscode.ExtensionContext) {
     const networkUrl = await vscode.window.showInputBox({
       prompt: "Enter the CCF network URL",
       placeHolder: "https://example.confidential-ledger.azure.com",
+      value: "https://127.0.0.1:8000",
       ignoreFocusOut: true,
     });
 

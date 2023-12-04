@@ -24,6 +24,7 @@ export async function voteProposal(specialContext: vscode.ExtensionContext) {
       ignoreFocusOut: true,
       prompt: "Enter the CCF network URL",
       placeHolder: "https://example.confidential-ledger.azure.com",
+      value: "https://127.0.0.1:8000",
     });
 
     // If no network url is entered, report it to the user
