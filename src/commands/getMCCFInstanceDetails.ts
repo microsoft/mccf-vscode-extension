@@ -9,7 +9,11 @@ export async function getMCCFInstanceDetails() {
     const res = await getMCCFInstances();
 
     // Show the details of the MCCF instance in the output channel
-    showMCCFInstanceDetails(res.instance, res.resourceGroup, res.subscription);
+    await showMCCFInstanceDetails(
+      res.instance,
+      res.resourceGroup,
+      res.subscription,
+    );
   } catch (error: any) {
     logAndDisplayError("Failed to list MCCF instances", error);
   }

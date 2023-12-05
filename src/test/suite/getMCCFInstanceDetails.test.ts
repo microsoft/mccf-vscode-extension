@@ -103,7 +103,6 @@ suite("Get MCCF Instance Details integration tests", () => {
     sinon.assert.calledWith(
       logAndDisplayErrorStub,
       "Failed to list MCCF instances",
-      err,
     );
 
     sinon.assert.notCalled(showErrorMessageStub);
@@ -128,7 +127,6 @@ suite("Get MCCF Instance Details integration tests", () => {
     sinon.assert.calledWith(
       logAndDisplayErrorStub,
       "Failed to list MCCF instances",
-      err,
     );
 
     sinon.assert.notCalled(showErrorMessageStub);
@@ -186,7 +184,7 @@ suite("Get MCCF Instance Details integration tests", () => {
     sinon.assert.calledOnce(listResourceGroupsStub);
     sinon.assert.calledOnce(ledgerClientStub);
     sinon.assert.calledOnce(listStub);
-    sinon.assert.notCalled(logAndDisplayErrorStub);
+    sinon.assert.calledOnce(logAndDisplayErrorStub);
 
     sinon.assert.notCalled(showErrorMessageStub);
     sinon.assert.calledWith(
@@ -217,7 +215,7 @@ suite("Get MCCF Instance Details integration tests", () => {
     sinon.assert.calledOnce(listResourceGroupsStub);
     sinon.assert.calledOnce(ledgerClientStub);
     sinon.assert.calledOnce(listStub);
-    sinon.assert.notCalled(logAndDisplayErrorStub);
+    sinon.assert.calledOnce(logAndDisplayErrorStub);
 
     sinon.assert.calledWith(showErrorMessageStub, "No MCCF instance selected");
     sinon.assert.notCalled(showInformationMessageStub);

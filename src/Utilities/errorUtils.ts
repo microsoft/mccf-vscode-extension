@@ -4,7 +4,6 @@ import * as vscode from "vscode";
 export function logAndThrowError(errorMessage: string, errorDetails: Error) {
   const error = errorMessage + ": " + errorDetails.message;
   console.error(error, errorDetails.stack);
-  vscode.window.showErrorMessage(error);
   throw new Error(error);
 }
 
