@@ -67,7 +67,7 @@ activate_member "$network_url" "$signing_cert" "$signing_key"
 echo "Sending vote..."
 
 # Member vote for proposal
-ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content "$vote_file" | curl "$network_url/gov/proposals/$proposal_id/ballots" --cacert <(echo "$service_cert") --data-binary @- -H "content-type: application/cose" --silent
+ccf_cose_sign1 --ccf-gov-msg-type ballot --ccf-gov-msg-created_at "$(date -Is)" --ccf-gov-msg-proposal_id "$proposal_id" --signing-key "$signing_key" --signing-cert "$signing_cert" --content "$vote_file" | curl -k -sS "$network_url/gov/proposals/$proposal_id/ballots" --cacert <(echo "$service_cert") --data-binary @- -H "content-type: application/cose"
 
 # Deactivate virtual environment
 deactivate_env
