@@ -7,4 +7,5 @@ steps:
 - task: Npm@1
   displayName: 'Build'
   inputs:
-    command: install
+    command: custom
+    customCommand: run compile
