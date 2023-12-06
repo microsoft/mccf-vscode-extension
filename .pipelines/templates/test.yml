@@ -22,8 +22,6 @@ steps:
   inputs:
     command: custom
     customCommand: test
-  env:
-    DISPLAY: :99.0 # Only necessary for linux tests
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
