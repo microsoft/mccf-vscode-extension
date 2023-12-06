@@ -21,7 +21,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: custom
-    customCommand: test
+    customCommand: run test
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
