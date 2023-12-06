@@ -2,4 +2,4 @@ steps:
 - task: Npm@1
   displayName: 'Clean install'
   inputs:
-    command: install
+    command: ci
