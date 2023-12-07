@@ -1,5 +1,18 @@
 steps:
 - task: Npm@1
-  displayName: 'install'
+  displayName: "typescript"
   inputs:
-    command: install
+    command: "custom"
+    customCommand: "install -g typescript@4.5.5"
+
+- task: Npm@1
+  displayName: 'mocha'
+  inputs:
+    command: "custom"
+    customCommand: "install mocha --save-dev"
+
+- task: Npm@1
+  displayName: "init extension"
+  inputs:
+    command: "custom"
+    customCommand: "i"
