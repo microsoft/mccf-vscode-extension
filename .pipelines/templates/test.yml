@@ -5,11 +5,8 @@ steps:
   displayName: Start xvfb
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-- task: Npm@1
-  displayName: 'Test'
-  inputs:
-    command: custom
-    customCommand: run test
+- script: npm run test
+  displayName: "run test"
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
