@@ -16,6 +16,8 @@ steps:
   inputs:
     command: custom
     customCommand: run pretest
+  env:
+    DISPLAY: :99.0 # Only necessary for linux tests
 
 - task: Npm@1
   displayName: 'Test'
