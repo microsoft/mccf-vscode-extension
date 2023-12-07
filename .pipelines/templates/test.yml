@@ -6,18 +6,6 @@ steps:
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
 - task: Npm@1
-  displayName: 'Pre-test'
-  inputs:
-    command: custom
-    customCommand: run pretest
-
-- task: Npm@1
-  displayName: "init extension"
-  inputs:
-    command: "custom"
-    customCommand: "i"
-
-- task: Npm@1
   displayName: 'Test'
   inputs:
     command: custom
