@@ -3,7 +3,7 @@ stages:
   jobs:
   - job: linux
     pool:
-      vmImage: ubuntu-latest
+      type: linux
 
     variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
         ob_outputDirectory: '$(Build.SourcesDirectory)/out' # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
