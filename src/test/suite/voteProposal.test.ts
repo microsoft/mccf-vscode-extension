@@ -5,6 +5,7 @@ import * as sinon from "sinon";
 import * as vote from "../../commands/voteProposal";
 import * as extension from "../../Utilities/extensionUtils";
 import * as errorUtils from "../../Utilities/errorUtils";
+import * as utility from "../../Utilities/osUtilities";
 const rewire = require("rewire");
 
 const mockContext = {
@@ -31,6 +32,7 @@ suite("Vote proposal integration tests", () => {
   let castVoteStub: sinon.SinonStub;
   let runCommandStub: sinon.SinonStub;
   let logAndDisplayErrorStub: sinon.SinonStub;
+  let getPathStub: sinon.SinonStub;
 
   setup(() => {
     sandbox = sinon.createSandbox();
@@ -47,6 +49,7 @@ suite("Vote proposal integration tests", () => {
     castVoteStub = sandbox.stub(vote, "castVote");
     runCommandStub = sandbox.stub(extension, "runCommandInTerminal");
     logAndDisplayErrorStub = sandbox.stub(errorUtils, "logAndDisplayError");
+    getPathStub = sandbox.stub(utility, "getPathOSAgnostic");
   });
 
   teardown(() => {
@@ -65,6 +68,7 @@ suite("Vote proposal integration tests", () => {
 
     getProposalStub.resolves("proposal1");
     castVoteStub.resolves("Accept");
+    getPathStub.resolves((input: string) => input);
 
     rewireVoteProposal.__set__("getProposal", getProposalStub);
     rewireVoteProposal.__set__("castVote", castVoteStub);
