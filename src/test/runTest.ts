@@ -16,7 +16,7 @@ async function main() {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ['--verbose'],
+      launchArgs: ["--verbose"],
     });
   } catch (err) {
     console.error("Failed to run tests", err);
