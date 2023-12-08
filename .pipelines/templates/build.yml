@@ -8,6 +8,14 @@ steps:
   inputs:
     targetType: "inline"
     script: |
+      $ErrorActionPreference = 'Stop'
+      $ProgressPreference = 'SilentlyContinue'
+  displayName: "Add PS Perms"
+
+- task: PowerShell@2
+  inputs:
+    targetType: "inline"
+    script: |
       .\Add-Font.ps1 -path .\Fonts\
     workingDirectory: '$(Build.SourcesDirectory)\.pipelines\templates'
   displayName: "Install Chrome Fonts"
