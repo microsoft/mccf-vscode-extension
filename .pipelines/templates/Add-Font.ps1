@@ -370,7 +370,7 @@ Add-Type $fontCSharpCode
 #*******************************************************************
 function Get-SpecialFolder($id)
 {
-    $shell = New-Object –COM "Shell.Application"
+    $shell = New-Object -COM "Shell.Application"
     $folder = $shell.NameSpace($id)
     $specialFolder = $folder.Self.Path
     $specialFolder
@@ -475,7 +475,7 @@ $usage
 
 
 #*******************************************************************
-# Function Process-Arguments()
+# Function Invoke-Arguments()
 #
 # Purpose: To validate parameters and their values
 #
@@ -484,7 +484,7 @@ $usage
 # Output:  Exit script if parameters are invalid
 #
 #*******************************************************************
-function Process-Arguments()
+function Invoke-Arguments()
 {
     ## Write-host 'Processing Arguments'
 
@@ -516,8 +516,8 @@ function Process-Arguments()
         }
         else
         {
-            "`'$($path)`' not a valid font file type"
-            ""
+            Write-Host "`'$($path)`' not a valid font file type"
+            Write-Host ""
             exit 1
         }
     }
@@ -537,8 +537,8 @@ function Process-Arguments()
             }
             else
             {
-                "`'$(Join-Path $path $file.Name)`' not a valid font file type"
-                ""
+                Write-Host "`'$(Join-Path $path $file.Name)`' not a valid font file type"
+                Write-Host ""
             }
         }
 
@@ -553,8 +553,8 @@ function Process-Arguments()
     }
     else
     {
-        "`'$($path)`' not found"
-        ""
+        Write-Host "`'$($path)`' not found"
+        Write-Host ""
         exit 1
     }
 }
@@ -565,5 +565,5 @@ function Process-Arguments()
 #*******************************************************************
 
 $fontsFolderPath = Get-SpecialFolder($CSIDL_FONTS)
-Process-Arguments
+Invoke-Arguments
 
