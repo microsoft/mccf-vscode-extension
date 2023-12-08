@@ -12,7 +12,13 @@
   },
   "publisher": "mccf-vscode",
   "icon": "https://imgur.com/7Nkhs7z.jpg",
-  "keywords": ["mccf", "managed ccf", "Confidential Consortium Framework", "Confidential Ledger", "ledger"],
+  "keywords": [
+    "mccf",
+    "managed ccf",
+    "Confidential Consortium Framework",
+    "Confidential Ledger",
+    "ledger"
+  ],
   "categories": [
     "Other"
   ],
@@ -97,7 +103,7 @@
     "@types/vscode": "^1.79.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
-    "@vscode/test-electron": "^2.3.2",
+    "@vscode/test-electron": "^2.3.8",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.8.0",
