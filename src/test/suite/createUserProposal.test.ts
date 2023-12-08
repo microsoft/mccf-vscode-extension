@@ -2,6 +2,7 @@
 // as well as import your extension to test it
 import * as vscode from "vscode";
 import * as sinon from "sinon";
+import * as utility from "../../Utilities/osUtilities";
 import fs = require("fs");
 const rewire = require("rewire");
 
@@ -23,6 +24,7 @@ suite("Create Use Proposal tests", () => {
 
   let generateProposalStub: sinon.SinonStub;
   let existStub: sinon.SinonStub;
+  let getPathStub: sinon.SinonStub;
 
   let showInputBoxStub: sinon.SinonStub;
   let showOpenDialogStub: sinon.SinonStub;
@@ -37,6 +39,7 @@ suite("Create Use Proposal tests", () => {
 
     generateProposalStub = sandbox.stub();
     existStub = sandbox.stub(fs, "existsSync");
+    getPathStub = sandbox.stub(utility, "getPathOSAgnostic");
   });
 
   teardown(() => {
@@ -57,6 +60,7 @@ suite("Create Use Proposal tests", () => {
 
     existStub.returns(false);
     generateProposalStub.resolves();
+    getPathStub.resolves((input: string) => input);
 
     rewireCreateProposal.__set__("generateProposal", generateProposalStub);
 

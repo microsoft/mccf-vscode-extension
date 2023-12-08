@@ -10,6 +10,14 @@
     "type": "git",
     "url": "https://msazure.visualstudio.com/One/_git/mccf-vscode-extension"
   },
+  "publisher": "mccf-vscode",
+  "keywords": [
+    "mccf",
+    "managed ccf",
+    "Confidential Consortium Framework",
+    "Confidential Ledger",
+    "ledger"
+  ],
   "categories": [
     "Other"
   ],
@@ -83,7 +91,7 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "lint-fix": "eslint src --ext ts --fix",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js --verbose"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
@@ -94,7 +102,7 @@
     "@types/vscode": "^1.79.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
-    "@vscode/test-electron": "^2.3.2",
+    "@vscode/test-electron": "^2.3.8",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.8.0",

@@ -39,6 +39,7 @@ export async function startCCFNetworkDocker() {
     }
 
     // Get the path of the folder
+
     const folderPath = appFolderUri[0].fsPath;
 
     const imageName = "ccf-app:virtual";

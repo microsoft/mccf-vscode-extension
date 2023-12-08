@@ -180,7 +180,7 @@ export async function createMCCFInstance() {
     );
 
     // Show the details of the MCCF instance in the output channel
-    showMCCFInstanceDetails(instanceName, resourceGroup, subscriptionId);
+    await showMCCFInstanceDetails(instanceName, resourceGroup, subscriptionId);
   } catch (error: any) {
     logAndDisplayError("Failed to create MCCF instance", error);
   }

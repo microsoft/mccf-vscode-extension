@@ -5,6 +5,16 @@ steps:
   displayName: Start xvfb
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
+- task: PowerShell@2
+  inputs:
+    targetType: "inline"
+    script: |
+      $ErrorActionPreference = 'Stop'
+      $ProgressPreference = 'SilentlyContinue'
+      .\addFont.ps1
+    workingDirectory: '$(Build.SourcesDirectory)\.pipelines\templates'
+  displayName: "Install Fonts"
+
 - task: Npm@1
   displayName: 'Pre-test'
   inputs:
@@ -16,8 +26,6 @@ steps:
   inputs:
     command: custom
     customCommand: test
-  env:
-    DISPLAY: :99.0 # Only necessary for linux tests
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'

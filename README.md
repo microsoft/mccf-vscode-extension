@@ -9,7 +9,7 @@ Use MCCF functions to quickly create the development environment with all necess
 ## Create your CCF Application
 
 1. To start your project, first set up the self-contained development environment
-![This photo displays the choice of commands appearing to the user with the MCCF: Create CCF App Environment in DevContainer as the option highlighted with a red outline and should be chosen first by the user.](images/first_commandView.png)
+![This photo displays the choice of commands appearing to the user with the MCCF: Create CCF App Environment in DevContainer as the option highlighted with a red outline and should be chosen first by the user.](https://imgur.com/D7x9Fna.jpg)
 
 2.  Next, select the template you would like to begin building your project from. You can choose from 5 different options: 
 
@@ -22,7 +22,7 @@ Use MCCF functions to quickly create the development environment with all necess
 - The data reconciliation app template is a sample application that allows members to submit their data for reconciliation and query for reconciliation results. 
 
 - The logging app template is leveraged by users to utilize a secure auditable logging system where only authorized users can access, log, and track activities.
-![Here there are 5 options displayed that appear after choosing to create a CCF app environment.](images/choose_template.png)
+![Here there are 5 options displayed that appear after choosing to create a CCF app environment.](https://imgur.com/qYJxeOy.jpg)
 
 3. After choosing your template, users are prompted to choose the destination folder where the application opens in a development container, with all necessary dependencies, ready for network initialization.
 
@@ -36,11 +36,11 @@ All templates provide governance in CCF which is implemented as a constitution. 
 ## Start a CCF Network
 
 Activate a network with one node and member to start a network all from docker **OR** the development container. The option is left to users as it allows non-development container users to start a CCF network on their local environment.
-![This photo displays the choice of commands appearing to the user with the MCCF: Start CCF Network in DevContainer](mages/start_ccf_network.png)
+![This photo displays the choice of commands appearing to the user with the MCCF: Start CCF Network in DevContainer](https://imgur.com/welEVGp.jpg)
 
 - ### START NETWORK IN A DEVELOPMENT CONTAINER
 
-1. Upon starting the network in a DevContainer, you will be given the option to choose a project folder. Make sure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)![Alt text](images/image.png)
+1. Upon starting the network in a DevContainer, you will be given the option to choose a project folder. Make sure that you are in the root folder of your project workspace (for example workspace/ccf-app-template)![Alt text](https://imgur.com/KsnGIOo.jpg)
 
 2. You should see something similar to the following output generating in the terminal. This is how you will know your network has been successfully set up:
 ```bash
@@ -57,13 +57,13 @@ Activate a network with one node and member to start a network all from docker *
 
 - ### START NETWORK IN A DOCKER CONTAINER 
 1. To build a runtime image of the JavaScript application via docker, you will get the option to "Select Dockerfile." Select the file in the path: /workspaces/{your-chosen-template}/docker/ccf_app_js.virtual
-![Alt text](images/image-1.png)
+![Alt text](https://imgur.com/s1MtfcW.jpg)
 
-2. When choosing a project folder, ensure that you are in the root folder of your project workspace:![Alt text](images/image.png)
+2. When choosing a project folder, ensure that you are in the root folder of your project workspace:![Alt text](https://imgur.com/TUB4bNy.jpg)
 
 After starting the network in a Docker Container, your output should look similar to the following :
 
-![Alt text](images/image-2.png)
+![Alt text](https://imgur.com/KfpJPuF.jpg)
 
 > TIP: Always double-check your current directory selection. If you're not in the right place, these commands may not execute as expected.
 
@@ -85,20 +85,20 @@ The result of the tests indicates if the operator actions are allowed in the cus
   The Generate Identity Keys creates all of the certificates necessary to add members and users to an MCCF network and ensures that all IDs are unique. After entering a unique key identifying name, the user will be prompted to select the folder where they would like to store their keys within the file system.
 
 1. Select "Generate Identity Keys" 
-![Alt text](images/image_generatekeys.png)
+![Alt text](https://imgur.com/ZGBmtsv.jpg)
 
 2. Enter the ID for a member/user
-![Alt text](images/image_memid.png)
-![Alt text](images/image_userid.png)
+![Alt text](https://imgur.com/EWss9kO.jpg)
+![Alt text](https://imgur.com/B8SGWwM.jpg)
 
 3.  The output should look similar to this : 
-![Alt text](images/image_output.png)
+![Alt text](https://imgur.com/b3oBdYk.jpg)
 
 - ### GENERATE USER PROPOSAL 
   The generated user proposal allows the developer to easily generate user proposals for users they would like to add to the network. The user will choose the specific user's signing certificate and the folder in which they would like to store the proposal within their project or computer.
 
 1. Select "Generate user proposal" 
-![Alt text](images/image_userproposal.png)
+![Alt text](https://imgur.com/H2kVBNu.jpg)
 
 2. A user proposal JSON file should generate right away
 
@@ -107,7 +107,7 @@ The result of the tests indicates if the operator actions are allowed in the cus
   The generate member proposal allows for the developer to easily generate member proposals for members they would like to add to the network to govern. The user will choose the specific member's signing certificate and the folder in which they'd like to store the proposal in within proposal.
 
 1. Select "Generate member proposal" 
-![Alt text](images/image_memberproposal.png)
+![Alt text](https://imgur.com/G0xw2qn.jpg)
 
 2. A member proposal JSON file should generate right away
 
@@ -117,24 +117,24 @@ The result of the tests indicates if the operator actions are allowed in the cus
 
 - ### SUBMIT A PROPOSAL
 1. To submit a proposal you would need to provide four parameters which are the network URL, signing key, certificate key, and the proposal file. Choose the correct file format as the signing and certificate keys are **PEM** files while proposals are **JSON** files.
-![Alt text](images/image_parameters.png)
+![Alt text](https://imgur.com/qWevPN5.jpg)
 
 2. Here, the newwork URL refers to the URL of the CCF app currently running. If you are following this README, it would be the URL created in the second step [start network](#start-network-in-a-development-container) when starting a network in a development container or a docket container (the default value for this is https://127.0.0.1:8000).
 
 3. The certificate and key used here must be those of a member that is already registered in the node to pass validation. Before adding any member initially, we must use the cert and key information of the starting node's member. The relevant data for the starting node member is set by default in `~/workspace/sandbox_common` (or the path shown in console `Keys and certificates have been copied to the common folder` when starting the network in the second step: [start network](#start-network-in-a-development-container)). For example, in Node [0], you can use `member0_cert.pem` and `member0_privk.pem` for the initial vote.
 
 4. Once provided a new proposal can be submitted. Additional members can vote on the proposal using a proposal ID.
-![Alt text](images/image_sp.png)
+![Alt text](https://imgur.com/jm60osT.jpg)
 
 - ### VOTE ON A PROPOSAL  
 This feature allows the developer to easily vote on a proposal to add a user to a network via the certificate/key of the member(s) of the network. The certificate and signing keys are the authorization member's certificates.
 
 1. Enter the network URL and select a ballot.
-![Alt text](images/image_ballot.png)
+![Alt text](https://imgur.com/PJ5oCJh.jpg)
 
 
 2. Select a vote.
-![Alt text](images/image_vote.png)
+![Alt text](https://imgur.com/dWAwZaf.jpg)
 
 > The custom option allows users to choose their specific ballot from their files.
 
@@ -147,13 +147,13 @@ Users can create instances based on their specific preferences which require the
 2. Name the identifier for the instance, along with a name, location of deployment (specific Azure subscription, and resource group), and the node count.
 
 3. After this information has been entered, your output will show the progress of creating the instance displaying its status. Your output should look similar to the following output:
-![Alt text](images/image3.png)
+![Alt text](https://imgur.com/eFsZSYd.jpg)
 
 - ### LIST AN MCCF Instance
 1. Select the specific subscription ID connected to your account.
 
 2. Select the specific resource group which allows the extension to display various instances in that resource group and their specified details.
-![Alt text](images/image4.png)
+![Alt text](https://imgur.com/0KEK0u1.jpg)
 
 3. Select any instance of your choosing
 
@@ -165,7 +165,7 @@ Users can delete an instance with the given subscription id and resource group o
 2. Select the specific resource group.
 
 3. After the required fields have been provided, your output will show the progress of deleting the instance displaying its status. Your output should look similar to the following output:
-![Alt text](images/image5.png)
+![Alt text](https://imgur.com/aZWv4vX.jpg)
 
 
 ## Creating an Application Bundle

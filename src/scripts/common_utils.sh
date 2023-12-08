@@ -2,8 +2,17 @@
 
 set -euo pipefail
 
+handle_error() {
+    local exit_code="$?"
+    
+    if [[ $exit_code -ne 0 ]]; then
+        echo "Error: Command $(tput setaf 1)$BASH_COMMAND$(tput sgr0) failed with exit code $exit_code"
+        exit "$exit_code"
+    fi  
+}
+
 VIRTUAL_ENVIRONMENT_NAME="/tmp/extensionenv"
-CCF_VERSION="4.0.2"
+CCF_VERSION="4.0.12"
 
 # Initialize environment
 function init_env() {
@@ -33,7 +42,7 @@ function get_ccf_service_cert() {
     local -n network_cert=$2
 
     # Ping /node/network endpoint and extract the network certificate from the response 
-    network_cert=$(curl "$network_url"/node/network -k --silent -m 10 | jq -r '.service_certificate')
+    network_cert=$(curl -k -sS "$network_url"/node/network -m 10 | jq -r '.service_certificate')
 
     # Check if network certificate is empty
     if [[ -z $network_cert ]]; then
@@ -56,16 +65,16 @@ function activate_member() {
     member_id=$(openssl x509 -in "$signing_cert" -noout -fingerprint -sha256 | cut -d "=" -f 2 | sed 's/://g' | awk '{print tolower($0)}')
 
     # Get member status
-    member_status=$(curl "$network_url"/gov/members --cacert <(echo "$service_cert") --silent | jq -r --arg member_id "$member_id" '.[$member_id].status')
+    member_status=$(curl -k -sS "$network_url"/gov/members --cacert <(echo "$service_cert") | jq -r --arg member_id "$member_id" '.[$member_id].status')
 
     # Activate member if not active
     if [[ "$member_status" != "Active" ]]; then
 
         # Get state digest
-        request_json=$(curl "$network_url"/gov/ack/update_state_digest -X POST --cacert <(echo "$service_cert") --key "$signing_key" --cert "$signing_cert" --silent)
+        request_json=$(curl -k -sS "$network_url"/gov/ack/update_state_digest -X POST --cacert <(echo "$service_cert") --key "$signing_key" --cert "$signing_cert")
         
         # Ack state digest
-        ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key "$signing_key" --signing-cert "$signing_cert" --content <(echo "$request_json") | curl "$network_url"/gov/ack --cacert <(echo "$service_cert") --header "Content-Type: application/cose" --data-binary @- --silent
+        ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key "$signing_key" --signing-cert "$signing_cert" --content <(echo "$request_json") | curl -k -sS "$network_url"/gov/ack --cacert <(echo "$service_cert") --header "Content-Type: application/cose" --data-binary @-
     fi
 }
 

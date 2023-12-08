@@ -3,6 +3,7 @@
 set -euo pipefail
 
 source common_utils.sh
+trap 'handle_error' EXIT
 
 # create set_user json proposal file
 function create_user_proposal {

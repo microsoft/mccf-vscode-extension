@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import * as sinon from "sinon";
 import * as extension from "../../Utilities/extensionUtils";
 import * as errorUtils from "../../Utilities/errorUtils";
+import * as utility from "../../Utilities/osUtilities";
 const rewire = require("rewire");
 
 const mockContext = {
@@ -28,6 +29,7 @@ suite("Submit proposal integration tests", () => {
 
   let runCommandStub: sinon.SinonStub;
   let logAndDisplayErrorStub: sinon.SinonStub;
+  let getPathStub: sinon.SinonStub;
 
   setup(() => {
     sandbox = sinon.createSandbox();
@@ -42,6 +44,7 @@ suite("Submit proposal integration tests", () => {
 
     runCommandStub = sandbox.stub(extension, "runCommandInTerminal");
     logAndDisplayErrorStub = sandbox.stub(errorUtils, "logAndDisplayError");
+    getPathStub = sandbox.stub(utility, "getPathOSAgnostic");
   });
 
   teardown(() => {
@@ -60,6 +63,7 @@ suite("Submit proposal integration tests", () => {
     showOpenDialogStub
       .onCall(2)
       .resolves([vscode.Uri.file("path/to/proposal.json")]);
+    getPathStub.resolves((input: string) => input);
 
     await rewireSubmitProposal.submitProposal(mockContext);
 
