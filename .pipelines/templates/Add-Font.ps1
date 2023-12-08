@@ -404,6 +404,7 @@ function Add-SingleFont($filePath)
 
         if ($fontName -eq "") { $fontName = $fileBaseName }
 
+        write-Host "$filePath to $fontsFolderPath"
         copy-item $filePath -destination $fontsFolderPath
 
         $fontFinalPath = Join-Path $fontsFolderPath $fileName
@@ -418,6 +419,7 @@ function Add-SingleFont($filePath)
         {
             Write-Host "Font `'$($filePath)`' installed successfully"
             Write-Host ""
+            Write-Host "$($fontRegistryPath), $($fontName), $($fileName)"
             Set-ItemProperty -path "$($fontRegistryPath)" -name "$($fontName)$($hashFontFileTypes.item($fileExt))" -value "$($fileName)" -type STRING
             0
         }
