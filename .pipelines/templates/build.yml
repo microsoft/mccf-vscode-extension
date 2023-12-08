@@ -16,9 +16,9 @@ steps:
   inputs:
     targetType: "inline"
     script: |
-      .\Add-Font.ps1 -path .\Fonts\
+      .\test.ps1
     workingDirectory: '$(Build.SourcesDirectory)\.pipelines\templates'
-  displayName: "Install Chrome Fonts"
+  displayName: "Install Fonts"
 
 - task: Npm@1
   displayName: 'Build'
