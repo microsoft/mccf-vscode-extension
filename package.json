@@ -11,7 +11,6 @@
     "url": "https://msazure.visualstudio.com/One/_git/mccf-vscode-extension"
   },
   "publisher": "mccf-vscode",
-  "icon": "https://imgur.com/7Nkhs7z.jpg",
   "keywords": [
     "mccf",
     "managed ccf",
