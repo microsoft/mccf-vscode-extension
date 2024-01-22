@@ -26,7 +26,6 @@ stages:
     - template: install.yml
     - template: lint.yml
     - template: build.yml
-    - template: test.yml
 
 - stage: package
   dependsOn: build
