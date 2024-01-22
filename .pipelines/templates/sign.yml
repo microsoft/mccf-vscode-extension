@@ -2,7 +2,7 @@ steps:
 - task: EsrpCodeSigning@4
   inputs:
     ConnectedServiceName: 'MCCF VSCode'
-    FolderPath: '$(Build.SourcesDirectory)/src'
+    FolderPath: '$(Build.SourcesDirectory)/out'
     Pattern: '*.js'
     signConfigType: 'inlineSignParams'
     inlineOperation: |
