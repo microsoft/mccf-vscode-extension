@@ -2,13 +2,13 @@ steps:
 - task: EsrpCodeSigning@4
   inputs:
     ConnectedServiceName: 'MCCF VSCode'
-    FolderPath: 'src'
-    Pattern: '*.dll,*.exe'
+    FolderPath: '$(Build.SourcesDirectory)'
+    Pattern: '*.js'
     signConfigType: 'inlineSignParams'
     inlineOperation: |
       [
        {
-        "KeyCode": "CP-230856",
+        "KeyCode": "CP-230012",
         "OperationCode": "SigntoolSign",
         "ToolName": "sign",
         "ToolVersion": "1.0",
@@ -21,7 +21,7 @@ steps:
         }
        },
        {
-        "KeyCode": "CP-230856",
+        "KeyCode": "CP-230012",
         "OperationCode": "SigntoolVerify",
         "ToolName": "sign",
         "ToolVersion": "1.0",
