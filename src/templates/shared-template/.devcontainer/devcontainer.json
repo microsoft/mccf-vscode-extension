@@ -1,6 +1,6 @@
 {
   "name": "MCCF template",
-  "image": "mcr.microsoft.com/ccf/app/dev:4.0.2-virtual",
+  "image": "mcr.microsoft.com/ccf/app/dev:4.0.14-virtual",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,7 +24,7 @@
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts",
+      "version": "16",
       "nodeGypDependencies": true
     },
     "ghcr.io/devcontainers/features/powershell:1": {

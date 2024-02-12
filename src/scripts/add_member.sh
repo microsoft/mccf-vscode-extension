@@ -12,12 +12,32 @@ function create_member_proposal {
   local setUserFile=$3
 
   cert=$(< "$certFile" sed '$!G' | paste -sd '\\n' -)
-  key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
+  
+  if [ -n "$keyFile" ]; then
+    key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
+    json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n", "encryption_pub_key": "'${key}'\n"} }  ]}'
+  else
+    json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n"} }  ]}'
+  fi
 
-  json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n", "encryption_pub_key": "'${key}'\n"} }  ]}'
+  echo "$json" > "$setUserFile"
+}
 
-    echo "$json" > "$setUserFile"
-  }
+function validate_file {
+  local file=$1
+  local extension=$2
+
+  check_existence=$(ls "$file" 2>/dev/null || true)
+  if [ -z "$check_existence" ]; then
+    echo "File \"$file\" does not exist."
+    exit 0
+  fi
+
+  if [ "${file##*.}" != "$extension" ]; then
+    echo "Wrong file extension for \"$file\". Only \".${extension}\" files are supported."
+    exit 0
+  fi
+}
 
 function usage {
   echo ""
@@ -26,7 +46,7 @@ function usage {
   echo "usage: ./add_member.sh --cert-file string --pubk-file string --id string"
   echo ""
   echo "  --cert-file     string     The certificate .pem file for the member"
-  echo "  --pubk-file     string     The encryption public key .pem file for the member"
+  echo "  --pubk-file     string     [Optional] The encryption public key .pem file for the member"
   echo "  --dest-folder   string     The destination folder for the proposal file"
   echo "  --id            string     The id of the proposal file"
   echo ""
@@ -39,11 +59,12 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-while [ $# -gt 0 ]
-do
+pubk_file=""
+
+while [ $# -gt 0 ]; do
   name="${1/--/}"
   name="${name/-/_}"
-  case "--$name"  in
+  case "--$name" in
     --cert_file) cert_file="$2"; shift;;
     --pubk_file) pubk_file="$2"; shift;;
     --dest_folder) dest_folder="$2"; shift;;
@@ -56,29 +77,18 @@ done
 
 # validate parameters
 if [ -z "$cert_file" ]; then
-	failed "Missing parameter --cert-file"
-elif [ -z "$pubk_file" ]; then
-	failed "Missing parameter --pubk-file"
+  failed "Missing parameter --cert-file"
 elif [ -z "$dest_folder" ]; then
-	failed "Missing parameter --dest-folder"
+  failed "Missing parameter --dest-folder"
 elif [ -z "$id" ]; then
   failed "Missing parameter --id"
 fi
 
-check_existence=$(ls $cert_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-    echo "Cert file \"$cert_file\" does not exist."
-    exit 0
-fi
-check_existence=$(ls $pubk_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-    echo "Public key file \"$pubk_file\" does not exist."
-    exit 0
-fi
-if [ "${cert_file##*.}" != "pem" -o "${pubk_file##*.}" != "pem" ]
-then
-    echo "Wrong file extensions. Only \".pem\" files are supported."
-    exit 0
+# validate files
+validate_file "$cert_file" "pem"
+
+if [ -n "$pubk_file" ]; then
+  validate_file "$pubk_file" "pem"
 fi
 
 proposal_json_file="${dest_folder}/${id}.json"

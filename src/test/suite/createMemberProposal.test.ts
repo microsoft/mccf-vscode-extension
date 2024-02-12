@@ -101,7 +101,7 @@ suite("Create Member Proposal tests", () => {
     );
   });
 
-  test("should fail when key is not selected", async () => {
+  test("should not fail when encryption key is not selected", async () => {
     const rewireCreateMemberProposal = rewire(
       "../../commands/createMemberProposal",
     );
@@ -111,15 +111,28 @@ suite("Create Member Proposal tests", () => {
       .onCall(0)
       .resolves([vscode.Uri.file("path/to/cert.pem")]);
     showOpenDialogStub.onCall(1).resolves();
+    showOpenDialogStub
+      .onCall(2)
+      .resolves([vscode.Uri.file("path/to/destination")]);
+    showInputBoxStub.resolves("proposal");
+
+    existStub.returns(false);
+    generateProposalStub.resolves();
+    getPathStub.resolves((input: string) => input);
+
+    rewireCreateMemberProposal.__set__(
+      "generateProposal",
+      generateProposalStub,
+    );
 
     await rewireCreateMemberProposal.createMemberProposal(mockContext);
 
-    sinon.assert.notCalled(existStub);
-    sinon.assert.notCalled(generateProposalStub);
+    sinon.assert.calledOnce(existStub);
+    sinon.assert.calledOnce(generateProposalStub);
 
-    sinon.assert.notCalled(showInputBoxStub);
-    sinon.assert.calledTwice(showOpenDialogStub);
-    sinon.assert.calledWith(showErrorMessageStub, "No key file selected");
+    sinon.assert.calledOnce(showInputBoxStub);
+    sinon.assert.calledThrice(showOpenDialogStub);
+    sinon.assert.notCalled(showErrorMessageStub);
   });
 
   test("should fail when destination is not selected", async () => {

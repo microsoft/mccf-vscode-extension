@@ -12,7 +12,7 @@ handle_error() {
 }
 
 VIRTUAL_ENVIRONMENT_NAME="/tmp/extensionenv"
-CCF_VERSION="4.0.12"
+CCF_VERSION="4.0.14"
 
 # Initialize environment
 function init_env() {

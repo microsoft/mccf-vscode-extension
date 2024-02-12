@@ -167,10 +167,10 @@ export function getLogItem(
 
     // Make hundle based on https://github.com/microsoft/CCF/blob/main/samples/apps/logging/js/src/logging.js
     // Compute a deterministic handle for the range request.
-    // Note: Instead of ccf.digest, an equivalent of std::hash should be used.
+    // Note: Instead of ccf.crypto.digest, an equivalent of std::hash should be used.
     const makeHandle = (begin: number, last: number): number => {
       const cacheKey = `${begin}-${last}`;
-      const digest = ccf.digest("SHA-256", ccf.strToBuf(cacheKey));
+      const digest = ccf.crypto.digest("SHA-256", ccf.strToBuf(cacheKey));
       const handle = new DataView(digest).getUint32(0);
       return handle;
     };

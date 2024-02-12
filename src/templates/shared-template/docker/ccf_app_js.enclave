@@ -1,8 +1,8 @@
 # Build
-FROM mcr.microsoft.com/ccf/app/dev:4.0.2-sgx as builder
+FROM mcr.microsoft.com/ccf/app/dev:4.0.14-sgx as builder
 
 # Run
-FROM mcr.microsoft.com/ccf/app/run-js:4.0.2-sgx
+FROM mcr.microsoft.com/ccf/app/run-js:4.0.14-sgx
 
 COPY --from=builder /opt/ccf_sgx/bin/* /app/
 

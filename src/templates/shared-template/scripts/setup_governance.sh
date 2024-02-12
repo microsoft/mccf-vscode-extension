@@ -45,12 +45,19 @@ if [ -z "$certs" ]; then
     failed "You must supply --certificate_dir"
 fi
 
+# Set up Python package
+if [ ! -f "env/bin/activate" ]
+    then
+        python3.8 -m venv env
+fi
+source env/bin/activate
+pip install -q ccf==$(cat /opt/ccf_virtual/share/VERSION)
 
 ##############################################
 # Generic variables
 ##############################################
 app_dir=$PWD                    # application folder for reference
-root_dir=`dirname $PWD`         # root (parent) folder 
+root_dir=$PWD                   # root (parent) folder 
 server="https://${nodeAddress}" # ccf network address
 
 
@@ -74,7 +81,15 @@ cat $certs/activation.json
 
 ccf_prefix=/opt/ccf_virtual/bin
 
-ccf_cose_sign1 --ccf-gov-msg-type ack --ccf-gov-msg-created_at "$(date -Is)" --signing-key $certs/member0_privk.pem --signing-cert $certs/member0_cert.pem --content @$certs/activation.json | curl "${server}/gov/ack" --cacert $certs/service_cert.pem --header "Content-Type: application/cose" --data-binary @- --silent
+ccf_cose_sign1 --ccf-gov-msg-type ack \
+               --ccf-gov-msg-created_at `date -uIs` \
+               --signing-key $certs/member0_privk.pem \
+               --signing-cert $certs/member0_cert.pem \
+               --content $certs/activation.json | \
+               curl -s "${server}/gov/ack" \
+               --cacert $certs/service_cert.pem \
+               --header "Content-Type: application/cose" \
+               --data-binary @-
 
 echo "Getting list of members..."
 curl ${server}/gov/members --cacert $certs/service_cert.pem | jq
@@ -115,19 +130,6 @@ echo "Adding user0 2/2: submit proposal to network and vote as accepted"
 $root_dir/scripts/submit_proposal.sh --network-url ${server} \
  --proposal-file "$certs/set_user.json" \
  --certificate_dir $certs
-
-
-#---------------------
-echo "Adding user1 1/2: create certificate and proposal"
-cert_name="user1"
-create_certificate "${cert_name}" "${certs}"
-$root_dir/scripts/add_user.sh --cert-file $certs/${cert_name}_cert.pem
-
-echo "Adding user1 2/2: submit proposal to network and vote as accepted"
-$root_dir/scripts/submit_proposal.sh --network-url ${server} \
- --proposal-file "$certs/set_user.json" \
- --certificate_dir $certs
-
 
 
 ##############################################

@@ -30,18 +30,12 @@ export async function createMemberProposal(
     canSelectFiles: true,
     canSelectFolders: false,
     canSelectMany: false,
-    openLabel: "Select signing key",
-    title: "Select signing key",
+    openLabel: "Select public encryption key (leave empty to not specify one)",
+    title: "Select public encryption key (leave empty to not specify one)",
     filters: {
       "Pem files": ["pem"],
     },
   });
-
-  // Check if pubkFile is undefined
-  if (!pubkFile) {
-    vscode.window.showErrorMessage("No key file selected");
-    return;
-  }
 
   // Show user an open dialogue box to choose the destination folder for the proposal files
   const destFolder = await vscode.window.showOpenDialog({
@@ -80,26 +74,30 @@ export async function createMemberProposal(
 
   // Get the path of the cert-file, pubk-file, and destination folder
   const certPath = utilities.getPathOSAgnostic(certFile[0].fsPath);
-  const pubkPath = utilities.getPathOSAgnostic(pubkFile[0].fsPath);
+
+  var pubkPath = "";
+  if (pubkFile) {
+    pubkPath = utilities.getPathOSAgnostic(pubkFile[0].fsPath);
+  }
   const destPath = utilities.getPathOSAgnostic(destFolder[0].fsPath);
 
   // Call the generateProposal function
   generateProposal(
     certPath,
-    pubkPath,
     destPath,
     idName,
     specialContext.extensionPath,
+    pubkPath,
   );
 }
 
 // Create member proposal function that runs the add_member.sh script to generate member proposals
 async function generateProposal(
   certPath: string,
-  pubkPath: string,
   destFolderPath: string,
   id: string,
   extensionPath: string,
+  pubkPath: string = "",
 ) {
   try {
     // Display progress message to user

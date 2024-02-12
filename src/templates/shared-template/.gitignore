@@ -9,3 +9,4 @@
 **/dist
 **/coverage
 aad.env
+**/env

@@ -8,22 +8,32 @@ function create_member_proposal {
     local keyFile=$2
     local setUserFile=$3
 
-    cert=$(< $certFile sed '$!G' | paste -sd '\\n' -)
-    key=$(< $keyFile sed '$!G' | paste -sd '\\n' -)
+    cert=$(< "$certFile" sed '$!G' | paste -sd '\\n' -)
 
-    cat <<JSON > $setUserFile
-{
-  "actions": [
-    {
-      "name": "set_member",
-      "args": {
-        "cert": "${cert}\n",
-        "encryption_pub_key": "${key}\n"
-      }
-    }
-  ]
+    if [ -n "$keyFile" ]; then
+        key=$(< "$keyFile" sed '$!G' | paste -sd '\\n' -)
+        json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n", "encryption_pub_key": "'${key}'\n"} }  ]}'
+    else
+        json='{"actions":[{"name": "set_member", "args": { "cert": "'${cert}'\n"} }  ]}'
+    fi
+
+    echo "$json" > "$setUserFile"
 }
-JSON
+
+function validate_file {
+    local file=$1
+    local extension=$2
+  
+    check_existence=$(ls "$file" 2>/dev/null || true)
+    if [ -z "$check_existence" ]; then
+      echo "File \"$file\" does not exist."
+      exit 0
+    fi
+  
+    if [ "${file##*.}" != "$extension" ]; then
+      echo "Wrong file extension for \"$file\". Only \".${extension}\" files are supported."
+      exit 0
+    fi
 }
 
 function usage {
@@ -48,11 +58,13 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+pubk_file=""
+
 while [ $# -gt 0 ]
 do
     name="${1/--/}"
     name="${name/-/_}"
-    case "--$name"  in
+    case "--$name" in
         --cert_file) cert_file="$2"; shift;;
         --pubk_file) pubk_file="$2"; shift;;
         --help) usage; exit 0; shift;;
@@ -64,28 +76,13 @@ done
 # validate parameters
 if [ -z "$cert_file" ]; then
 	failed "Missing parameter --cert-file"
-elif [ -z "$pubk_file" ]; then
-	failed "Missing parameter --pubk-file"
 fi
 
-echo "Looking for certificate file..."
-check_existence=$(ls $cert_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-    echo "Cert file \"$cert_file\" does not exist."
-    exit 0
-fi
+# validate files
+validate_file "$cert_file" "pem"
 
-echo "Looking for public key file..."
-check_existence=$(ls $pubk_file 2>/dev/null || true)
-if [ -z "$check_existence" ]; then
-    echo "Public key file \"$pubk_file\" does not exist."
-    exit 0
-fi
-
-if [ ${cert_file##*.} != "pem" -o ${pubk_file##*.} != "pem" ]
-then
-    echo "Wrong file extensions. Only \".pem\" files are supported."
-    exit 0
+if [ -n "$pubk_file" ]; then
+  validate_file "$pubk_file" "pem"
 fi
 
 certs_folder=`dirname $cert_file`

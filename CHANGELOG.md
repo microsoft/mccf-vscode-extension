@@ -2,8 +2,14 @@
 
 All notable changes to the "vscode-azure-managed-ccf" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.1.1]
 
-## [Unreleased]
+- Update to CCF 4.0.14
+- Update CCF app templates with latest upstream updates
+- Update extension package dependencies
+- Create member proposal command does no longer require to specify a public encryption key
+- Fix missing `tsconfig.json` and `*.ts` files in CCF templates 
+
+## [0.1.0]
 
 - Initial release

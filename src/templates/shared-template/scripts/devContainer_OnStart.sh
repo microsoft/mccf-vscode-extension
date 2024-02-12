@@ -5,4 +5,4 @@ set -euo pipefail
 npm install --prefix .
 
 # Install CCF python package
-pip install ccf==4.0.12
+pip install ccf==4.0.14

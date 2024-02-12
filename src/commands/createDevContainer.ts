@@ -77,7 +77,6 @@ export async function createDevContainerCommand(
     }
 
     // Get the path of the folder
-    const abc = appFolderUri[0];
     const folderPath = appFolderUri[0].fsPath;
 
     // Get the name of the folder where to store the template
