@@ -68,4 +68,11 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/out
         cp -R ${{ github.workspace }}/*.vsix ${{ github.workspace }}/out
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: package-extension
+        path: |
+          ${{ github.workspace }}/out
     
