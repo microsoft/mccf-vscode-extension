@@ -19,10 +19,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Setup BuildNumber
-      run: |
-        echo "BuildNumber=$(Build.SourceBranchName)_$(Build.SourceVersion)" >> $GITHUB_ENV
-      id: setBuildNumber
+    - name: Build Number
+      run: echo ${{ github.run_number }}
+    - name: Build Attempt
+      run: echo ${{ github.run_attempt }}
 
     - name: Install
       run: npm ci
