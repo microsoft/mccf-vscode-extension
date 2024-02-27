@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { runCommandInTerminal } from "../Utilities/extensionUtils";
 import { logAndDisplayError } from "../Utilities/errorUtils";
+import { TerminalType, getTerminalType } from '../Utilities/osUtilities';
 
 // Build and run a CCF network inside a docker container
 export async function startCCFNetworkDocker() {
@@ -45,8 +46,12 @@ export async function startCCFNetworkDocker() {
     const imageName = "ccf-app:virtual";
 
     // Build and run a docker container
+    const envType = getTerminalType();
+    const envCommand: string = (envType == TerminalType.LinuxTerminal) ? "DOCKER_BUILDKIT=1 " : "";
+
     const dockerBuildCommand =
-      "DOCKER_BUILDKIT=1 docker build -t " +
+      envCommand +
+      "docker build -t " +
       imageName +
       " -f " +
       dockerfilePath +
@@ -58,7 +63,7 @@ export async function startCCFNetworkDocker() {
     // such that we will execute the subsequent commands only if the previous ones succeed
     const commandsSequence = [dockerBuildCommand, dockerRunCommand];
 
-    const finalCommand = commandsSequence.join(" && ");
+    const finalCommand = (envType == TerminalType.PowerShell)? commandsSequence.join(" ; ") : commandsSequence.join(" && ");
 
     // Run the command in the terminal
     runCommandInTerminal("Start CCF Network Terminal", finalCommand);

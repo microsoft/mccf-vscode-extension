@@ -75,7 +75,7 @@
       },
       {
         "command": "vscode-azure-managed-ccf.testOperatorActions",
-        "title": "MCCF: Test operator actions on the custom constitution"
+        "title": "MCCF: Test Operator Actions on the Custom Constitution"
       }
     ]
   },
