@@ -55,7 +55,7 @@ jobs:
 
     - name: Setup BuildNumber
       run: |
-        echo "##[set-output name=BuildNumber;]$(Build.SourceBranchName)_$(Build.SourceVersion)"
+        echo "BuildNumber=$(Build.SourceBranchName)_$(Build.SourceVersion)" >> $GITHUB_ENV
       id: setBuildNumber
 
     - name: Install
