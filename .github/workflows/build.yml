@@ -67,5 +67,5 @@ jobs:
     - name: Copy vsix to output directory
       run: |
         mkdir -p ${{ github.workspace }}/out
-        cp -R ${{ github.workspace }}/**/*.vsix ${{ github.workspace }}/out
+        cp -R ${{ github.workspace }}/*.vsix ${{ github.workspace }}/out
     
