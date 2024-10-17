@@ -1,6 +1,5 @@
 import * as ccfapp from "@microsoft/ccf-app";
 import { ApiResult } from "../utils/api-result";
-import { MS_AAD_CONFIG } from "../utils/config";
 
 /**
  * Generate a swagger UI based on the OpenApi documents of (Application - Governance)
@@ -43,7 +42,7 @@ export function getSwaggerUI(): ccfapp.Response<string> {
             });
 
           window.ui.initOAuth({
-            clientId: "${MS_AAD_CONFIG.ClientApplicationId}",
+            clientId: "test-client-id",
             usePkceWithAuthorizationCodeGrant: true
           });
         };
@@ -181,9 +180,9 @@ const openApiDoc = {
         "name": "Authorization using AAD identity provider Oauth2 flow",
         "flows": {
           "authorizationCode": {
-            "scopes": MS_AAD_CONFIG.ApiScopes,
-            "authorizationUrl": `https://login.microsoftonline.com/${MS_AAD_CONFIG.TenantId}/oauth2/v2.0/authorize`,
-            "tokenUrl": `https://login.microsoftonline.com/${MS_AAD_CONFIG.TenantId}/oauth2/token`
+            "scopes": "test-api-scope",
+            "authorizationUrl": `https://login.microsoftonline.com/test-tenenat-id/oauth2/v2.0/authorize`,
+            "tokenUrl": `https://login.microsoftonline.com/test-tenenat-id/oauth2/token`
           }
         }
       }
